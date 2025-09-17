@@ -6,7 +6,15 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "check": "biome check",
+    "check:fix": "biome check --write",
+    "check:fix:unsafe": "biome check --write --unsafe",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write",
+    "lint:fix:unsafe": "biome lint --write --unsafe",
+    "format": "biome format",
+    "format:fix": "biome format --write"
   },
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.1.16",
@@ -23,6 +31,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.2.4",
     "@react-router/dev": "^7.7.1",
     "@tailwindcss/vite": "^4.1.4",
     "@types/node": "^20",
