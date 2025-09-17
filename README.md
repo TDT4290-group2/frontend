@@ -16,10 +16,10 @@
 
 ## Other documents
 
-- [Onboarding: READ IF ITS YOUR FIRST TIME OPENING THIS REPO](./onboarding.md)
-- [Tips for developing with VSCode (please read)](./vscode-tips.md)
-- [Tech Stack](./tech-stack.md)
-- [React Router README](react-router_README.md)
+- [Onboarding: READ IF ITS YOUR FIRST TIME OPENING THIS REPO](./docs/onboarding.md)
+- [Tips for developing with VSCode (please read)](./docs/vscode-tips.md)
+- [Tech Stack](./docs/tech-stack.md)
+- [React Router README](./docs/react-router_README.md)
 
 ## Local Development
 
