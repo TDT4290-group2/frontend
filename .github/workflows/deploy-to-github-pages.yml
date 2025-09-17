@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
       - name: Setup Node
@@ -42,14 +42,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
       - name: Install dependencies
         run: pnpm install
       - name: Build
         run: pnpm build
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
         with:
           name: github-pages
           path: ./build/client
