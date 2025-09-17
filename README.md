@@ -20,6 +20,7 @@
 - [Tips for developing with VSCode (please read)](./docs/vscode-tips.md)
 - [Tech Stack](./docs/tech-stack.md)
 - [React Router README](./docs/react-router_README.md)
+- [Learn React](./docs/learn-react.md)
 
 ## Local Development
 
