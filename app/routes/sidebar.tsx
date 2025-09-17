@@ -1,16 +1,16 @@
 import type { ComponentProps } from "react";
 import { Outlet } from "react-router";
-import { Calendars } from "~/components/calendars";
-import { DatePicker } from "~/components/date-picker";
-import { ModeToggle } from "~/components/mode-toggle";
-import { NavUser } from "~/components/nav-user";
+import { Calendars } from "@/components/calendars";
+import { DatePicker } from "@/components/date-picker";
+import { ModeToggle } from "@/components/mode-toggle";
+import { NavUser } from "@/components/nav-user";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
 	BreadcrumbList,
 	BreadcrumbPage,
-} from "~/components/ui/breadcrumb";
-import { Separator } from "~/components/ui/separator";
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
 	Sidebar,
 	SidebarContent,
@@ -21,7 +21,7 @@ import {
 	SidebarRail,
 	SidebarSeparator,
 	SidebarTrigger,
-} from "~/components/ui/sidebar";
+} from "@/components/ui/sidebar";
 
 // This is sample data.
 const data = {
