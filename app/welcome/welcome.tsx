@@ -1,4 +1,3 @@
-import { ModeToggle } from "~/components/mode-toggle";
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
 
@@ -25,7 +24,6 @@ export function Welcome() {
 						<p className="text-center text-gray-700 leading-6 dark:text-gray-200">
 							What&apos;s next?
 						</p>
-						<ModeToggle />
 						<ul>
 							{resources.map(({ href, text, icon }) => (
 								<li key={href}>
