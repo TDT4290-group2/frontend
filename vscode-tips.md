@@ -33,6 +33,7 @@ Read more about [Intellisense](https://code.visualstudio.com/docs/editor/intelli
 Install the official Biome extension [`biomejs.biome`](https://marketplace.visualstudio.com/items?itemName=biomejs.biome)
 
 Configure the VSCode workspace settings:
+PS: Copy paste and remove the comments to configure
 
 ```jsonc
 // .vscode/settings.json
