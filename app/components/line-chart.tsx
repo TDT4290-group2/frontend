@@ -8,13 +8,7 @@ import {
 	YAxis,
 } from "recharts";
 
-import {
-	Card,
-	CardContent,
-	// CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -49,7 +43,6 @@ export function ChartLineDefault({
 		<Card>
 			<CardHeader>
 				<CardTitle>{chartTitle}</CardTitle>
-				{/* <CardDescription>January - June 2024</CardDescription> */}
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig}>
@@ -92,21 +85,48 @@ export function ChartLineDefault({
 							strokeWidth={2}
 							dot={false}
 						/>
-						<ReferenceLine
-							y={threshold}
-							stroke="red"
-							strokeDasharray={"4 4"}
-							label={{
-								value: "Keep under this threshold",
-								position: "left",
-								fill: "red",
-								offset: -150,
-								dy: -10,
-							}}
-						/>
+						<ThresholdLine y={threshold} dangerLevel={DangerLevel.HIGH} />
 					</LineChart>
 				</ChartContainer>
 			</CardContent>
 		</Card>
+	);
+}
+
+enum DangerLevel {
+	HIGH,
+}
+
+type DangerLevelInfo = {
+	label: string;
+	color: string;
+};
+
+const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
+	[DangerLevel.HIGH]: { label: "Keep under this threshold", color: "red" },
+};
+
+function ThresholdLine({
+	y,
+	dangerLevel,
+}: {
+	y: number;
+	dangerLevel: DangerLevel;
+}) {
+	const color = dangerLevels[dangerLevel].color;
+	const label = dangerLevels[dangerLevel].label;
+	return (
+		<ReferenceLine
+			y={y}
+			stroke={color}
+			strokeDasharray="4 4"
+			label={{
+				value: label,
+				position: "left",
+				fill: color,
+				offset: -150,
+				dy: -10,
+			}}
+		/>
 	);
 }
