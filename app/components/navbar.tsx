@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { NavLink } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
 	NavigationMenu,
@@ -14,6 +15,8 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "../hooks/use-mobile";
+import { ModeToggle } from "./mode-toggle";
 
 // Simple logo component for the navbar
 const Logo = () => (
@@ -28,9 +31,9 @@ const Logo = () => (
 		<path
 			d="M42.8334 20H34.5001L28.2501 38.75L15.7501 1.25L9.50008 20H1.16675"
 			stroke="#A4D4DB"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 		/>
 	</svg>
 );
@@ -70,7 +73,7 @@ const HamburgerIcon = ({
 );
 
 // Types
-export type NavLink = {
+export type NavBarLink = {
 	href: string;
 	label: string;
 };
@@ -78,7 +81,7 @@ export type NavLink = {
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
 	logo?: React.ReactNode;
 	logoHref?: string;
-	navigationLinks: Array<NavLink>;
+	navigationLinks: Array<NavBarLink>;
 	signInText?: string;
 	signInHref?: string;
 	ctaText?: string;
@@ -92,30 +95,8 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 		{ className, logo = <Logo />, logoHref = "/", navigationLinks, ...props },
 		ref,
 	) => {
-		const [isMobile, setIsMobile] = useState(false);
 		const containerRef = useRef<HTMLElement>(null);
-		const [currentPath, setCurrentPath] = useState("/");
-
-		useEffect(() => {
-			setCurrentPath(window.location.pathname);
-			const checkWidth = () => {
-				if (containerRef.current) {
-					const width = containerRef.current.offsetWidth;
-					setIsMobile(width < 768); // 768px is md breakpoint
-				}
-			};
-
-			checkWidth();
-
-			const resizeObserver = new ResizeObserver(checkWidth);
-			if (containerRef.current) {
-				resizeObserver.observe(containerRef.current);
-			}
-
-			return () => {
-				resizeObserver.disconnect();
-			};
-		}, []);
+		const isMobile = useIsMobile();
 
 		// Combine refs
 		const combinedRef = React.useCallback(
@@ -131,7 +112,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 		);
 
 		return (
-			<header
+			<div
 				ref={combinedRef}
 				className={cn(
 					"sticky top-0 z-50 w-full bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-6 [&_*]:no-underline",
@@ -155,15 +136,18 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 										<NavigationMenuList className="flex-col items-start gap-1">
 											{navigationLinks.map((link) => (
 												<NavigationMenuItem key={link.href} className="w-full">
-													<a
-														href={link.href}
-														className={cn(
-															"flex w-full cursor-pointer items-center rounded-md px-3 py-2 font-medium text-sm no-underline transition-colors hover:underline",
-															link.href === currentPath && "font-bold",
-														)}
+													<NavLink
+														to={link.href}
+														className={({ isActive, isPending }) =>
+															cn(
+																"flex w-full cursor-pointer items-center rounded-md px-3 py-2 font-medium text-sm no-underline transition-colors hover:underline",
+																isActive && "font-bold",
+																isPending && "text-muted-foreground",
+															)
+														}
 													>
 														{link.label}
-													</a>
+													</NavLink>
 												</NavigationMenuItem>
 											))}
 										</NavigationMenuList>
@@ -173,39 +157,43 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 						)}
 						{/* Main nav */}
 						<div className="flex items-center gap-6">
-							<a
-								href={logoHref}
+							<NavLink
+								to={logoHref}
 								className="flex cursor-pointer items-center space-x-2 text-primary transition-colors hover:text-primary/90"
 							>
 								<div className="text-2xl">{logo}</div>
 								<span className="text-xl sm:inline-block">
 									{"Aker Solutions"}
 								</span>
-							</a>
+							</NavLink>
 							{/* Navigation menu */}
 							{!isMobile && (
 								<NavigationMenu className="flex rounded-3xl bg-card">
 									<NavigationMenuList className="gap-1">
 										{navigationLinks.map((link) => (
 											<NavigationMenuItem key={link.href}>
-												<a
-													href={link.href}
-													className={cn(
-														"group inline-flex h-9 w-max cursor-pointer items-center justify-center rounded-md px-4 py-2 font-medium text-sm transition-colors hover:underline disabled:pointer-events-none disabled:opacity-50",
-														link.href === currentPath && "font-bold",
-													)}
+												<NavLink
+													to={link.href}
+													className={({ isActive, isPending }) =>
+														cn(
+															"group inline-flex h-9 w-max cursor-pointer items-center justify-center rounded-md px-4 py-2 font-medium text-sm transition-colors hover:underline disabled:pointer-events-none disabled:opacity-50",
+															isActive && "font-bold",
+															isPending && "text-muted-foreground",
+														)
+													}
 												>
 													{link.label}
-												</a>
+												</NavLink>
 											</NavigationMenuItem>
 										))}
 									</NavigationMenuList>
 								</NavigationMenu>
 							)}
+							<ModeToggle /> {/* Can be removed or moved later */}
 						</div>
 					</div>
 				</div>
-			</header>
+			</div>
 		);
 	},
 );
