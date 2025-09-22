@@ -1,15 +1,10 @@
 import React, { createContext, useContext, useState, type ReactNode } from 'react';
 
-export enum RangeType {
-    Daily = 'daily',
-    Weekly = 'weekly',
-    Monthly = 'monthly',
-    Total = 'total',
-}
+export enum DataRange { Day = "Day", Week = "Week", Month = "Month" }
 
 interface RangeContextValue {
-    range: RangeType;
-    setRange: (range: RangeType) => void;
+    range: DataRange;
+    setRange: (range: DataRange) => void;
 }
 
 const RangeContext = createContext<RangeContextValue | undefined>(undefined);
@@ -24,14 +19,18 @@ export const useRange = (): RangeContextValue => {
 
 interface RangeProviderProps {
     children: ReactNode;
-    initialRange?: RangeType;
+    initialRange?: DataRange;
 }
 
 export const RangeProvider: React.FC<RangeProviderProps> = ({
     children,
-    initialRange = RangeType.Daily,
+    initialRange = DataRange.Day,
 }) => {
-    const [range, setRange] = useState<RangeType>(initialRange);
+    const [range, setRange] = useState<DataRange>(initialRange);
+
+    React.useEffect(() => {
+        console.log("Selected range:", range)
+    }, [range])
 
     return (
         <RangeContext.Provider value={{ range, setRange }}>
