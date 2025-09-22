@@ -22,6 +22,8 @@ import {
 	SidebarSeparator,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
+import RangeDropdown from "../components/range-dropdown";
+
 
 // This is sample data.
 const data = {
@@ -65,6 +67,7 @@ export default function Layout() {
 							</BreadcrumbItem>
 						</BreadcrumbList>
 					</Breadcrumb>
+					<RangeDropdown />
 				</header>
 				<Outlet />
 			</SidebarInset>
