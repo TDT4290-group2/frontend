@@ -24,22 +24,21 @@ const statusColors: Record<SlotStatus, string> = {
     red: "bg-red-500",
 };
 
-const hourNoToHourMapping = (hourNo: number) => {
-    return hourNo + 7;
-}
+
 
 export const DayColumn: React.FC<DayProps> = ({selectedDay}) => {
+    const columnLabel: string = new Date(selectedDay.date).toLocaleDateString("default", { weekday: 'short' })
+    
     return (
-        <div className="flex flex-col border rounded overflow-auto min-w-25">
+        <div className="day-column flex flex-col border rounded overflow-auto min-w-25">
             <div className="text-center font-bold py-1">
-                {new Date(selectedDay.date).toLocaleDateString("default", { weekday: 'short' })}
+                {columnLabel}
             </div>
-            <div className="hours">
+            <div className="day-column-hours">
                 {selectedDay.hours.map((hour, i) => (
                     <div
                         key={i}
-                        className={`flex min-h-10 border-black border-t border-dotted ${statusColors[hour.status]}`}
-                        title={`${hourNoToHourMapping(hour.hourNo)}:00`}
+                        className={`hour-slot flex min-h-10 border-black border-t border-dotted ${statusColors[hour.status]}`}
                     />
                 ))}
             </div>

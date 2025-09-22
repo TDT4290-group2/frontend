@@ -19,6 +19,10 @@ body {
 	}
 }
 
+.day-column-hours .hour-slot:first-child {
+	border-top: none
+}
+
 @theme inline {
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);
