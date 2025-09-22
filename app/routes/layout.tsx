@@ -1,5 +1,11 @@
 import { Outlet } from "react-router";
-import { type NavBarLink, Navbar } from "../components/navbar";
+import {
+	NavBar,
+	NavBarItem,
+	type NavBarLink,
+	NavBarMenu,
+	NavBarTitle,
+} from "../components/navbar";
 
 const links: Array<NavBarLink> = [
 	{ href: "/", label: "Overview" },
@@ -13,7 +19,14 @@ export default function Layout() {
 	return (
 		<>
 			<header>
-				<Navbar navigationLinks={links} />
+				<NavBar>
+					<NavBarTitle />
+					<NavBarMenu>
+						{links.map((link) => (
+							<NavBarItem key={link.href} link={link}></NavBarItem>
+						))}
+					</NavBarMenu>
+				</NavBar>
 			</header>
 			<main>
 				<Outlet />

@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRef } from "react";
 import { NavLink } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,10 +15,13 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "../hooks/use-mobile";
-import { ModeToggle } from "./mode-toggle";
 
-// Simple logo component for the navbar
-const Logo = () => (
+export type NavBarLink = {
+	href: string;
+	label: string;
+};
+
+export const Logo = () => (
 	<svg
 		width="44"
 		height="40"
@@ -27,7 +29,7 @@ const Logo = () => (
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
 	>
-		<title>{"Logo"}</title>
+		<title>{"HealthTech Logo"}</title>
 		<path
 			d="M42.8334 20H34.5001L28.2501 38.75L15.7501 1.25L9.50008 20H1.16675"
 			stroke="#A4D4DB"
@@ -38,8 +40,7 @@ const Logo = () => (
 	</svg>
 );
 
-// Hamburger icon component
-const HamburgerIcon = ({
+export const HamburgerIcon = ({
 	className,
 	...props
 }: React.SVGAttributes<SVGElement>) => (
@@ -72,132 +73,102 @@ const HamburgerIcon = ({
 	</svg>
 );
 
-// Types
-export type NavBarLink = {
-	href: string;
-	label: string;
-};
-
-export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
-	logo?: React.ReactNode;
+export const NavBarTitle = ({
+	logoHref = "/",
+	title = "HealthTech",
+}: {
 	logoHref?: string;
-	navigationLinks: Array<NavBarLink>;
-	signInText?: string;
-	signInHref?: string;
-	ctaText?: string;
-	ctaHref?: string;
-	onSignInClick?: () => void;
-	onCtaClick?: () => void;
-}
-
-export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
-	(
-		{ className, logo = <Logo />, logoHref = "/", navigationLinks, ...props },
-		ref,
-	) => {
-		const containerRef = useRef<HTMLElement>(null);
-		const isMobile = useIsMobile();
-
-		// Combine refs
-		const combinedRef = React.useCallback(
-			(node: HTMLElement | null) => {
-				containerRef.current = node;
-				if (typeof ref === "function") {
-					ref(node);
-				} else if (ref) {
-					ref.current = node;
-				}
-			},
-			[ref],
-		);
-
-		return (
-			<div
-				ref={combinedRef}
-				className={cn(
-					"sticky top-0 z-50 w-full bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-6 [&_*]:no-underline",
-					className,
-				)}
-				{...props}
-			>
-				<div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between gap-4">
-					{/* Left side */}
-					<div className="flex items-center gap-2">
-						{/* Mobile menu trigger */}
-						{isMobile && (
-							<Popover>
-								<PopoverTrigger asChild>
-									<Button className="group h-9 w-9" variant="ghost" size="icon">
-										<HamburgerIcon />
-									</Button>
-								</PopoverTrigger>
-								<PopoverContent align="start" className="w-48 p-2">
-									<NavigationMenu className="max-w-none">
-										<NavigationMenuList className="flex-col items-start gap-1">
-											{navigationLinks.map((link) => (
-												<NavigationMenuItem key={link.href} className="w-full">
-													<NavLink
-														to={link.href}
-														className={({ isActive, isPending }) =>
-															cn(
-																"flex w-full cursor-pointer items-center rounded-md px-3 py-2 font-medium text-sm no-underline transition-colors hover:underline",
-																isActive && "font-bold",
-																isPending && "text-muted-foreground",
-															)
-														}
-													>
-														{link.label}
-													</NavLink>
-												</NavigationMenuItem>
-											))}
-										</NavigationMenuList>
-									</NavigationMenu>
-								</PopoverContent>
-							</Popover>
-						)}
-						{/* Main nav */}
-						<div className="flex items-center gap-6">
-							<NavLink
-								to={logoHref}
-								className="flex cursor-pointer items-center space-x-2 text-primary transition-colors hover:text-primary/90"
-							>
-								<div className="text-2xl">{logo}</div>
-								<span className="text-xl sm:inline-block">
-									{"Aker Solutions"}
-								</span>
-							</NavLink>
-							{/* Navigation menu */}
-							{!isMobile && (
-								<NavigationMenu className="flex rounded-3xl bg-card">
-									<NavigationMenuList className="gap-1">
-										{navigationLinks.map((link) => (
-											<NavigationMenuItem key={link.href}>
-												<NavLink
-													to={link.href}
-													className={({ isActive, isPending }) =>
-														cn(
-															"group inline-flex h-9 w-max cursor-pointer items-center justify-center rounded-md px-4 py-2 font-medium text-sm transition-colors hover:underline disabled:pointer-events-none disabled:opacity-50",
-															isActive && "font-bold",
-															isPending && "text-muted-foreground",
-														)
-													}
-												>
-													{link.label}
-												</NavLink>
-											</NavigationMenuItem>
-										))}
-									</NavigationMenuList>
-								</NavigationMenu>
-							)}
-							<ModeToggle /> {/* Can be removed or moved later */}
-						</div>
-					</div>
-				</div>
+	title?: string;
+}) => (
+	<div className="flex items-center gap-6">
+		<NavLink
+			to={logoHref}
+			className="flex cursor-pointer items-center space-x-2 text-primary transition-colors hover:text-primary/90"
+		>
+			<div className="text-2xl">
+				<Logo />
 			</div>
-		);
-	},
+			<span className="text-xl sm:inline-block">{title}</span>
+		</NavLink>
+	</div>
 );
 
-Navbar.displayName = "Navbar";
+export const NavBarItem = ({ link }: { link: NavBarLink }) => (
+	<NavigationMenuItem key={link.href}>
+		<NavLink
+			to={link.href}
+			className={({ isActive, isPending }) =>
+				cn(
+					"group inline-flex h-9 w-max cursor-pointer items-center justify-center rounded-md px-4 py-2 font-medium text-sm transition-colors hover:underline disabled:pointer-events-none disabled:opacity-50",
+					isActive && "font-bold",
+					isPending && "text-muted-foreground",
+				)
+			}
+		>
+			{link.label}
+		</NavLink>
+	</NavigationMenuItem>
+);
 
-export { Logo, HamburgerIcon };
+export const NavBarMobileMenu = ({
+	children,
+}: {
+	children: React.ReactNode;
+}) => (
+	<Popover>
+		<PopoverTrigger asChild>
+			<Button className="group h-9 w-9" variant="ghost" size="icon">
+				<HamburgerIcon />
+			</Button>
+		</PopoverTrigger>
+		<PopoverContent align="start" className="w-48 p-2">
+			<NavigationMenu className="max-w-none">
+				<NavigationMenuList className="flex-col items-start gap-1">
+					{children}
+				</NavigationMenuList>
+			</NavigationMenu>
+		</PopoverContent>
+	</Popover>
+);
+
+export const NavBarMenu = ({ children }: { children: React.ReactNode }) => {
+	const isMobile = useIsMobile();
+
+	return isMobile ? (
+		<NavBarMobileMenu>{children}</NavBarMobileMenu>
+	) : (
+		<NavBarDesktopMenu>{children}</NavBarDesktopMenu>
+	);
+};
+
+export const NavBarDesktopMenu = ({
+	children,
+}: {
+	children: React.ReactNode;
+}) => (
+	<NavigationMenu className="rounded-3xl bg-card">
+		<NavigationMenuList className="gap-1">{children}</NavigationMenuList>
+	</NavigationMenu>
+);
+
+export const NavBar = ({
+	className,
+	children,
+}: {
+	className?: string;
+	children: React.ReactNode;
+}) => {
+	const isMobile = useIsMobile();
+	return (
+		<div
+			className={cn(
+				"fixed top-0 z-50 w-full bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:px-6 [&_*]:no-underline",
+				className,
+			)}
+		>
+			<div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-start gap-4">
+				{isMobile ? React.Children.toArray(children).reverse() : children}
+			</div>
+		</div>
+	);
+};
