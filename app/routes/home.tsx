@@ -1,4 +1,4 @@
-import { ChartLineDefault } from "@/components/line-chart";
+import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
 
 export function meta() {
 	return [
@@ -22,9 +22,10 @@ export default function Home() {
 			<ChartLineDefault
 				chartData={chartData}
 				chartTitle="Dust Exposure Graph"
-				threshold={25}
 				unit="decibel"
-			/>
+			>
+				<ThresholdLine y={25} dangerLevel="DANGER" />
+			</ChartLineDefault>
 		</div>
 	);
 }

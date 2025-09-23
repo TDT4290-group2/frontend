@@ -28,16 +28,16 @@ const chartConfig = {
 export function ChartLineDefault({
 	chartData,
 	chartTitle,
-	threshold,
 	unit,
+	children,
 }: {
 	chartData: Array<{
 		x: string;
 		y: number;
 	}>;
 	chartTitle: string;
-	threshold: number;
 	unit: string;
+	children: React.ReactNode;
 }) {
 	return (
 		<Card>
@@ -85,7 +85,7 @@ export function ChartLineDefault({
 							strokeWidth={2}
 							dot={false}
 						/>
-						<ThresholdLine y={threshold} dangerLevel={DangerLevel.HIGH} />
+						{children}
 					</LineChart>
 				</ChartContainer>
 			</CardContent>
@@ -93,9 +93,11 @@ export function ChartLineDefault({
 	);
 }
 
-enum DangerLevel {
-	HIGH,
-}
+const DangerTypes = {
+	high: "DANGER",
+} as const;
+
+type DangerLevel = (typeof DangerTypes)[keyof typeof DangerTypes];
 
 type DangerLevelInfo = {
 	label: string;
@@ -103,10 +105,10 @@ type DangerLevelInfo = {
 };
 
 const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
-	[DangerLevel.HIGH]: { label: "Keep under this threshold", color: "red" },
+	DANGER: { label: "Keep under this threshold", color: "red" },
 };
 
-function ThresholdLine({
+export function ThresholdLine({
 	y,
 	dangerLevel,
 }: {
