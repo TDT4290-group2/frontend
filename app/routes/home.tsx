@@ -1,4 +1,5 @@
-import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
+import { parseAsView } from "@/lib/utils";
+import { useQueryState } from "nuqs";
 
 export function meta() {
 	return [
@@ -9,23 +10,33 @@ export function meta() {
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
-	const chartData = [
-		{ x: "08.10", y: 18 },
-		{ x: "09.05", y: 30 },
-		{ x: "10.01", y: 23 },
-		{ x: "11.23", y: 7 },
-		{ x: "15.32", y: 20 },
-		{ x: "16.01", y: 21 },
-	];
-	return (
-		<div>
-			<ChartLineDefault
-				chartData={chartData}
-				chartTitle="Dust Exposure Graph"
-				unit="decibel"
-			>
-				<ThresholdLine y={25} dangerLevel="DANGER" />
-			</ChartLineDefault>
-		</div>
-	);
+	const [view] = useQueryState("view", parseAsView.withDefault("day"));
+
+	switch (view) {
+		case "day":
+			return (
+				<div>
+					<span>{"Overview page"}</span>
+					<span>{"Day view"}</span>
+				</div>
+			);
+		case "week":
+			return (
+				<div>
+					<span>{"Overview page"}</span>
+					<span>{"Week view"}</span>
+				</div>
+			);
+		case "month":
+			return (
+				<div>
+					<span>{"Overview page"}</span>
+					<span>{"Month view"}</span>
+				</div>
+			);
+		default: {
+			const exhaustiveCheck: never = view;
+			throw new Error(`Unhandled view type: ${exhaustiveCheck}`);
+		}
+	}
 }
