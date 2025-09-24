@@ -127,7 +127,7 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 	);
 
 	return (
-		<div className="flew-row relative mx-auto flex h-11 rounded-full bg-accent px-0.5">
+		<div className="flew-row relative mx-auto flex h-11 rounded-full bg-accent px-2">
 			<span
 				className="absolute top-0 bottom-0 z-10 flex overflow-hidden rounded-full py-1.5 transition-all duration-300"
 				style={{ left: pillLeft, width: pillWidth }}
