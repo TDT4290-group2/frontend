@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@/components/theme-provider";
 import {
 	isRouteErrorResponse,
 	Links,
@@ -6,8 +7,6 @@ import {
 	Scripts,
 	ScrollRestoration,
 } from "react-router";
-
-import { ThemeProvider } from "@/components/theme-provider";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { RangeProvider } from "./hooks/range-context";

@@ -1,6 +1,3 @@
-import { Check, ChevronRight } from "lucide-react";
-import { Fragment } from "react/jsx-runtime";
-
 import {
 	Collapsible,
 	CollapsibleContent,
@@ -15,6 +12,8 @@ import {
 	SidebarMenuItem,
 	SidebarSeparator,
 } from "@/components/ui/sidebar";
+import { Check, ChevronRight } from "lucide-react";
+import { Fragment } from "react/jsx-runtime";
 
 export function Calendars({
 	calendars,
