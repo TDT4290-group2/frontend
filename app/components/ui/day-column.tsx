@@ -30,7 +30,7 @@ export const DayColumn: React.FC<DayProps> = ({selectedDay}) => {
     const columnLabel: string = new Date(selectedDay.date).toLocaleDateString("default", { weekday: 'short' })
     
     return (
-        <div className="day-column flex flex-col border rounded overflow-auto min-w-25">
+        <div className="day-column flex flex-col border rounded overflow-auto min-w-2">
             <div className="text-center font-bold py-1">
                 {columnLabel}
             </div>

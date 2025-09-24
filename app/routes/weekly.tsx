@@ -1,6 +1,7 @@
 import type React from "react";
 import { DayColumn, type Day } from "../components/ui/day-column";
 import dummyWeekData from "../dummy/weekly.json";
+import { Card } from "../components/ui/card";
 
 export const WeeklyOverview: React.FC = () => {
 	// Temp assignment of dummydata
@@ -35,14 +36,14 @@ export const WeeklyOverview: React.FC = () => {
 	};
 
 	return (
-		<div className="weekly-container p-2">
+		<Card className="weekly-container p-2">
 			<div className="weekly-labels p-3 pl-6">
 				<h1 className="text-3xl">{"Your weekly exposure"}</h1>
 				<h2 className="pb-4">{getDateRange()}</h2>
 			</div>
-			<div className="inline-flex w-auto gap-2 rounded-lg border border-gray-800 p-4">
+			<div className="inline-flex gap-1">
 				<div className="hour-column">
-					<div className="flex min-w-14 flex-col items-end overflow-auto pt-13 pl-4 text-right text-gray-400">
+					<div className="flex flex-col items-end overflow-auto pt-13 text-right text-gray-400">
 						{/* TEMPORARY MAPPING OF HOURS - Should be more dynamic */}
 						{timeSections.map((hour) => (
 							<div key={hour} className="flex min-h-10">
@@ -52,12 +53,12 @@ export const WeeklyOverview: React.FC = () => {
 					</div>
 				</div>
 				{weekData.map((day) => (
-					<div key={day.date}>
-						<h2 className="mb-2 text-center font-semibold text-gray-400">
+					<div key={day.date} className="flex-1">
+						<h2 className="mb-2 text-center font-semibold text-gray-400 sm:text-xsm">
 							{`${new Date(day.date).getDate()}. `}
-							{new Date(day.date).toLocaleString("default", { month: "short" })}
+							{/* {new Date(day.date).toLocaleString("default", { month: "short" })} */}
 						</h2>
-						<div>
+						<div className="min-w-2">
 							{day.hours.length > 0 ? (
 								<DayColumn selectedDay={day as Day} />
 							) : (
@@ -67,6 +68,6 @@ export const WeeklyOverview: React.FC = () => {
 					</div>
 				))}
 			</div>
-		</div>
+		</Card>
 	);
 };
