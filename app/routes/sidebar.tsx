@@ -22,8 +22,7 @@ import {
 	SidebarSeparator,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
-import RangeDropdown from "../components/range-dropdown";
-
+import { RangeDropdown } from "../components/range-dropdown";
 
 // This is sample data.
 const data = {
@@ -54,7 +53,7 @@ export default function Layout() {
 		<SidebarProvider>
 			<AppSidebar />
 			<SidebarInset>
-				<header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
+				<header className="sticky top-0 z-1 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
 					<SidebarTrigger className="-ml-1" />
 					<Separator
 						orientation="vertical"
