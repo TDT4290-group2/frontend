@@ -21,6 +21,7 @@ import {
 	type To,
 	useLocation,
 } from "react-router";
+import { RangeDropdown } from "../components/range-dropdown";
 
 const links: Array<{ to: To; label: string }> = [
 	{ to: href("/"), label: "Overview" },
@@ -82,6 +83,8 @@ export default function Layout() {
 
 						<HomeLink />
 
+						<RangeDropdown />
+
 						<ModeToggle />
 					</header>
 
@@ -105,6 +108,8 @@ export default function Layout() {
 					<nav className="flex list-none items-center rounded-full">
 						<NavTabs routes={links} />
 					</nav>
+
+					<RangeDropdown />
 
 					<ModeToggle />
 				</header>
