@@ -1,4 +1,6 @@
 import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
+import { Calendar } from "@/components/ui/calendar";
+import React from "react";
 
 export function meta() {
 	return [
@@ -17,15 +19,38 @@ export default function Home() {
 		{ x: "15.32", y: 20 },
 		{ x: "16.01", y: 21 },
 	];
+
+  const [date, setDate] = React.useState<Date | undefined>(
+    new Date(2025, 5, 12)
+  )
+
+	const greenDays = [
+		new Date(2025, 8, 1),
+		new Date(2025, 8, 5),
+	]
+
+	const yellowDays = [
+		new Date(2025, 8, 2),
+		new Date(2025, 8, 6),
+	]
+
+	const redDays = [
+		new Date(2025, 8, 3),
+		new Date(2025, 8, 7),
+		new Date(2025, 8, 8),
+	]
+
 	return (
 		<div>
-			<ChartLineDefault
-				chartData={chartData}
-				chartTitle="Dust Exposure Graph"
-				unit="decibel"
-			>
-				<ThresholdLine y={25} dangerLevel="DANGER" />
-			</ChartLineDefault>
+			<Calendar
+      mode="single"
+      onSelect={setDate}
+			greenDays={greenDays}
+			yellowDays={yellowDays}
+			redDays={redDays}
+      className="rounded-md border shadow-sm"
+      captionLayout="dropdown"
+    />
 		</div>
 	);
 }
