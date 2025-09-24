@@ -53,7 +53,7 @@ function HomeLink() {
 	return (
 		<NavLink
 			to={href("/")}
-			className="flex cursor-pointer items-center space-x-2 text-primary transition-colors hover:text-primary/90"
+			className="flex cursor-pointer items-center space-x-2 text-foreground transition-colors hover:text-primary/90"
 		>
 			<div className="text-2xl">
 				<Logo />
@@ -137,7 +137,7 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 				className="absolute top-0 bottom-0 z-10 flex overflow-hidden rounded-full py-1.5 transition-all duration-300"
 				style={{ left: pillLeft, width: pillWidth }}
 			>
-				<span className="h-full w-full rounded-full bg-primary-foreground shadow-sm" />
+				<span className="h-full w-full rounded-full bg-secondary shadow-sm" />
 			</span>
 			{routes.map((route, i) => {
 				return (
@@ -156,7 +156,7 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 							}
 						}}
 						className={({ isActive }) =>
-							`${isActive ? "text-black" : "text-neutral-700 hover:text-black"} z-20 my-auto cursor-pointer select-none rounded-full px-4 text-center font-medium text-primary text-sm`
+							`${isActive ?? "text-foreground"} z-20 my-auto cursor-pointer select-none rounded-full px-4 text-center font-medium text-muted-foreground text-sm hover:text-foreground`
 						}
 						prefetch="intent"
 					>
