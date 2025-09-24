@@ -10,7 +10,7 @@ import {
 import { ThemeProvider } from "@/components/theme-provider";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { RangeProvider } from "./hooks/rangeContext";
+import { RangeProvider } from "./hooks/range-context";
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
