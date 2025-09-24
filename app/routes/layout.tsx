@@ -1,3 +1,12 @@
+import { type ReactNode, useRef, useState } from "react";
+import {
+	href,
+	Link,
+	NavLink,
+	Outlet,
+	type To,
+	useLocation,
+} from "react-router";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,15 +21,6 @@ import {
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { type ReactNode, useRef, useState } from "react";
-import {
-	href,
-	Link,
-	NavLink,
-	Outlet,
-	type To,
-	useLocation,
-} from "react-router";
 import { RangeDropdown } from "../components/range-dropdown";
 
 const links: Array<{ to: To; label: string }> = [
