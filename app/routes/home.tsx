@@ -40,10 +40,10 @@ export default function Home() {
 					danger: redDays,
 				}}
 				modifiersClassNames={{
-					safe: cn("bg-primary"),
-					warning: cn("bg-destructive"),
-					danger: cn("bg-orange-500"),
-					disabled: cn("rounded-2xl text-black dark:text-white"),
+					safe: cn("bg-green-500 dark:bg-green-700"),
+					warning: cn("bg-orange-500 dark:bg-orange-700"),
+					danger: cn("bg-red-500 dark:bg-red-700"),
+					disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
 				}}
 				className="rounded-md border font-bold text-foreground shadow-sm [--cell-size:--spacing(11)] md:[--cell-size:--spacing(20)]"
 				captionLayout="dropdown"
