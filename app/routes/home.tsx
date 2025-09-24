@@ -1,6 +1,5 @@
-import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
 import { Calendar } from "@/components/ui/calendar";
-import React from "react";
+import { cn } from "@/lib/utils";
 
 export function meta() {
 	return [
@@ -11,7 +10,7 @@ export function meta() {
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
-	const chartData = [
+	const _chartData = [
 		{ x: "08.10", y: 18 },
 		{ x: "09.05", y: 30 },
 		{ x: "10.01", y: 23 },
@@ -20,37 +19,36 @@ export default function Home() {
 		{ x: "16.01", y: 21 },
 	];
 
-  const [date, setDate] = React.useState<Date | undefined>(
-    new Date(2025, 5, 12)
-  )
-
-	const greenDays = [
-		new Date(2025, 8, 1),
-		new Date(2025, 8, 5),
-	]
-
-	const yellowDays = [
-		new Date(2025, 8, 2),
-		new Date(2025, 8, 6),
-	]
-
+	const greenDays = [new Date(2025, 8, 1), new Date(2025, 8, 5)];
+	const yellowDays = [new Date(2025, 8, 2), new Date(2025, 8, 6)];
 	const redDays = [
 		new Date(2025, 8, 3),
 		new Date(2025, 8, 7),
 		new Date(2025, 8, 8),
-	]
+	];
 
 	return (
-		<div>
+		<div className="grid h-full w-full place-content-center">
 			<Calendar
-      mode="single"
-      onSelect={setDate}
-			greenDays={greenDays}
-			yellowDays={yellowDays}
-			redDays={redDays}
-      className="rounded-md border shadow-sm"
-      captionLayout="dropdown"
-    />
+				fixedWeeks
+				showWeekNumber
+				disabled
+				mode="single"
+				modifiers={{
+					safe: greenDays,
+					warning: yellowDays,
+					danger: redDays,
+				}}
+				modifiersClassNames={{
+					safe: cn("bg-primary"),
+					warning: cn("bg-destructive"),
+					danger: cn("bg-orange-500"),
+					disabled: cn("rounded-2xl text-black dark:text-white"),
+				}}
+				className="rounded-md border font-bold text-foreground shadow-sm [--cell-size:--spacing(11)] md:[--cell-size:--spacing(20)]"
+				captionLayout="dropdown"
+				buttonVariant="ghost"
+			/>
 		</div>
 	);
 }
