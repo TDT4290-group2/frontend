@@ -20,7 +20,7 @@ body {
 }
 
 .day-column-hours .hour-slot:first-child {
-	border-top: none
+	border-top: none;
 }
 
 @theme inline {

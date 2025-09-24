@@ -1,7 +1,7 @@
 import type React from "react";
-import { DayColumn, type Day } from "../components/ui/day-column";
-import dummyWeekData from "../dummy/weekly.json";
 import { Card } from "../components/ui/card";
+import { type Day, DayColumn } from "../components/ui/day-column";
+import dummyWeekData from "../dummy/weekly.json";
 
 export const WeeklyOverview: React.FC = () => {
 	// Temp assignment of dummydata
@@ -56,7 +56,6 @@ export const WeeklyOverview: React.FC = () => {
 					<div key={day.date} className="flex-1">
 						<h2 className="mb-2 text-center font-semibold text-gray-400 sm:text-xsm">
 							{`${new Date(day.date).getDate()}. `}
-							{/* {new Date(day.date).toLocaleString("default", { month: "short" })} */}
 						</h2>
 						<div className="min-w-2">
 							{day.hours.length > 0 ? (
