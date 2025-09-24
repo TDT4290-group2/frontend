@@ -1,4 +1,11 @@
 "use client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	type ChartConfig,
+	ChartContainer,
+	ChartTooltip,
+	ChartTooltipContent,
+} from "@/components/ui/chart";
 import {
 	CartesianGrid,
 	Line,
@@ -7,14 +14,6 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-	type ChartConfig,
-	ChartContainer,
-	ChartTooltip,
-	ChartTooltipContent,
-} from "@/components/ui/chart";
 
 export const description = "A line chart";
 
