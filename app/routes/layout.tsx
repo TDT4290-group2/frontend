@@ -125,9 +125,8 @@ export default function Layout() {
 
 					<ModeToggle />
 				</header>
-				<main>
-					<Outlet />
-				</main>
+
+				<Outlet />
 			</SidebarInset>
 		</SidebarProvider>
 	);
