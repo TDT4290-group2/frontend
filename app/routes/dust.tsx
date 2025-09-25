@@ -1,6 +1,6 @@
+import { WeeklyOverview } from "@/components/weekly";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { DataRange, useRange } from "../hooks/range-context";
-import { WeeklyOverview } from "./weekly";
 
 // biome-ignore lint: page components can be default exports
 export default function Dust() {
