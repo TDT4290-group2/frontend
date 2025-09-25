@@ -1,4 +1,5 @@
 import { Calendar } from "@/components/ui/calendar";
+import { WeeklyOverview } from "@/components/weekly";
 import { cn } from "@/lib/utils";
 
 export function meta() {
@@ -28,7 +29,7 @@ export default function Home() {
 	];
 
 	return (
-		<div className="grid h-full w-full place-content-center">
+		<main className="grid h-full w-full place-content-center">
 			<Calendar
 				fixedWeeks
 				showWeekNumber
@@ -49,6 +50,7 @@ export default function Home() {
 				captionLayout="dropdown"
 				buttonVariant="ghost"
 			/>
-		</div>
+			<WeeklyOverview />
+		</main>
 	);
 }
