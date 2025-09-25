@@ -125,8 +125,9 @@ export default function Layout() {
 
 					<ModeToggle />
 				</header>
-
-				<Outlet />
+				<main className="m-2 flex items-center justify-center">
+					<Outlet />
+				</main>
 			</SidebarInset>
 		</SidebarProvider>
 	);

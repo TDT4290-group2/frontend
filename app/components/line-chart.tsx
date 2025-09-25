@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -39,9 +39,9 @@ export function ChartLineDefault({
 	children: React.ReactNode;
 }) {
 	return (
-		<Card>
+		<Card className="sm: w-full md:w-4/5 lg:w-3/4">
 			<CardHeader>
-				<CardTitle>{chartTitle}</CardTitle>
+				<h1 className="text-3xl">{chartTitle}</h1>
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig}>
@@ -58,7 +58,8 @@ export function ChartLineDefault({
 							dataKey="x"
 							tickLine={false}
 							axisLine={false}
-							tickMargin={8}
+							tickMargin={2}
+							interval={12}
 							label={{ value: "Time", position: "insideBottom", offset: 0 }}
 						/>
 						<YAxis
