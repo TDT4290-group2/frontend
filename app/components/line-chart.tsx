@@ -39,9 +39,9 @@ export function ChartLineDefault({
 	children: React.ReactNode;
 }) {
 	return (
-		<Card>
+		<Card className="sm: w-full md:w-4/5 lg:w-3/4">
 			<CardHeader>
-				<CardTitle>{chartTitle}</CardTitle>
+				<CardTitle className="text-2xl">{chartTitle}</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig}>
@@ -58,7 +58,8 @@ export function ChartLineDefault({
 							dataKey="x"
 							tickLine={false}
 							axisLine={false}
-							tickMargin={8}
+							tickMargin={2}
+							interval={12}
 							label={{ value: "Time", position: "insideBottom", offset: 0 }}
 						/>
 						<YAxis
@@ -94,6 +95,7 @@ export function ChartLineDefault({
 
 const DangerTypes = {
 	high: "DANGER",
+	medium: "WARNING",
 } as const;
 
 type DangerLevel = (typeof DangerTypes)[keyof typeof DangerTypes];
@@ -105,6 +107,10 @@ type DangerLevelInfo = {
 
 const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
 	DANGER: { label: "Keep under this threshold", color: "red" },
+	WARNING: {
+		label: "",
+		color: "orange",
+	},
 };
 
 export function ThresholdLine({
