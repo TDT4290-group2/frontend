@@ -45,7 +45,7 @@ export default function Home() {
 					danger: cn("bg-red-500 dark:bg-red-700"),
 					disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
 				}}
-				className="rounded-md border font-bold text-foreground shadow-sm [--cell-size:--spacing(11)] md:[--cell-size:--spacing(20)]"
+				className="rounded-md border font-bold text-foreground shadow-sm [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(11)] md:[--cell-size:--spacing(20)]"
 				captionLayout="dropdown"
 				buttonVariant="ghost"
 			/>
