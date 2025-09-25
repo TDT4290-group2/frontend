@@ -11,7 +11,15 @@ import {
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
+import { cn, parseAsView, type View } from "@/lib/utils";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/ui/select";
+import { useQueryState } from "nuqs";
 import { type ReactNode, useRef, useState } from "react";
 import {
 	href,
@@ -21,14 +29,6 @@ import {
 	type To,
 	useLocation,
 } from "react-router";
-import { RangeDropdown } from "../components/range-dropdown";
-
-const links: Array<{ to: To; label: string }> = [
-	{ to: href("/"), label: "Overview" },
-	{ to: href("/dust"), label: "Dust" },
-	{ to: href("/vibration"), label: "Vibration" },
-	{ to: href("/noise"), label: "Noise" },
-];
 
 const Logo = () => (
 	<svg
@@ -65,51 +65,63 @@ function HomeLink() {
 
 // biome-ignore lint: page components can be default exports
 export default function Layout() {
+	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 	const isMobile = useIsMobile();
 
-	if (isMobile) {
-		/* Mobile View */
-		return (
-			<SidebarProvider defaultOpen={false}>
-				<SidebarInset>
-					<header className="flex items-center justify-between p-2">
-						<div className="flex items-center gap-6">
-							<MobileMenu routes={links}>
-								<DrawerTrigger>
-									<HamburgerButton />
-								</DrawerTrigger>
-							</MobileMenu>
-						</div>
-
-						<HomeLink />
-
-						<RangeDropdown />
-
-						<ModeToggle />
-					</header>
-
-					<main>
-						<Outlet />
-					</main>
-				</SidebarInset>
-			</SidebarProvider>
-		);
-	}
+	const links: Array<{ to: To; label: string }> = [
+		{ to: href("/"), label: "Overview" },
+		{ to: href("/dust"), label: "Dust" },
+		{ to: href("/vibration"), label: "Vibration" },
+		{ to: href("/noise"), label: "Noise" },
+	];
 
 	return (
-		/* Desktop View */
 		<SidebarProvider defaultOpen={false}>
 			<SidebarInset>
 				<header className="flex items-center justify-between p-2">
-					<div className="flex items-center gap-6">
-						<HomeLink />
-					</div>
+					{isMobile ? (
+						<>
+							<div className="flex items-center gap-6">
+								<MobileMenu routes={links}>
+									<DrawerTrigger>
+										<HamburgerButton />
+									</DrawerTrigger>
+								</MobileMenu>
+							</div>
 
-					<nav className="flex list-none items-center rounded-full">
-						<NavTabs routes={links} />
-					</nav>
+							<HomeLink />
+						</>
+					) : (
+						<>
+							<div className="flex items-center gap-6">
+								<HomeLink />
+							</div>
 
-					<RangeDropdown />
+							<nav className="flex list-none items-center rounded-full">
+								<NavTabs routes={links} />
+							</nav>
+						</>
+					)}
+
+					<Select
+						value={view}
+						onValueChange={(value) => setView(value as View | null)}
+					>
+						<SelectTrigger className="w-32">
+							<SelectValue placeholder="View" />
+						</SelectTrigger>
+						<SelectContent className="w-32">
+							<SelectItem key={"day"} value={"day"}>
+								{"Day"}
+							</SelectItem>
+							<SelectItem key={"week"} value={"week"}>
+								{"Week"}
+							</SelectItem>
+							<SelectItem key={"month"} value={"month"}>
+								{"Month"}
+							</SelectItem>
+						</SelectContent>
+					</Select>
 
 					<ModeToggle />
 				</header>
@@ -121,6 +133,7 @@ export default function Layout() {
 }
 
 function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
+	const [view] = useQueryState("view", parseAsView.withDefault("day"));
 	const location = useLocation();
 	const navLinkRefs = useRef<Array<HTMLElement>>([]); // Refs to the nav links
 	const [pillWidth, setPillWidth] = useState<number>();
@@ -141,7 +154,10 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 			{routes.map((route, i) => {
 				return (
 					<NavLink
-						to={route.to}
+						to={{
+							pathname: route.to.toString(),
+							search: `?view=${view}`,
+						}}
 						key={route.to.toString()}
 						ref={(el) => {
 							if (!el) return;
