@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -41,7 +41,7 @@ export function ChartLineDefault({
 	return (
 		<Card className="sm: w-full md:w-4/5 lg:w-3/4">
 			<CardHeader>
-				<h1 className="text-3xl">{chartTitle}</h1>
+				<CardTitle className="text-2xl">{chartTitle}</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig}>
