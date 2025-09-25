@@ -38,7 +38,6 @@ export const WeeklyOverview: React.FC = () => {
 	return (
 		<Card className="weekly-container p-2">
 			<div className="weekly-labels p-3 pl-6">
-				<h1 className="text-3xl">{"Your weekly exposure"}</h1>
 				<h2 className="pb-4">{getDateRange()}</h2>
 			</div>
 			<div className="inline-flex gap-1">

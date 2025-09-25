@@ -26,7 +26,7 @@ const chartConfig = {
 
 export function ChartLineDefault({
 	chartData,
-	chartTitle,
+	// chartTitle,
 	unit,
 	children,
 }: {
@@ -41,7 +41,7 @@ export function ChartLineDefault({
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>{chartTitle}</CardTitle>
+				{/* <CardTitle>{chartTitle}</CardTitle> */}
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig}>

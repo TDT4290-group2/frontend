@@ -13,6 +13,7 @@ import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 // const vibrationData = vibrationChartData;
 // const dustData = dustChartData;
 
+// Dummy data for line charts
 const noiseChartData = [
 	{ x: "08:00", y: 75 },
 	{ x: "10:00", y: 88 },
@@ -56,30 +57,36 @@ export default function Home() {
 			return (
 				<div>
 					<div className="p-2">
+						<h1 className="text-3xl">{"Daily dust exposure"}</h1>
 						<ChartLineDefault
 							chartData={noiseChartData}
 							chartTitle="Noise Exposure"
 							unit="db (TWA)"
 							>
 							<ThresholdLine y={120} dangerLevel="DANGER" />
+							{/* <ThresholdLine y={85} dangerLevel="WARNING" /> */}
 						</ChartLineDefault>
 					</div>
 					<div className="p-2">
+						<h1 className="text-3xl">{"Daily vibration exposure"}</h1>
 						<ChartLineDefault
 							chartData={vibrationChartData}
 							chartTitle="Vibration Exposure"
 							unit="db (TWA)"
 						>
 							<ThresholdLine y={120} dangerLevel="DANGER" />
+							{/* <ThresholdLine y={85} dangerLevel="WARNING" /> */}
 						</ChartLineDefault>
 					</div>
 					<div className="p-2">
+						<h1 className="text-3xl">{"Daily noise exposure"}</h1>
 						<ChartLineDefault
 							chartData={dustChartData}
 							chartTitle="Dust Exposure"
 							unit="db (TWA)"
 						>
 							<ThresholdLine y={120} dangerLevel="DANGER" />
+							{/* <ThresholdLine y={85} dangerLevel="WARNING" /> */}
 						</ChartLineDefault>
 					</div>
 				</div>
@@ -87,15 +94,25 @@ export default function Home() {
 		case "week":
 			return (
 				<div>
-					<WeeklyOverview />;
-					<WeeklyOverview />;
-					<WeeklyOverview />;
+					<div className="p-2">
+						<h1 className="text-3xl">{"Weekly dust exposure"}</h1>
+						<WeeklyOverview />
+					</div>
+					<div className="p-2">
+						<h1 className="text-3xl">{"Weekly vibration exposure"}</h1>
+						<WeeklyOverview />
+					</div>
+					<div className="p-2">
+						<h1 className="text-3xl">{"Weekly noise exposure"}</h1>
+						<WeeklyOverview />
+					</div>
 				</div>
 			);
 		case "month":
 			return (
 				<div>
 					<div className="p-2">
+					<h1 className="text-3xl">{"Monthly dust exposure"}</h1>
 					<Card className="sm: w-full md:w-4/5 lg:w-3/4">
 					<Calendar
 						fixedWeeks
@@ -121,6 +138,7 @@ export default function Home() {
 					</Card>
 					</div>
 					<div className="p-2">
+					<h1 className="text-3xl">{"Monthly vibration exposure"}</h1>
 					<Card className="sm: w-full md:w-4/5 lg:w-3/4">
 					<Calendar
 						fixedWeeks
@@ -146,6 +164,7 @@ export default function Home() {
 					</Card>
 					</div>
 					<div className="p-2">
+					<h1 className="text-3xl">{"Monthly noise exposure"}</h1>
 					<Card className="sm: w-full md:w-4/5 lg:w-3/4">
 					<Calendar
 						fixedWeeks
