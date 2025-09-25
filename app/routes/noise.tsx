@@ -40,6 +40,7 @@ export default function Noise() {
 					unit="db (TWA)"
 				>
 					<ThresholdLine y={120} dangerLevel="DANGER" />
+					<ThresholdLine y={80} dangerLevel="WARNING" />
 				</ChartLineDefault>
 			);
 		case "week":

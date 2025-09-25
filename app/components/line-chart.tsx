@@ -95,6 +95,7 @@ export function ChartLineDefault({
 
 const DangerTypes = {
 	high: "DANGER",
+	medium: "WARNING",
 } as const;
 
 type DangerLevel = (typeof DangerTypes)[keyof typeof DangerTypes];
@@ -106,6 +107,10 @@ type DangerLevelInfo = {
 
 const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
 	DANGER: { label: "Keep under this threshold", color: "red" },
+	WARNING: {
+		label: "",
+		color: "orange",
+	},
 };
 
 export function ThresholdLine({
