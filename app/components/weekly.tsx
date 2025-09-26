@@ -7,21 +7,11 @@ import {
 } from "@/ui/card";
 import { type Day, DayColumn } from "@/ui/day-column";
 import dummyWeekData from "../dummy/weekly.json";
+import { timeSections } from "../lib/utils";
 
 export const WeeklyOverview = () => {
 	// Temp assignment of dummydata
 	const weekData = dummyWeekData;
-	const timeSections: Array<string> = [
-		"08:00",
-		"09:00",
-		"10:00",
-		"11:00",
-		"12:00",
-		"13:00",
-		"14:00",
-		"15:00",
-		"16:00",
-	];
 
 	const getDateRange = () => {
 		const firstDate = new Date(weekData[0].date);
@@ -44,19 +34,23 @@ export const WeeklyOverview = () => {
 		<Card className="sm: w-full sm:p-2 md:w-4/5 lg:w-3/4">
 			<CardHeader className="weekly-labels p-3 pl-6">
 				<CardTitle className="text-2xl">{"Your weekly exposure"}</CardTitle>
-				<CardDescription className="pb-4">{getDateRange()}</CardDescription>
+				<CardDescription>{getDateRange()}</CardDescription>
 			</CardHeader>
-			<CardContent className="flex">
-				<div className="flex flex-col place-items-end gap-4 pt-18 pr-1 text-gray-400 text-sm">
-					{/* TEMPORARY MAPPING OF HOURS - Should be more dynamic */}
-					{timeSections.map((hour) => (
-						<span key={hour}>{hour}</span>
-					))}
-				</div>
-				<div className="grid w-full grid-cols-7">
+			<CardContent>
+				<div className="grid grid-cols-7 md:grid-cols-[auto_repeat(7,minmax(0,1fr))] w-full">
+					{/* HOUR LABELS */}
+					<div className="hidden md:flex flex-col dark:text-gray-400 text-gray-700 text-sm pr-1.5 pt-13">
+						
+						{timeSections.map((hour) => (
+							<div key={hour} className="min-h-10 flex items-start justify-end">
+								<span>{hour}</span>
+							</div>
+						))}
+					</div>
+				
 					{weekData.map((day) => (
-						<div key={day.date} className="col-span-1">
-							<h2 className="mb-2 text-center font-semibold text-gray-400 sm:text-xsm">
+						<div key={day.date} className="flex flex-col">
+							<h2 className="mb-2 text-center font-semibold dark:text-gray-400 text-gray-700 sm:text-xsm">
 								{`${new Date(day.date).getDate()}. `}
 							</h2>
 							<div className="min-w-2">
