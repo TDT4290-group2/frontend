@@ -54,7 +54,7 @@ export const DayColumn: React.FC<DayProps> = ({selectedDay}) => {
                         <HoverCardContent className="w-80">
                             <div className="flex justify-between gap-4">
                                 <div className="space-y-1">
-                                    <h2>{timeSections[hour.hourNo]} - {timeSections[hour.hourNo + 1]}</h2>
+                                    <h2>{timeSections[hour.hourNo - 1]} - {timeSections[hour.hourNo]}</h2>
                                     <h4>{statusMessage[hour.status]}</h4>
                                 </div>
                             </div>
