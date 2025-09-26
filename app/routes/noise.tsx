@@ -1,4 +1,11 @@
-import { cn, parseAsView } from "@/lib/utils";
+import { cn, parseAsView, type View } from "@/lib/utils";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/ui/select";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Calendar } from "../components/ui/calendar";
@@ -29,24 +36,30 @@ const redDays = [
 
 // biome-ignore lint: page components can be default exports
 export default function Noise() {
-	const [view] = useQueryState("view", parseAsView.withDefault("day"));
+	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 
-	switch (view) {
-		case "day":
-			return (
-				<ChartLineDefault
-					chartData={data}
-					chartTitle="Noise Exposure"
-					unit="db (TWA)"
-				>
-					<ThresholdLine y={120} dangerLevel="DANGER" />
-					<ThresholdLine y={80} dangerLevel="WARNING" />
-				</ChartLineDefault>
-			);
-		case "week":
-			return <WeeklyOverview />;
-		case "month":
-			return (
+	return (
+		<main className="flex w-full flex-col place-items-center gap-4">
+			<Select
+				value={view}
+				onValueChange={(value) => setView(value as View | null)}
+			>
+				<SelectTrigger className="w-32">
+					<SelectValue placeholder="View" />
+				</SelectTrigger>
+				<SelectContent className="w-32">
+					<SelectItem key={"day"} value={"day"}>
+						{"Day"}
+					</SelectItem>
+					<SelectItem key={"week"} value={"week"}>
+						{"Week"}
+					</SelectItem>
+					<SelectItem key={"month"} value={"month"}>
+						{"Month"}
+					</SelectItem>
+				</SelectContent>
+			</Select>
+			{view === "month" ? (
 				<Card className="sm: w-full md:w-4/5 lg:w-3/4">
 					<Calendar
 						fixedWeeks
@@ -70,10 +83,18 @@ export default function Noise() {
 						buttonVariant="ghost"
 					/>
 				</Card>
-			);
-		default: {
-			const exhaustiveCheck: never = view;
-			throw new Error(`Unhandled view type: ${exhaustiveCheck}`);
-		}
-	}
+			) : view === "week" ? (
+				<WeeklyOverview />
+			) : (
+				<ChartLineDefault
+					chartData={data}
+					chartTitle="Noise Exposure"
+					unit="db (TWA)"
+				>
+					<ThresholdLine y={120} dangerLevel="DANGER" />
+					<ThresholdLine y={80} dangerLevel="WARNING" />
+				</ChartLineDefault>
+			)}
+		</main>
+	);
 }

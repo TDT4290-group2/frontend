@@ -9,3 +9,7 @@ export function cn(...inputs: Array<ClassValue>) {
 export type View = "day" | "week" | "month";
 const views: Array<View> = ["day", "week", "month"];
 export const parseAsView = parseAsStringLiteral(views);
+
+export type Sensor = "dust" | "noise" | "vibration";
+const sensors: Array<Sensor> = ["dust", "noise", "vibration"];
+export const parseAsSensor = parseAsStringLiteral(sensors);
