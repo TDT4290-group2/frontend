@@ -55,9 +55,10 @@ export default function Home() {
 	switch (view) {
 		case "day":
 			return (
-				<main>
+				<main className="flex w-full flex-col">
+					<h1 className="text-3xl">{"Your daily overview"}</h1>
 					<section className="p-2">
-						<h1 className="text-3xl">{"Daily dust exposure"}</h1>
+						<h2 className="text-2xl">{"Daily dust exposure"}</h2>
 						<ChartLineDefault
 							chartData={noiseChartData}
 							chartTitle="Noise Exposure"
@@ -68,7 +69,7 @@ export default function Home() {
 						</ChartLineDefault>
 					</section>
 					<section className="p-2">
-						<h1 className="text-3xl">{"Daily vibration exposure"}</h1>
+						<h2 className="text-2xl">{"Daily vibration exposure"}</h2>
 						<ChartLineDefault
 							chartData={vibrationChartData}
 							chartTitle="Vibration Exposure"
@@ -79,7 +80,7 @@ export default function Home() {
 						</ChartLineDefault>
 					</section>
 					<section className="p-2">
-						<h1 className="text-3xl">{"Daily noise exposure"}</h1>
+						<h2 className="text-2xl">{"Daily noise exposure"}</h2>
 						<ChartLineDefault
 							chartData={dustChartData}
 							chartTitle="Dust Exposure"
@@ -93,26 +94,28 @@ export default function Home() {
 			);
 		case "week":
 			return (
-				<main>
+				<main className="flex w-full flex-col">
+					<h1>{"Your weekly overview"}</h1>
 					<section className="p-2">
-						<h2 className="text-3xl">{"Weekly dust exposure"}</h2>
+						<h2 className="text-2xl">{"Weekly dust exposure"}</h2>
 						<WeeklyOverview />
 					</section>
 					<section className="p-2">
-						<h2 className="text-3xl">{"Weekly vibration exposure"}</h2>
+						<h2 className="text-2xl">{"Weekly vibration exposure"}</h2>
 						<WeeklyOverview />
 					</section>
 					<section className="p-2">
-						<h2 className="text-3xl">{"Weekly noise exposure"}</h2>
+						<h2 className="text-2xl">{"Weekly noise exposure"}</h2>
 						<WeeklyOverview />
 					</section>
 				</main>
 			);
 		case "month":
 			return (
-				<main>
+				<main className="flex w-full flex-col">
+					<h1>{"Your monthly overview"}</h1>
 					<section className="p-2">
-						<h2 className="text-3xl">{"Monthly dust exposure"}</h2>
+						<h2 className="text-2xl">{"Monthly dust exposure"}</h2>
 						<Card className="sm: w-full md:w-4/5 lg:w-3/4">
 							<Calendar
 								fixedWeeks
@@ -138,7 +141,7 @@ export default function Home() {
 						</Card>
 					</section>
 					<section className="p-2">
-						<h2 className="text-3xl">{"Monthly vibration exposure"}</h2>
+						<h2 className="text-2xl">{"Monthly vibration exposure"}</h2>
 						<Card className="sm: w-full md:w-4/5 lg:w-3/4">
 							<Calendar
 								fixedWeeks
@@ -164,7 +167,7 @@ export default function Home() {
 						</Card>
 					</section>
 					<section className="p-2">
-						<h2 className="text-3xl">{"Monthly noise exposure"}</h2>
+						<h2 className="text-2xl">{"Monthly noise exposure"}</h2>
 						<Card className="sm: w-full md:w-4/5 lg:w-3/4">
 							<Calendar
 								fixedWeeks
