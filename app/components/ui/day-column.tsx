@@ -1,4 +1,6 @@
 import React from "react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
+import { timeSections } from "~/app/lib/utils";
 
 type SlotStatus = "none" | "green" | "orange" | "red";
 
@@ -24,6 +26,13 @@ const statusColors: Record<SlotStatus, string> = {
     red: "bg-red-500",
 };
 
+const statusMessage: Record<SlotStatus, string> = {
+    none: "No data recorded",
+    green: "Under exposure limit",
+    orange: "Close to exposure limit",
+    red: "Exposure limit exceeded",
+}
+
 
 
 export const DayColumn: React.FC<DayProps> = ({selectedDay}) => {
@@ -34,14 +43,27 @@ export const DayColumn: React.FC<DayProps> = ({selectedDay}) => {
             <div className="text-center font-bold py-1">
                 {columnLabel}
             </div>
-            <div className="day-column-hours">
+            <div className="day-column-hours divide-black divide-y divide-dotted">
                 {selectedDay.hours.map((hour, i) => (
-                    <div
-                        key={i}
-                        className={`hour-slot flex min-h-10 border-black border-t border-dotted ${statusColors[hour.status]}`}
-                    />
+                    <HoverCard>
+                        <HoverCardTrigger 
+                            className={`hour-slot flex box-border min-h-10 ${statusColors[hour.status]} ${hour.status === "none" ? ``: `hover:brightness-150 transition`}`}
+                            key={i}
+                        >
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-80">
+                            <div className="flex justify-between gap-4">
+                                <div className="space-y-1">
+                                    <h2>{timeSections[hour.hourNo]} - {timeSections[hour.hourNo + 1]}</h2>
+                                    <h4>{statusMessage[hour.status]}</h4>
+                                </div>
+                            </div>
+                        </HoverCardContent>
+                        
+                    </HoverCard>
                 ))}
             </div>
+                
         </div>
     );
 };
