@@ -11,14 +11,7 @@ import {
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn, parseAsView, type View } from "@/lib/utils";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/ui/select";
+import { cn, parseAsView } from "@/lib/utils";
 import { useQueryState } from "nuqs";
 import { type ReactNode, useRef, useState } from "react";
 import {
@@ -65,7 +58,6 @@ function HomeLink() {
 
 // biome-ignore lint: page components can be default exports
 export default function Layout() {
-	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 	const isMobile = useIsMobile();
 
 	const links: Array<{ to: To; label: string }> = [
@@ -102,26 +94,6 @@ export default function Layout() {
 							</nav>
 						</>
 					)}
-
-					<Select
-						value={view}
-						onValueChange={(value) => setView(value as View | null)}
-					>
-						<SelectTrigger className="w-32">
-							<SelectValue placeholder="View" />
-						</SelectTrigger>
-						<SelectContent className="w-32">
-							<SelectItem key={"day"} value={"day"}>
-								{"Day"}
-							</SelectItem>
-							<SelectItem key={"week"} value={"week"}>
-								{"Week"}
-							</SelectItem>
-							<SelectItem key={"month"} value={"month"}>
-								{"Month"}
-							</SelectItem>
-						</SelectContent>
-					</Select>
 
 					<ModeToggle />
 				</header>
