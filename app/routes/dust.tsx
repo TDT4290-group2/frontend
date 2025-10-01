@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noAlert: We use alert for testing, but will be changed later */
 import { cn, parseAsView, type View } from "@/lib/utils";
 import {
 	Select,
@@ -6,11 +7,12 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
+import { format, isBefore, setHours, setMinutes, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
-import { WeeklyOverview } from "../components/weekly";
+import { WeekView } from "../components/weekly-view";
 import dustChartData from "../dummy/dust_chart_data.json";
 
 const data = dustChartData;
@@ -84,7 +86,31 @@ export default function Dust() {
 					/>
 				</Card>
 			) : view === "week" ? (
-				<WeeklyOverview />
+				<WeekView
+					initialDate={new Date()}
+					weekStartsOn={1}
+					disabledCell={(date) => isBefore(date, new Date())}
+					disabledWeek={(startDayOfWeek) =>
+						isBefore(startDayOfWeek, startOfWeek(new Date()))
+					}
+					events={[
+						{
+							id: "1",
+							title: "Meeting",
+							startDate: setMinutes(setHours(new Date(), 15), 15),
+							endDate: setMinutes(setHours(new Date(), 16), 20),
+						},
+					]}
+					onCellClick={(cell) => alert(`Clicked ${format(cell.date, "Pp")}`)}
+					onEventClick={(event) =>
+						alert(
+							`${event.title} ${format(event.startDate, "Pp")} - ${format(
+								event.endDate,
+								"Pp",
+							)}`,
+						)
+					}
+				/>
 			) : (
 				<ChartLineDefault
 					chartData={data}
