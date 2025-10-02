@@ -3,7 +3,6 @@ import {
 	type Day,
 	eachDayOfInterval,
 	eachMinuteOfInterval,
-	endOfDay,
 	format,
 	getDay,
 	getHours,
@@ -14,28 +13,29 @@ import {
 	isSameYear,
 	isToday,
 	type Locale,
+	set,
 	startOfDay,
 	startOfWeek,
 } from "date-fns";
 import type { ReactNode } from "react";
 import { useState } from "react";
+import { cn, type DangerLevel, dangerLevels } from "../lib/utils";
 
 export function DaysHeader({ days }: { days: Days }) {
 	return (
-		<div className="sticky top-0 z-30 flex-none bg-white shadow">
+		<div className="sticky top-0 z-30 flex-none">
 			<div className="grid grid-cols-7 text-slate-500 text-sm leading-6">
-				{days.map((day, index) => (
+				{days.map((day) => (
 					<div
 						key={getUnixTime(day.date)}
-						className={`flex h-14 items-center justify-center border-gray-100 border-l ${index === 0 && "border-l-0"}
-            `}
+						className={`flex h-14 items-center justify-center border-gray-300 border-r border-b border-l`}
 					>
 						<span className={day.isToday ? "flex items-center" : ""}>
 							{day.shortName}{" "}
 							<span
 								className={`font-semibold text-slate-900 ${
 									day.isToday &&
-									"ml-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white"
+									"ml-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-foreground)] text-white"
 								}
                 `}
 							>
@@ -53,18 +53,18 @@ export function EventGrid({
 	days,
 	events,
 	weekStartsOn,
-	locale,
 	minuteStep,
 	rowHeight,
 	onEventClick,
+	dayStartHour,
 }: {
 	days: Days;
 	events?: Array<Event>;
 	weekStartsOn: Day;
-	locale?: Locale;
 	minuteStep: number;
 	rowHeight: number;
 	onEventClick?: (event: Event) => void;
+	dayStartHour: number;
 }) {
 	return (
 		<div
@@ -78,14 +78,12 @@ export function EventGrid({
 				.filter((event) => isSameWeek(days[0].date, event.startDate))
 				.map((event) => {
 					const start =
-						getHours(event.startDate) * 2 +
+						getHours(event.startDate) -
+						dayStartHour +
 						1 +
 						Math.floor(getMinutes(event.startDate) / minuteStep);
-					const end =
-						getHours(event.endDate) * 2 +
-						1 +
-						Math.ceil(getMinutes(event.endDate) / minuteStep);
-
+					const end = getHours(event.endDate) - dayStartHour + 1;
+					Math.ceil(getMinutes(event.endDate) / minuteStep);
 					const paddingTop =
 						((getMinutes(event.startDate) % minuteStep) / minuteStep) *
 						rowHeight;
@@ -98,8 +96,8 @@ export function EventGrid({
 
 					return (
 						<div
-							key={event.id}
-							className="relative mt-[1px] flex transition-all"
+							key={event.startDate.toISOString()}
+							className="relative flex transition-all"
 							style={{
 								gridRowStart: start,
 								gridRowEnd: end,
@@ -109,26 +107,18 @@ export function EventGrid({
 						>
 							<button
 								type="button"
-								className="absolute inset-1 flex cursor-pointer flex-col overflow-y-auto rounded-md border border-transparent border-dashed bg-blue-50 p-2 text-xs leading-5 transition hover:bg-blue-100"
+								className={cn(
+									"absolute inset-1 flex cursor-pointer flex-col overflow-y-auto rounded-md text-xs leading-5 transition",
+									`bg-${dangerLevels[event.dangerLevel].color}-500`,
+									"border-t-2 border-t-black border-dotted",
+									`${event.startDate.getHours() === dayStartHour && "border-t-0"} `,
+								)}
 								style={{
-									top: paddingTop + 4,
-									bottom: paddingBottom + 4,
+									top: paddingTop,
+									bottom: paddingBottom,
 								}}
 								onClick={() => onEventClick?.(event)}
-							>
-								<p className="text-blue-500 leading-4">
-									{format(new Date(event.startDate), "H:mm", {
-										weekStartsOn,
-										locale,
-									})}
-									{"-"}
-									{format(new Date(event.endDate), "H:mm", {
-										weekStartsOn,
-										locale,
-									})}
-								</p>
-								<p className="font-semibold text-blue-700">{event.title}</p>
-							</button>
+							/>
 						</div>
 					);
 				})}
@@ -140,11 +130,9 @@ export function Grid({
 	days,
 	rowHeight,
 	CellContent,
-	onCellClick,
 }: {
 	days: Days;
 	rowHeight: number;
-	onCellClick?: (cell: Cell) => void;
 	CellContent?: (cell: Cell) => ReactNode;
 }) {
 	return (
@@ -157,25 +145,22 @@ export function Grid({
 		>
 			{days.map((day, dayIndex) =>
 				day.cells.map((cell, cellIndex) => (
-					<button
-						type="button"
+					<div
 						key={getUnixTime(cell.date)}
-						className="relative cursor-pointer border-gray-100 border-t border-l transition-colors hover:bg-slate-100 disabled:bg-slate-50"
+						className="relative border-gray-300 border-r border-l transition-colors"
 						style={{
 							gridRowStart: cellIndex + 1,
 							gridRowEnd: cellIndex + 2,
 							gridColumnStart: dayIndex + 1,
 							gridColumnEnd: dayIndex + 2,
 						}}
-						disabled={cell.disabled}
-						onClick={() => onCellClick?.(cell)}
 					>
 						{CellContent?.(cell)}
-					</button>
+					</div>
 				)),
 			)}
 			<div
-				className="pointer-events-none sticky left-0 grid"
+				className="pointer-events-none sticky left-0 z-10 grid"
 				style={{
 					display: "grid",
 					gridRowStart: 1,
@@ -189,13 +174,13 @@ export function Grid({
 						getMinutes(cell.date) === 0 && (
 							<div
 								key={getUnixTime(cell.date)}
-								className="relative flex items-center justify-center border-gray-100 border-t"
+								className="relative flex items-center justify-center"
 								style={{
 									gridRowStart: cellIndex + 1,
 									gridRowEnd: cellIndex + 2,
 								}}
 							>
-								<span className="absolute top-0 left-0 px-1 text-slate-400 text-xs">
+								<span className="absolute top-0 left-0 px-1 text-md">
 									{cell.hourAndMinute}
 								</span>
 							</div>
@@ -230,7 +215,7 @@ export function Header({
 	onNext?: () => void;
 }) {
 	return (
-		<header className="flex h-16 items-center justify-between border-b bg-slate-50 px-6 py-4">
+		<div className="flex h-16 items-center justify-between border-gray-300 border-b-2 px-6 py-4">
 			<h1 className="flex items-center gap-3 font-semibold text-base text-slate-600">
 				{title}
 				{showTodayButton &&
@@ -302,7 +287,7 @@ export function Header({
 						))}
 				</div>
 			</div>
-		</header>
+		</div>
 	);
 }
 
@@ -310,6 +295,8 @@ export function useWeekView({
 	initialDate,
 	minuteStep = 30,
 	weekStartsOn = 1,
+	dayStartHour,
+	dayEndHour,
 	locale,
 	disabledCell,
 	disabledDay,
@@ -318,6 +305,8 @@ export function useWeekView({
 	| {
 			initialDate?: Date;
 			minuteStep?: number;
+			dayStartHour?: number;
+			dayEndHour?: number;
 			weekStartsOn?: Day;
 			locale?: Locale;
 			disabledCell?: (date: Date) => boolean;
@@ -359,8 +348,18 @@ export function useWeekView({
 		disabled: disabledDay ? disabledDay(day) : false,
 		cells: eachMinuteOfInterval(
 			{
-				start: startOfDay(day),
-				end: endOfDay(day),
+				start: set(day, {
+					hours: dayStartHour,
+					minutes: 0,
+					seconds: 0,
+					milliseconds: 0,
+				}),
+				end: set(day, {
+					hours: dayEndHour,
+					minutes: 0,
+					seconds: 0,
+					milliseconds: 0,
+				}),
 			},
 			{
 				step: minuteStep,
@@ -401,6 +400,8 @@ export function useWeekView({
 		days,
 		weekNumber,
 		viewTitle,
+		dayStartHour,
+		dayEndHour,
 	};
 }
 
@@ -408,28 +409,30 @@ export type Days = ReturnType<typeof useWeekView>["days"];
 export type Cell = Days[number]["cells"][number];
 
 export type Event = {
-	id: string;
-	title: string;
 	startDate: Date;
 	endDate: Date;
+	dangerLevel: DangerLevel;
 };
 
 export function WeekView({
 	initialDate,
 	minuteStep = 30,
 	weekStartsOn = 1,
+	dayStartHour = 8,
+	dayEndHour = 16,
 	locale,
 	rowHeight = 56,
 	disabledCell,
 	disabledDay,
 	disabledWeek,
 	events,
-	onCellClick,
 	onEventClick,
 }: {
 	initialDate?: Date;
 	minuteStep?: number;
 	weekStartsOn?: Day;
+	dayStartHour?: number;
+	dayEndHour?: number;
 	locale?: Locale;
 	rowHeight?: number;
 	disabledCell?: (date: Date) => boolean;
@@ -443,6 +446,8 @@ export function WeekView({
 		initialDate,
 		minuteStep,
 		weekStartsOn,
+		dayStartHour,
+		dayEndHour,
 		locale,
 		disabledCell,
 		disabledDay,
@@ -450,7 +455,7 @@ export function WeekView({
 	});
 
 	return (
-		<div className="flex h-full flex-col overflow-hidden">
+		<div className="flex flex-col overflow-hidden">
 			<Header
 				title={viewTitle}
 				onNext={nextWeek}
@@ -460,25 +465,21 @@ export function WeekView({
 			/>
 			<div className="flex flex-1 select-none flex-col overflow-hidden">
 				<div className="isolate flex flex-1 flex-col overflow-auto">
-					<div className="flex min-w-[700px] flex-none flex-col">
+					<div className="flex min-w-[500px] flex-none flex-col">
 						<DaysHeader days={days} />
 						<div className="grid grid-cols-1 grid-rows-1">
 							<div className="col-start-1 row-start-1">
-								<Grid
-									days={days}
-									rowHeight={rowHeight}
-									onCellClick={onCellClick}
-								/>
+								<Grid days={days} rowHeight={rowHeight} />
 							</div>
 							<div className="col-start-1 row-start-1">
 								<EventGrid
 									days={days}
 									events={events}
 									weekStartsOn={weekStartsOn}
-									locale={locale}
 									minuteStep={minuteStep}
 									rowHeight={rowHeight}
 									onEventClick={onEventClick}
+									dayStartHour={dayStartHour}
 								/>
 							</div>
 						</div>
