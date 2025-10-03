@@ -24,7 +24,8 @@ import { cn, type DangerLevel, dangerLevels } from "../lib/utils";
 export function DaysHeader({ days }: { days: Days }) {
 	return (
 		<div className="sticky top-0 z-30 flex-none">
-			<div className="grid grid-cols-7 text-slate-500 text-sm leading-6">
+			<div className="grid grid-cols-8 text-slate-500 text-sm leading-6">
+				<div />
 				{days.map((day) => (
 					<div
 						key={getUnixTime(day.date)}
@@ -70,7 +71,7 @@ export function EventGrid({
 		<div
 			style={{
 				display: "grid",
-				gridTemplateColumns: `repeat(${days.length}, minmax(0, 1fr))`,
+				gridTemplateColumns: `repeat(${days.length + 1}, minmax(0, 1fr))`,
 				gridTemplateRows: `repeat(${days[0].cells.length}, minmax(${rowHeight}px, 1fr))`,
 			}}
 		>
@@ -101,7 +102,7 @@ export function EventGrid({
 							style={{
 								gridRowStart: start,
 								gridRowEnd: end,
-								gridColumnStart: getDay(event.startDate) - weekStartsOn + 1,
+								gridColumnStart: getDay(event.startDate) - weekStartsOn + 2,
 								gridColumnEnd: "span 1",
 							}}
 						>
@@ -112,6 +113,7 @@ export function EventGrid({
 									`bg-${dangerLevels[event.dangerLevel].color}-500`,
 									"border-t-2 border-t-black border-dotted",
 									`${event.startDate.getHours() === dayStartHour && "border-t-0"} `,
+									"hover:brightness-85",
 								)}
 								style={{
 									top: paddingTop,
@@ -139,7 +141,7 @@ export function Grid({
 		<div
 			style={{
 				display: "grid",
-				gridTemplateColumns: `repeat(${days.length}, minmax(0, 1fr))`,
+				gridTemplateColumns: `repeat(${days.length + 1}, minmax(0, 1fr))`,
 				gridTemplateRows: `repeat(${days[0].cells.length}, minmax(${rowHeight}px, 1fr))`,
 			}}
 		>
@@ -151,42 +153,32 @@ export function Grid({
 						style={{
 							gridRowStart: cellIndex + 1,
 							gridRowEnd: cellIndex + 2,
-							gridColumnStart: dayIndex + 1,
-							gridColumnEnd: dayIndex + 2,
+							gridColumnStart: dayIndex + 2,
+							gridColumnEnd: dayIndex + 3,
 						}}
 					>
 						{CellContent?.(cell)}
 					</div>
 				)),
 			)}
-			<div
-				className="pointer-events-none sticky left-0 z-10 grid"
-				style={{
-					display: "grid",
-					gridRowStart: 1,
-					gridRowEnd: -1,
-					gridColumnStart: 1,
-					gridTemplateRows: `repeat(${days[0].cells.length}, minmax(${rowHeight}px, 1fr))`,
-				}}
-			>
-				{days[0].cells.map(
-					(cell, cellIndex) =>
-						getMinutes(cell.date) === 0 && (
-							<div
-								key={getUnixTime(cell.date)}
-								className="relative flex items-center justify-center"
-								style={{
-									gridRowStart: cellIndex + 1,
-									gridRowEnd: cellIndex + 2,
-								}}
-							>
-								<span className="absolute top-0 left-0 px-1 text-md">
-									{cell.hourAndMinute}
-								</span>
-							</div>
-						),
-				)}
-			</div>
+
+			{days[0].cells.map(
+				(cell, cellIndex) =>
+					getMinutes(cell.date) === 0 && (
+						<div
+							key={getUnixTime(cell.date)}
+							className="flex items-start justify-end pr-2"
+							style={{
+								gridRowStart: cellIndex + 1,
+								gridRowEnd: cellIndex + 2,
+								gridColumnStart: 1,
+								gridColumnEnd: 2,
+							}}
+						>
+							<span className="text-md">{cell.hourAndMinute}</span>
+						</div>
+					),
+			)}
 		</div>
 	);
 }

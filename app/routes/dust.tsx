@@ -70,7 +70,7 @@ export default function Dust() {
 				</SelectContent>
 			</Select>
 			{view === "month" ? (
-				<Card className="sm: w-full md:w-4/5 lg:w-3/4">
+				<Card className="w-full md:w-4/5 lg:w-3/4">
 					<Calendar
 						fixedWeeks
 						showWeekNumber
@@ -94,7 +94,7 @@ export default function Dust() {
 					/>
 				</Card>
 			) : view === "week" ? (
-				<Card className="sm:w-full md:w-4/5 lg:w-3/4">
+				<Card className="w-full md:w-4/5 lg:w-3/4">
 					<WeekView
 						initialDate={new Date()}
 						dayStartHour={8}
