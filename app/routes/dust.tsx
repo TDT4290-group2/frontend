@@ -1,4 +1,5 @@
-import { cn, parseAsView, type View } from "@/lib/utils";
+/** biome-ignore-all lint/suspicious/noAlert: We use alert for testing, but will be changed later */
+import { cn, type DangerLevel, parseAsView, type View } from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -10,8 +11,9 @@ import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
-import { WeeklyOverview } from "../components/weekly";
+import { type Event as _Event, WeekView } from "../components/weekly-view";
 import dustChartData from "../dummy/dust_chart_data.json";
+import eventsData from "../dummy/weekly-events.json";
 
 const data = dustChartData;
 
@@ -33,6 +35,14 @@ const redDays = [
 	new Date(2025, 8, 17),
 	new Date(2025, 8, 8),
 ];
+
+const raw = eventsData;
+
+const events: Array<_Event> = raw.map((e) => ({
+	startDate: new Date(e.startDate),
+	endDate: new Date(e.endDate),
+	dangerLevel: e.dangerLevel as DangerLevel,
+}));
 
 // biome-ignore lint: page components can be default exports
 export default function Dust() {
@@ -60,7 +70,7 @@ export default function Dust() {
 				</SelectContent>
 			</Select>
 			{view === "month" ? (
-				<Card className="sm: w-full md:w-4/5 lg:w-3/4">
+				<Card className="w-full md:w-4/5 lg:w-3/4">
 					<Calendar
 						fixedWeeks
 						showWeekNumber
@@ -84,7 +94,17 @@ export default function Dust() {
 					/>
 				</Card>
 			) : view === "week" ? (
-				<WeeklyOverview />
+				<Card className="w-full md:w-4/5 lg:w-3/4">
+					<WeekView
+						initialDate={new Date()}
+						dayStartHour={8}
+						dayEndHour={16}
+						weekStartsOn={1}
+						minuteStep={60}
+						events={events}
+						onEventClick={(event) => alert(event.dangerLevel)}
+					/>
+				</Card>
 			) : (
 				<ChartLineDefault
 					chartData={data}
