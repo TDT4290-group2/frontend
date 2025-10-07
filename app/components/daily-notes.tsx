@@ -14,6 +14,13 @@ type Note = {
 const d1 = new Date(2025, 9, 7);
 const d2 = new Date(2025, 9, 6);
 const d3 = new Date(2025, 9, 3);
+const d4 = new Date(2025, 9, 2);
+const d5 = new Date(2025, 9, 1);
+const d6 = new Date(2025, 9, 1);
+const d7 = new Date(2025, 9, 1);
+const d8 = new Date(2025, 9, 1);
+const d9 = new Date(2025, 9, 1);
+const d10 = new Date(2025, 9, 1);
 const today = new Date();
 
 const locale = "en-GB"; //nb-NO: bokmål, nn-NO: nynorsk
@@ -21,14 +28,24 @@ const locale = "en-GB"; //nb-NO: bokmål, nn-NO: nynorsk
 export const DailyNotes = () => {
 	//assumes that the notes are sorted with current day first
 	const [notes, setNotes] = useState<Array<Note>>([
-		{ date: today, note: "Sanding at 10." },
+		{
+			date: today,
+			note: "Sanding at 10. This is a long note. A very very very long note. Hopefully it does not make the page look bad or anything.",
+		},
 		{ date: d1, note: "Welding at 11." },
 		{ date: d2, note: "Nothing to report." },
 		{ date: d3, note: "Grinding at 12." },
+		{ date: d4, note: "Grinding at 12." },
+		{ date: d5, note: "Grinding at 12." },
+		{ date: d6, note: "Grinding at 12." },
+		{ date: d7, note: "Grinding at 12." },
+		{ date: d8, note: "Grinding at 12." },
+		{ date: d9, note: "Grinding at 12." },
+		{ date: d10, note: "Grinding at 12." },
 	]);
 	const [view] = useQueryState("view", parseAsView.withDefault("day"));
 	const [showTextArea, setShowTextArea] = useState<boolean>(
-		notes.some((note) => isToday(note.date)),
+		!notes.some((note) => isToday(note.date)),
 	);
 	const [noteText, setNoteText] = useState<string>(notes[0].note);
 
@@ -48,7 +65,7 @@ export const DailyNotes = () => {
 
 	if (view === "day") {
 		return (
-			<Card className="w-full">
+			<Card className="max-h-64 w-full overflow-y-auto">
 				<CardHeader>
 					<h2 className="text-xl">{"Daily Note:"}</h2>
 				</CardHeader>
@@ -77,7 +94,7 @@ export const DailyNotes = () => {
 
 	if (view === "week") {
 		return (
-			<Card className="w-full">
+			<Card className="max-h-64 w-full overflow-y-auto">
 				<CardHeader>
 					<h2 className="text-xl">
 						{"Notes from this "}
@@ -111,7 +128,7 @@ export const DailyNotes = () => {
 
 	//month-view
 	return (
-		<Card className="w-full">
+		<Card className="max-h-64 w-full overflow-y-auto">
 			<CardHeader>
 				<h2 className="text-xl">
 					{"Notes from this "}
