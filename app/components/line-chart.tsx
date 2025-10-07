@@ -14,6 +14,7 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
+import { type DangerLevel, dangerLevels } from "../lib/utils";
 
 export const description = "A line chart";
 
@@ -90,26 +91,6 @@ export function ChartLineDefault({
 		</Card>
 	);
 }
-
-const DangerTypes = {
-	high: "DANGER",
-	medium: "WARNING",
-} as const;
-
-type DangerLevel = (typeof DangerTypes)[keyof typeof DangerTypes];
-
-type DangerLevelInfo = {
-	label: string;
-	color: string;
-};
-
-const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
-	DANGER: { label: "Keep under this threshold", color: "var(--destructive)" },
-	WARNING: {
-		label: "",
-		color: "var(--warning)",
-	},
-};
 
 export function ThresholdLine({
 	y,
