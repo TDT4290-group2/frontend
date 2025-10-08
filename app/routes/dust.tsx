@@ -58,7 +58,7 @@ export default function Dust() {
 		<section className="w-full flex flex-col">
 
 			<main className="flex w-full flex-col-reverse gap-4 md:flex-row">
-				<div className="flex flex-col gap-4 p-2 rounded-xl">
+				<div className="flex flex-col gap-4 pl-2 ">
 					<Summary exposureType="dust" safeCount={8} warningCount={4}/>
 					<Notifications />
 				</div>
