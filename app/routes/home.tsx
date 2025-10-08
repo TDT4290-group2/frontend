@@ -7,6 +7,7 @@ import {
 	SelectValue,
 } from "@/ui/select";
 import { useQueryState } from "nuqs";
+import { DailyNotes } from "../components/daily-notes";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
@@ -219,6 +220,7 @@ export default function Home() {
 					</section>
 				</>
 			)}
+			<DailyNotes />
 		</main>
 	);
 }
