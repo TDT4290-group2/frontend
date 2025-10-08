@@ -18,10 +18,10 @@ interface DayProps {
 
 const statusColors: Record<SlotStatus, string> = {
     // Temp colors 
-    none: "bg-gray-600",
-    green: "bg-green-400",
-    orange: "bg-orange-400",
-    red: "bg-red-500",
+    none: "bg-gray-500",
+    green: "bg-[var(--safe)]",
+    orange: "bg-[var(--warning)]",
+    red: "bg-[var(--danger)]",
 };
 
 
