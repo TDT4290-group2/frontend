@@ -49,26 +49,15 @@ const events: Array<_Event> = raw.map((e) => ({
 export default function Dust() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 
-	const tempSensor: Sensor = "dust"; 
-	const tempSummaryData = {
-		exposureType: tempSensor,
-		safeCount: 24, 
-		warningCount: 12, 
-		dangerCount: 3, 
-		safeLabel: "Safe days", 
-		warningLabel: "Days with warnings", 
-		dangerLabel: "Days where threshold was exceeded"
-	}
-
 	return (
 		<main className="flex w-full flex-row gap-4">
 
 			<div className="flex-col md:flex-1 flex gap-7">
-				<Summary {...tempSummaryData}/>
+				<Summary exposureType="dust" safeCount={8} warningCount={4}/>
 				<Notifications />
 			</div>
 
-			<div className="flex md:flex-2 flex-auto xl:flex-4 flex-col w-full gap-4">
+			<div className="flex md:flex-2 flex-auto flex-col w-full gap-4">
 				<div className="select-wrapper flex self-center justify-center text-center">
 					<Select
 						value={view}
@@ -116,17 +105,16 @@ export default function Dust() {
 							/>
 						</Card>
 					) : view === "week" ? (
-						<Card className="w-full">
-							<WeekView
-								initialDate={new Date()}
-								dayStartHour={8}
-								dayEndHour={16}
-								weekStartsOn={1}
-								minuteStep={60}
-								events={events}
-								onEventClick={(event) => alert(event.dangerLevel)}
-							/>
-						</Card>
+						
+						<WeekView
+							initialDate={new Date()}
+							dayStartHour={8}
+							dayEndHour={16}
+							weekStartsOn={1}
+							minuteStep={60}
+							events={events}
+							onEventClick={(event) => alert(event.dangerLevel)}
+						/>
 					) : (
 						<ChartLineDefault
 							chartData={data}

@@ -20,6 +20,7 @@ import {
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { cn, type DangerLevel, dangerLevels } from "../lib/utils";
+import { Card } from "./ui/card";
 
 export function DaysHeader({ days }: { days: Days }) {
 	return (
@@ -447,37 +448,39 @@ export function WeekView({
 	});
 
 	return (
-		<div className="flex flex-col overflow-hidden">
-			<Header
-				title={viewTitle}
-				onNext={nextWeek}
-				onPrev={previousWeek}
-				onToday={goToToday}
-				showTodayButton={!isSameWeek(days[0].date, new Date())}
-			/>
-			<div className="flex flex-1 select-none flex-col overflow-hidden">
-				<div className="isolate flex flex-1 flex-col overflow-auto">
-					<div className="flex min-w-[500px] flex-none flex-col">
-						<DaysHeader days={days} />
-						<div className="grid grid-cols-1 grid-rows-1">
-							<div className="col-start-1 row-start-1">
-								<Grid days={days} rowHeight={rowHeight} />
-							</div>
-							<div className="col-start-1 row-start-1">
-								<EventGrid
-									days={days}
-									events={events}
-									weekStartsOn={weekStartsOn}
-									minuteStep={minuteStep}
-									rowHeight={rowHeight}
-									onEventClick={onEventClick}
-									dayStartHour={dayStartHour}
-								/>
+		<Card className="w-full">
+			<div className="flex flex-col overflow-hidden">
+				<Header
+					title={viewTitle}
+					onNext={nextWeek}
+					onPrev={previousWeek}
+					onToday={goToToday}
+					showTodayButton={!isSameWeek(days[0].date, new Date())}
+				/>
+				<div className="flex flex-1 select-none flex-col overflow-hidden">
+					<div className="isolate flex flex-1 flex-col overflow-auto">
+						<div className="flex min-w-[500px] flex-none flex-col">
+							<DaysHeader days={days} />
+							<div className="grid grid-cols-1 grid-rows-1">
+								<div className="col-start-1 row-start-1">
+									<Grid days={days} rowHeight={rowHeight} />
+								</div>
+								<div className="col-start-1 row-start-1">
+									<EventGrid
+										days={days}
+										events={events}
+										weekStartsOn={weekStartsOn}
+										minuteStep={minuteStep}
+										rowHeight={rowHeight}
+										onEventClick={onEventClick}
+										dayStartHour={dayStartHour}
+									/>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</Card>
 	);
 }
