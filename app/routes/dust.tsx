@@ -1,4 +1,4 @@
-import { cn, type DangerLevel, parseAsView, type View } from "@/lib/utils";
+import { cn, type DangerLevel, parseAsView, type View, type Sensor } from "@/lib/utils";
 import {Notifications} from "../components/ui/notifications";
 import {
 	Select,
@@ -14,6 +14,7 @@ import { Card } from "../components/ui/card";
 import { type Event as _Event, WeekView } from "../components/weekly-view";
 import dustChartData from "../dummy/dust_chart_data.json";
 import eventsData from "../dummy/weekly-events.json";
+import Summary from "../components/ui/summary";
 
 const data = dustChartData;
 
@@ -48,80 +49,95 @@ const events: Array<_Event> = raw.map((e) => ({
 export default function Dust() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 
+	const tempSensor: Sensor = "dust"; 
+	const tempSummaryData = {
+		exposureType: tempSensor,
+		safeCount: 24, 
+		warningCount: 12, 
+		dangerCount: 3, 
+		safeLabel: "Safe days", 
+		warningLabel: "Days with warnings", 
+		dangerLabel: "Days where threshold was exceeded"
+	}
+
 	return (
 		<main className="flex w-full flex-row gap-4">
 
-			<div className="flex-col gap-4">
+			<div className="flex-col md:flex-1 flex gap-7">
+				<Summary {...tempSummaryData}/>
 				<Notifications />
 			</div>
 
-			<div className="flex flex-1 flex-col items-end gap-4">
-				<Select
-					value={view}
-					onValueChange={(value) => setView(value as View | null)}
-				>
-					<SelectTrigger className="w-32">
-						<SelectValue placeholder="View" />
-					</SelectTrigger>
-					<SelectContent className="w-32">
-						<SelectItem key={"day"} value={"day"}>
-							{"Day"}
-						</SelectItem>
-						<SelectItem key={"week"} value={"week"}>
-							{"Week"}
-						</SelectItem>
-						<SelectItem key={"month"} value={"month"}>
-							{"Month"}
-						</SelectItem>
-					</SelectContent>
-				</Select>
-
-				{view === "month" ? (
-					<Card className="sm: w-full md:w-4/5 lg:w-3/4">
-						<Calendar
-							fixedWeeks
-							showWeekNumber
-							disabled
-							mode="single"
-							weekStartsOn={1}
-							modifiers={{
-								safe: greenDays,
-								warning: yellowDays,
-								danger: redDays,
-							}}
-							modifiersClassNames={{
-								safe: cn("bg-green-500 dark:bg-green-700"),
-								warning: cn("bg-orange-500 dark:bg-orange-700"),
-								danger: cn("bg-red-500 dark:bg-red-700"),
-								disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
-							}}
-							className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-							captionLayout="dropdown"
-							buttonVariant="ghost"
-						/>
-					</Card>
-				) : view === "week" ? (
-					<Card className="w-full md:w-4/5 lg:w-3/4">
-						<WeekView
-							initialDate={new Date()}
-							dayStartHour={8}
-							dayEndHour={16}
-							weekStartsOn={1}
-							minuteStep={60}
-							events={events}
-							onEventClick={(event) => alert(event.dangerLevel)}
-						/>
-					</Card>
-				) : (
-					<ChartLineDefault
-						chartData={data}
-						chartTitle="Dust Exposure"
-						unit="TWA"
+			<div className="flex md:flex-2 flex-auto xl:flex-4 flex-col w-full gap-4">
+				<div className="select-wrapper flex self-center justify-center text-center">
+					<Select
+						value={view}
+						onValueChange={(value) => setView(value as View | null)}
 					>
-						<ThresholdLine y={120} dangerLevel="DANGER" />
-						<ThresholdLine y={80} dangerLevel="WARNING" />
-					</ChartLineDefault>
-				)}
+						<SelectTrigger className="w-32 bg-background">
+							<SelectValue placeholder="View" />
+						</SelectTrigger>
+						<SelectContent className="w-32">
+							<SelectItem key={"day"} value={"day"}>
+								{"Day"}
+							</SelectItem>
+							<SelectItem key={"week"} value={"week"}>
+								{"Week"}
+							</SelectItem>
+							<SelectItem key={"month"} value={"month"}>
+								{"Month"}
+							</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+				<div className="flex self-end w-full items-end md:px-8 px-1">
+					{view === "month" ? (
+						<Card className="w-full">
+							<Calendar
+								fixedWeeks
+								showWeekNumber
+								disabled
+								mode="single"
+								weekStartsOn={1}
+								modifiers={{
+									safe: greenDays,
+									warning: yellowDays,
+									danger: redDays,
+								}}
+								modifiersClassNames={{
+									safe: cn("bg-green-500 dark:bg-green-700"),
+									warning: cn("bg-orange-500 dark:bg-orange-700"),
+									danger: cn("bg-red-500 dark:bg-red-700"),
+									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
+								}}
+								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
+								captionLayout="dropdown"
+								buttonVariant="ghost"
+							/>
+						</Card>
+					) : view === "week" ? (
+						<Card className="w-full">
+							<WeekView
+								initialDate={new Date()}
+								dayStartHour={8}
+								dayEndHour={16}
+								weekStartsOn={1}
+								minuteStep={60}
+								events={events}
+								onEventClick={(event) => alert(event.dangerLevel)}
+							/>
+						</Card>
+					) : (
+						<ChartLineDefault
+							chartData={data}
+							chartTitle="Dust Exposure"
+							unit="TWA"
+						>
+							<ThresholdLine y={120} dangerLevel="DANGER" />
+							<ThresholdLine y={80} dangerLevel="WARNING" />
+						</ChartLineDefault>
+					)}
+				</div>
 			</div>
 		</main>
 	);
