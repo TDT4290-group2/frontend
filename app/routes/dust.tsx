@@ -1,5 +1,6 @@
-import { cn, type DangerLevel, parseAsView, type View, type Sensor } from "@/lib/utils";
+import { cn, type DangerLevel, parseAsView, type View } from "@/lib/utils";
 import {Notifications} from "../components/ui/notifications";
+/** biome-ignore-all lint/suspicious/noAlert: We use alert for testing, but will be changed later */
 import {
 	Select,
 	SelectContent,
@@ -7,14 +8,17 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
+import { addDays, subDays } from "date-fns";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
+import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
 import { type Event as _Event, WeekView } from "../components/weekly-view";
 import dustChartData from "../dummy/dust_chart_data.json";
 import eventsData from "../dummy/weekly-events.json";
 import Summary from "../components/ui/summary";
+import { useDayContext } from "../lib/day-context";
 
 const data = dustChartData;
 
@@ -48,6 +52,7 @@ const events: Array<_Event> = raw.map((e) => ({
 // biome-ignore lint: page components can be default exports
 export default function Dust() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
+	const { selectedDay, setSelectedDay } = useDayContext();
 
 	return (
 		<section className="w-full flex flex-col">
@@ -75,7 +80,7 @@ export default function Dust() {
 				</Select>
 				</div>
 			</div>
-			
+
 			<main className="flex w-full flex-col-reverse gap-4 md:flex-row">
 					<div className="flex flex-col gap-4 bg-[var(--card)] p-2 h-64 overflow-y-auto rounded-xl">
 						<Notifications />
@@ -83,9 +88,47 @@ export default function Dust() {
 					</div>
 
 				<div className="flex flex-1 flex-col items-end gap-4">
+					<div className="flex gap-4">
+						{view === "day" && (
+							<Button
+								onClick={() => setSelectedDay(subDays(selectedDay, 1))}
+								size={"icon"}
+							>
+								{"<"}
+							</Button>
+						)}
+						<Select
+							value={view}
+							onValueChange={(value) => setView(value as View | null)}
+						>
+							<SelectTrigger className="w-32">
+								<SelectValue placeholder="View" />
+							</SelectTrigger>
+							<SelectContent className="w-32">
+								<SelectItem key={"day"} value={"day"}>
+									{"Day"}
+								</SelectItem>
+								<SelectItem key={"week"} value={"week"}>
+									{"Week"}
+								</SelectItem>
+								<SelectItem key={"month"} value={"month"}>
+									{"Month"}
+								</SelectItem>
+							</SelectContent>
+						</Select>
+						{view === "day" && (
+							<Button
+								onClick={() => setSelectedDay(addDays(selectedDay, 1))}
+								size={"icon"}
+							>
+								{">"}
+							</Button>
+						)}
+					</div>
 					{view === "month" ? (
 						<Card className="w-full">
 							<Calendar
+								defaultMonth={selectedDay}
 								fixedWeeks
 								showWeekNumber
 								disabled
@@ -97,19 +140,19 @@ export default function Dust() {
 									danger: redDays,
 								}}
 								modifiersClassNames={{
-									safe: cn("bg-green-500 dark:bg-green-700"),
-									warning: cn("bg-orange-500 dark:bg-orange-700"),
-									danger: cn("bg-red-500 dark:bg-red-700"),
+									safe: cn("bg-[var(--safe)]"),
+									warning: cn("bg-[var(--warning)]"),
+									danger: cn("bg-[var(--danger)]"),
 									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
 								}}
 								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
 								captionLayout="dropdown"
-								buttonVariant="ghost"
+								buttonVariant="default"
 							/>
 						</Card>
 					) : view === "week" ? (
 						<WeekView
-							initialDate={new Date()}
+							initialDate={selectedDay}
 							dayStartHour={8}
 							dayEndHour={16}
 							weekStartsOn={1}
@@ -120,7 +163,10 @@ export default function Dust() {
 					) : (
 						<ChartLineDefault
 							chartData={data}
-							chartTitle="Dust Exposure"
+							chartTitle={selectedDay.toLocaleDateString("en-GB", {
+								day: "numeric",
+								month: "long",
+							})}
 							unit="TWA"
 						>
 							<ThresholdLine y={120} dangerLevel="DANGER" />

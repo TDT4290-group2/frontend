@@ -7,6 +7,7 @@ import {
 	SelectValue,
 } from "@/ui/select";
 import { useQueryState } from "nuqs";
+import { DailyNotes } from "../components/daily-notes";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
@@ -85,9 +86,9 @@ export default function Home() {
 											danger: redNoiseDays,
 										}}
 										modifiersClassNames={{
-											safe: cn("bg-green-500 dark:bg-green-700"),
-											warning: cn("bg-orange-500 dark:bg-orange-700"),
-											danger: cn("bg-red-500 dark:bg-red-700"),
+											safe: cn("bg-[var(--safe)]"),
+											warning: cn("bg-[var(--warning)]"),
+											danger: cn("bg-[var(--danger)]"),
 											disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
 										}}
 										className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"

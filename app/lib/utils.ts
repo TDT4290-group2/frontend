@@ -30,14 +30,14 @@ type DangerLevelInfo = {
 export const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
 	DANGER: { 
 		label: "Threshold exceeded!", 
-		color: "red" 
+		color: "var(--danger)" 
 	},
 	WARNING: {
 		label: "Close to exposure limit",
-		color: "orange",
+		color: "var(--warning)",
 	},
 	SAFE: { 
 		label: "Safely within exposure limit", 
-		color: "green" 
+		color: "var(--safe)" 
 	},
 };
