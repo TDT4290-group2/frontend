@@ -31,17 +31,23 @@ export function DaysHeader({ days }: { days: Days }) {
 					<div
 						key={getUnixTime(day.date)}
 						className={cn(
-							`flex h-14 items-center justify-center border-muted-foreground border-r border-b-2 border-l`,
+							`flex h-14 items-center justify-center border-card border-r border-b-2 border-l`,
 							i === 0 ? "border-l-2" : "",
 							i === days.length - 1 ? "border-r-2" : "",
 						)}
 					>
-						<span className={day.isToday ? "flex items-center" : ""}>
+						<span
+							className={
+								day.isToday
+									? "flex items-center font-semibold"
+									: "text-muted-foreground"
+							}
+						>
 							{day.shortName}{" "}
 							<span
 								className={`font-semibold ${
 									day.isToday &&
-									"ml-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-foreground text-secondary"
+									"ml-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-foreground font-bold text-secondary"
 								}
                 `}
 							>
@@ -116,7 +122,7 @@ export function EventGrid({
 								className={cn(
 									"absolute inset-1 flex cursor-pointer flex-col overflow-y-auto rounded-md text-xs leading-5 transition",
 									`bg-[${dangerLevels[event.dangerLevel].color}]`,
-									"border-t-2 border-t-black border-dotted",
+									"border-t-2 border-t-muted-foreground border-dotted",
 									`${event.startDate.getHours() === dayStartHour && "border-t-0"} `,
 									"hover:brightness-85",
 								)}
@@ -155,9 +161,11 @@ export function Grid({
 					<div
 						key={getUnixTime(cell.date)}
 						className={cn(
-							"relative border-muted-foreground border-r border-l transition-colors",
+							"relative border-card border-r border-l transition-colors",
 							dayIndex === 0 ? "border-l-2" : "",
 							dayIndex === days.length - 1 ? "border-r-2" : "",
+							"bg-card-highlight",
+							"border-t-2 border-t-card",
 						)}
 						style={{
 							gridRowStart: cellIndex + 1,
@@ -176,7 +184,7 @@ export function Grid({
 					getMinutes(cell.date) === 0 && (
 						<div
 							key={getUnixTime(cell.date)}
-							className="flex items-start justify-end pr-2"
+							className="flex items-start justify-end pr-2 text-muted-foreground"
 							style={{
 								gridRowStart: cellIndex + 1,
 								gridRowEnd: cellIndex + 2,
@@ -216,7 +224,7 @@ export function Header({
 	onNext?: () => void;
 }) {
 	return (
-		<div className="flex h-16 items-center justify-between border-muted-foreground border-b-2 px-6 py-4">
+		<div className="flex h-16 items-center justify-between border-card-highlight border-b-2 px-6 py-4">
 			<h1 className="flex items-center gap-3 font-semibold text-base text-foreground">
 				{title}
 				{showTodayButton &&
@@ -449,7 +457,7 @@ export function WeekView({
 	});
 
 	return (
-		<div className="flex flex-col overflow-hidden">
+		<div className="flex flex-col overflow-hidden px-1">
 			<Header
 				title={viewTitle}
 				onNext={nextWeek}

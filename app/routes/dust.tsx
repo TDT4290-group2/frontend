@@ -90,7 +90,7 @@ export default function Dust() {
 						}}
 						className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
 						captionLayout="dropdown"
-						buttonVariant="ghost"
+						buttonVariant="default"
 					/>
 				</Card>
 			) : view === "week" ? (
