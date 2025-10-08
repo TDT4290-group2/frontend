@@ -14,8 +14,22 @@ import { Card } from "../components/ui/card";
 import { type Event as _Event, WeekView } from "../components/weekly-view";
 import dustChartData from "../dummy/dust_chart_data.json";
 import eventsData from "../dummy/weekly-events.json";
+import { useSensorData } from "../lib/api";
+import {
+	AggregationFunction,
+	TimeGranularity,
+	type SensorDataRequestDto,
+} from "../lib/dto";
 
-const data = dustChartData;
+const exampleQuery: SensorDataRequestDto = {
+	startTime: new Date("2024-11-18T10:18:00+00:00"),
+	endTime: new Date("2024-11-18T10:20:00+00:00"),
+	granularity: 0,
+	function: 0,
+	fields: [],
+};
+
+const dust_data = dustChartData;
 
 const greenDays = [
 	new Date(2025, 8, 1),
@@ -48,6 +62,9 @@ const events: Array<_Event> = raw.map((e) => ({
 export default function Dust() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 
+	const { data, isLoading } = useSensorData("noise", exampleQuery);
+
+	console.log(data)
 	return (
 		<main className="flex w-full flex-col place-items-center gap-4">
 			<Select
@@ -106,14 +123,17 @@ export default function Dust() {
 					/>
 				</Card>
 			) : (
-				<ChartLineDefault
-					chartData={data}
-					chartTitle="Dust Exposure"
-					unit="TWA"
-				>
-					<ThresholdLine y={120} dangerLevel="DANGER" />
-					<ThresholdLine y={80} dangerLevel="WARNING" />
-				</ChartLineDefault>
+				<>
+					<p>{ !isLoading && data![0].value}</p>
+					<ChartLineDefault
+						chartData={dust_data}
+						chartTitle="Dust Exposure"
+						unit="TWA"
+					>
+						<ThresholdLine y={120} dangerLevel="DANGER" />
+						<ThresholdLine y={80} dangerLevel="WARNING" />
+					</ChartLineDefault>
+				</>
 			)}
 		</main>
 	);

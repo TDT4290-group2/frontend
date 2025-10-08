@@ -10,6 +10,11 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
+import {
+	QueryClient,
+	QueryClientProvider,
+	useQuery,
+} from "@tanstack/react-query";
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -42,14 +47,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
 	);
 }
 
+const queryClient = new QueryClient();
+
 // biome-ignore lint: page components can be default exports
 export default function App() {
 	return (
-		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-			<NuqsAdapter>
-				<Outlet />
-			</NuqsAdapter>
-		</ThemeProvider>
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+				<NuqsAdapter>
+					<Outlet />
+				</NuqsAdapter>
+			</ThemeProvider>
+		</QueryClientProvider>
 	);
 }
 
