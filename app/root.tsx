@@ -15,6 +15,7 @@ import {
 	QueryClientProvider,
 	useQuery,
 } from "@tanstack/react-query";
+import { DayContextProvider } from "./lib/day-context";
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -54,9 +55,11 @@ export default function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-				<NuqsAdapter>
-					<Outlet />
-				</NuqsAdapter>
+				<DayContextProvider>
+					<NuqsAdapter>
+						<Outlet />
+					</NuqsAdapter>
+				</DayContextProvider>
 			</ThemeProvider>
 		</QueryClientProvider>
 	);
