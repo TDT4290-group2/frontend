@@ -42,7 +42,7 @@ export default function Dust() {
 	return (
 		<main className="flex w-full flex-row gap-4">
 
-			<div className="flex-col gap-4">
+			<div className="flex flex-col gap-4 bg-[var(--card)] p-2 h-68 overflow-y-auto rounded-xl">
 				<Notifications />
 			</div>
 
