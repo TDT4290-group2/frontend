@@ -39,7 +39,7 @@ export function ChartLineDefault({
 	children: React.ReactNode;
 }) {
 	return (
-		<Card className="sm: w-full md:w-4/5 lg:w-3/4">
+		<Card className="w-full">
 			<CardHeader>{/* <CardTitle>{chartTitle}</CardTitle> */}</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig}>
