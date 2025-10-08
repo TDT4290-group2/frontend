@@ -21,7 +21,7 @@ const statusColors: Record<SlotStatus, string> = {
     none: "bg-gray-500",
     green: "bg-[var(--safe)]",
     orange: "bg-[var(--warning)]",
-    red: "bg-[var(--destructive)]",
+    red: "bg-[var(--danger)]",
 };
 
 

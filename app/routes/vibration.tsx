@@ -75,7 +75,7 @@ export default function Vibration() {
 						modifiersClassNames={{
 							safe: cn("bg-[var(--safe)]"),
 							warning: cn("bg-[var(--warning)]"),
-							danger: cn("bg-[var(--destructive)]"),
+							danger: cn("bg-[var(--danger)]"),
 							disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
 						}}
 						className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
