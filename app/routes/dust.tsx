@@ -1,4 +1,3 @@
-import {Notifications} from "../components/ui/notifications";
 /** biome-ignore-all lint/suspicious/noAlert: We use alert for testing, but will be changed later */
 import { cn, type DangerLevel, parseAsView, type View } from "@/lib/utils";
 import {
@@ -14,6 +13,7 @@ import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
+import { Notifications } from "../components/ui/notifications";
 import { type Event as _Event, WeekView } from "../components/weekly-view";
 import dustChartData from "../dummy/dust_chart_data.json";
 import eventsData from "../dummy/weekly-events.json";
@@ -57,14 +57,14 @@ export default function Dust() {
 		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
 				<h1 className="p-2 text-3xl">{"Dust exposure"}</h1>
-				<div className="flex flex-row ml-auto">
+				<div className="ml-auto flex flex-row">
 					{view === "day" && (
-					<Button
-						onClick={() => setSelectedDay(subDays(selectedDay, 1))}
-						size={"icon"}
-					>
-						{"<"}
-					</Button>
+						<Button
+							onClick={() => setSelectedDay(subDays(selectedDay, 1))}
+							size={"icon"}
+						>
+							{"<"}
+						</Button>
 					)}
 					<Select
 						value={view}
@@ -85,21 +85,21 @@ export default function Dust() {
 							</SelectItem>
 						</SelectContent>
 					</Select>
-				{view === "day" && (
-					<Button
-						onClick={() => setSelectedDay(addDays(selectedDay, 1))}
-						size={"icon"}
-					>
-						{">"}
-					</Button>
-				)}
+					{view === "day" && (
+						<Button
+							onClick={() => setSelectedDay(addDays(selectedDay, 1))}
+							size={"icon"}
+						>
+							{">"}
+						</Button>
+					)}
 				</div>
 			</div>
 			
 			<main className="flex w-full flex-col-reverse gap-4 md:flex-row">
-					<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
-						<Notifications />
-					</div>
+				<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
+					<Notifications />
+				</div>
 
 				<div className="flex flex-1 flex-col items-end gap-4">
 					{view === "month" ? (
@@ -136,7 +136,7 @@ export default function Dust() {
 								weekStartsOn={1}
 								minuteStep={60}
 								events={events}
-								onEventClick={(event) => alert(event.dangerLevel)}
+								// onEventClick={(event) => alert(event.dangerLevel)}
 							/>
 						</Card>
 					) : (
