@@ -65,7 +65,7 @@ export default function Vibration() {
 					</Select>
 				</div>
 			</div>
-			<main className="flex w-full flex-col-reverse gap-4 md:flex-row">
+			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
 					<Notifications />
 				</div>
@@ -107,7 +107,7 @@ export default function Vibration() {
 						</ChartLineDefault>
 					)}
 				</div>
-			</main>
+			</div>
 		</section>
 	);
 }

@@ -36,7 +36,7 @@ export function Notifications() {
       <ItemGroup className="gap-1">
         {notifications.map((notification) => (
           <Item key={notification.title} variant="outline" asChild role="listitem" className=" bg-[var(--background)] rounded-3xl border-3 border-[var(--border)]">
-            <a href="#">
+            <li>
               <ItemMedia variant="image">
                 <img 
                   src={
@@ -66,7 +66,7 @@ export function Notifications() {
               <ItemContent className="flex-none text-center">
                 <ItemDescription>{notification.date}</ItemDescription>
               </ItemContent>
-            </a>
+            </li>
           </Item>
         ))}
       </ItemGroup>

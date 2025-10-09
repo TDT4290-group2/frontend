@@ -57,7 +57,7 @@ export default function Dust() {
 		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
 				<h1 className="p-2 text-3xl">{"Dust exposure"}</h1>
-				<div className="ml-auto flex flex-row">
+				<div className="ml-auto flex flex-row gap-4">
 					{view === "day" && (
 						<Button
 							onClick={() => setSelectedDay(subDays(selectedDay, 1))}
@@ -95,7 +95,7 @@ export default function Dust() {
 					)}
 				</div>
 			</div>
-			<main className="flex w-full flex-col-reverse gap-4 md:flex-row">
+			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
 					<Notifications />
 				</div>
@@ -151,7 +151,7 @@ export default function Dust() {
 						</ChartLineDefault>
 					)}
 				</div>
-			</main>
+			</div>
 		</section>
 	);
 }
