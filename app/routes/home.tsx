@@ -11,8 +11,8 @@ import { DailyNotes } from "../components/daily-notes";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
-import { WeekView } from "../components/weekly-view";
 import Summary from "../components/ui/summary";
+import { WeekView } from "../components/weekly-view";
 
 const tempDailyChartData = [
 	{ x: "08:00", y: 75 },
@@ -30,7 +30,6 @@ export function meta() {
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
-
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 
 	const greenNoiseDays = [new Date(2025, 8, 1), new Date(2025, 8, 5)];
@@ -42,14 +41,15 @@ export default function Home() {
 	];
 
 	return (
-		<div className="flex flex-col w-full gap-4 md:flex-row md:items-start items-center">
-			
+		<div className="flex w-full flex-col items-center gap-4 md:flex-row md:items-start">
 			<div className="flex flex-col gap-4 pl-2">
 				<Summary />
 			</div>
 			<div className="flex flex-1 flex-col gap-1">
-			<h1 className="text-3xl text-center md:pl-4 md:text-left">Overview of the {view}</h1>
-				<div className="select-wrapper self-end flex">
+				<h1 className="text-center text-3xl md:pl-4 md:text-left">
+					{`Overview of the ${view}`}
+				</h1>
+				<div className="select-wrapper flex self-end">
 					<Select
 						value={view}
 						onValueChange={(value) => setView(value as View | null)}
@@ -73,52 +73,47 @@ export default function Home() {
 				<div className="view-wrapper w-full">
 					<section className="flex w-full flex-col place-items-center gap-4 pb-5">
 						{view === "month" ? (
-							<>
-								<Card className="w-full">
-									<Calendar
-										fixedWeeks
-										showWeekNumber
-										disabled
-										mode="single"
-										weekStartsOn={1}
-										modifiers={{
-											safe: greenNoiseDays,
-											warning: yellowNoiseDays,
-											danger: redNoiseDays,
-										}}
-										modifiersClassNames={{
-											safe: cn("bg-[var(--safe)]"),
-											warning: cn("bg-[var(--warning)]"),
-											danger: cn("bg-[var(--danger)]"),
-											disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
-										}}
-										className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-										captionLayout="dropdown"
-										buttonVariant="ghost"
-									/>
-								</Card>
-							</>
+							<Card className="w-full">
+								<Calendar
+									fixedWeeks
+									showWeekNumber
+									disabled
+									mode="single"
+									weekStartsOn={1}
+									modifiers={{
+										safe: greenNoiseDays,
+										warning: yellowNoiseDays,
+										danger: redNoiseDays,
+									}}
+									modifiersClassNames={{
+										safe: cn("bg-[var(--safe)]"),
+										warning: cn("bg-[var(--warning)]"),
+										danger: cn("bg-[var(--danger)]"),
+										disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
+									}}
+									className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
+									captionLayout="dropdown"
+									buttonVariant="ghost"
+								/>
+							</Card>
 						) : view === "week" ? (
 							<>
 								{/* NOTE: Should use props, if none are provided then some default values are used. Like here */}
 								<WeekView />
 							</>
 						) : (
-							<>
-								<ChartLineDefault
-									chartData={tempDailyChartData}
-									chartTitle="Vibration Exposure"
-									unit="db (TWA)"
-								>
-									<ThresholdLine y={120} dangerLevel="DANGER" />
-									{/* <ThresholdLine y={85} dangerLevel="WARNING" /> */}
-								</ChartLineDefault>
-							</>
+							<ChartLineDefault
+								chartData={tempDailyChartData}
+								chartTitle="Vibration Exposure"
+								unit="db (TWA)"
+							>
+								<ThresholdLine y={120} dangerLevel="DANGER" />
+								{/* <ThresholdLine y={85} dangerLevel="WARNING" /> */}
+							</ChartLineDefault>
 						)}
 						<DailyNotes />
 					</section>
 				</div>
-				
 			</div>
 		</div>
 	);

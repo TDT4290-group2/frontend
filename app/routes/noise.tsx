@@ -1,5 +1,4 @@
 import { cn, parseAsView, type View } from "@/lib/utils";
-import {Notifications} from "../components/ui/notifications";
 import {
 	Select,
 	SelectContent,
@@ -11,6 +10,7 @@ import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
+import { Notifications } from "../components/ui/notifications";
 import { WeeklyOverview } from "../components/weekly";
 import noiseChartData from "../dummy/noise_chart_data.json";
 
@@ -40,36 +40,36 @@ export default function Noise() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 
 	return (
-		<section className="w-full flex flex-col">
+		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
-				<h1 className="text-3xl p-2">{"Noise exposure"}</h1>
+				<h1 className="p-2 text-3xl">{"Noise exposure"}</h1>
 				<div className="ml-auto">
-				<Select
-					value={view}
-					onValueChange={(value) => setView(value as View | null)}
-				>
-					<SelectTrigger className="w-32">
-						<SelectValue placeholder="View" />
-					</SelectTrigger>
-					<SelectContent className="w-32">
-						<SelectItem key={"day"} value={"day"}>
-							{"Day"}
-						</SelectItem>
-						<SelectItem key={"week"} value={"week"}>
-							{"Week"}
-						</SelectItem>
-						<SelectItem key={"month"} value={"month"}>
-							{"Month"}
-						</SelectItem>
-					</SelectContent>
-				</Select>
+					<Select
+						value={view}
+						onValueChange={(value) => setView(value as View | null)}
+					>
+						<SelectTrigger className="w-32">
+							<SelectValue placeholder="View" />
+						</SelectTrigger>
+						<SelectContent className="w-32">
+							<SelectItem key={"day"} value={"day"}>
+								{"Day"}
+							</SelectItem>
+							<SelectItem key={"week"} value={"week"}>
+								{"Week"}
+							</SelectItem>
+							<SelectItem key={"month"} value={"month"}>
+								{"Month"}
+							</SelectItem>
+						</SelectContent>
+					</Select>
 				</div>
 			</div>
-			
+
 			<main className="flex w-full flex-col-reverse gap-4 md:flex-row">
-					<div className="flex flex-col gap-4 bg-[var(--card)] p-2 h-64 overflow-y-auto rounded-xl">
-						<Notifications />
-					</div>
+				<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
+					<Notifications />
+				</div>
 
 				<div className="flex flex-1 flex-col items-end gap-4">
 					{view === "month" ? (

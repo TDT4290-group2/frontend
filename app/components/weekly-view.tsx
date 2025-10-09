@@ -20,8 +20,8 @@ import {
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { cn, type DangerLevel, dangerLevels } from "../lib/utils";
-import { Card } from "./ui/card";
 import { Button } from "./ui/button";
+import { Card } from "./ui/card";
 
 export function DaysHeader({ days }: { days: Days }) {
 	return (

@@ -1,6 +1,5 @@
-import { cn, type DangerLevel, parseAsView, type View } from "@/lib/utils";
-import {Notifications} from "../components/ui/notifications";
 /** biome-ignore-all lint/suspicious/noAlert: We use alert for testing, but will be changed later */
+import { cn, type DangerLevel, parseAsView, type View } from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -14,10 +13,11 @@ import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
+import { Notifications } from "../components/ui/notifications";
+import Summary from "../components/ui/summary";
 import { type Event as _Event, WeekView } from "../components/weekly-view";
 import dustChartData from "../dummy/dust_chart_data.json";
 import eventsData from "../dummy/weekly-events.json";
-import Summary from "../components/ui/summary";
 import { useDayContext } from "../lib/day-context";
 
 const data = dustChartData;
@@ -55,16 +55,15 @@ export default function Dust() {
 	const { selectedDay, setSelectedDay } = useDayContext();
 
 	return (
-		<section className="w-full flex flex-col">
-
+		<section className="flex w-full flex-col">
 			<main className="flex w-full flex-col-reverse gap-4 md:flex-row">
-				<div className="flex flex-col gap-4 pl-2 ">
-					<Summary exposureType="dust" safeCount={8} warningCount={4}/>
+				<div className="flex flex-col gap-4 pl-2">
+					<Summary exposureType="dust" safeCount={8} warningCount={4} />
 					<Notifications />
 				</div>
 
 				<div className="flex flex-1 flex-col items-end gap-4">
-					<h1 className="text-3xl pl-4 self-start">{"Dust exposure"}</h1>
+					<h1 className="self-start pl-4 text-3xl">{"Dust exposure"}</h1>
 					<div className="flex gap-4">
 						{view === "day" && (
 							<Button
