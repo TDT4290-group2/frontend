@@ -44,33 +44,31 @@ export default function Noise() {
 			<div className="flex flex-row">
 				<h1 className="p-2 text-3xl">{"Noise exposure"}</h1>
 				<div className="ml-auto">
-				<Select
-					value={view}
-					onValueChange={(value) => setView(value as View | null)}
-				>
-					<SelectTrigger className="w-32">
-						<SelectValue placeholder="View" />
-					</SelectTrigger>
-					<SelectContent className="w-32">
-						<SelectItem key={"day"} value={"day"}>
-							{"Day"}
-						</SelectItem>
-						<SelectItem key={"week"} value={"week"}>
-							{"Week"}
-						</SelectItem>
-						<SelectItem key={"month"} value={"month"}>
-							{"Month"}
-						</SelectItem>
-					</SelectContent>
-				</Select>
+					<Select
+						value={view}
+						onValueChange={(value) => setView(value as View | null)}
+					>
+						<SelectTrigger className="w-32">
+							<SelectValue placeholder="View" />
+						</SelectTrigger>
+						<SelectContent className="w-32">
+							<SelectItem key={"day"} value={"day"}>
+								{"Day"}
+							</SelectItem>
+							<SelectItem key={"week"} value={"week"}>
+								{"Week"}
+							</SelectItem>
+							<SelectItem key={"month"} value={"month"}>
+								{"Month"}
+							</SelectItem>
+						</SelectContent>
+					</Select>
 				</div>
 			</div>
-			
 			<main className="flex w-full flex-col-reverse gap-4 md:flex-row">
-					<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
-						<Notifications />
-					</div>
-
+				<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
+					<Notifications />
+				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
 					{view === "month" ? (
 						<Card className="w-full">

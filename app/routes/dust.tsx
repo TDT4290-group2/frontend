@@ -95,12 +95,10 @@ export default function Dust() {
 					)}
 				</div>
 			</div>
-			
 			<main className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
 					<Notifications />
 				</div>
-
 				<div className="flex flex-1 flex-col items-end gap-4">
 					{view === "month" ? (
 						<Card className="w-full">
