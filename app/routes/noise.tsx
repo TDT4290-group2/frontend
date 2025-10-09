@@ -6,14 +6,19 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
 import { WeeklyOverview } from "../components/weekly";
-import noiseChartData from "../dummy/noise_chart_data.json";
-
-const data = noiseChartData;
+import { useSensorData } from "../lib/api";
+import { useDayContext } from "../lib/day-context";
+import {
+	AggregationFunction,
+	type SensorDataRequestDto,
+	TimeGranularity,
+} from "../lib/dto";
 
 const greenDays = [
 	new Date(2025, 8, 1),
@@ -38,6 +43,36 @@ const redDays = [
 export default function Noise() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 
+	const { selectedDay } = useDayContext();
+
+	const dayQuery: SensorDataRequestDto = {
+		startTime: new Date(selectedDay.setHours(8)),
+		endTime: new Date(selectedDay.setHours(16)),
+		granularity: TimeGranularity.Minute,
+		function: AggregationFunction.Avg,
+		fields: [],
+	};
+
+	const weekQuery: SensorDataRequestDto = {
+		startTime: startOfWeek(selectedDay),
+		endTime: endOfWeek(selectedDay),
+		granularity: TimeGranularity.Hour,
+		function: AggregationFunction.Max,
+		fields: [],
+	};
+
+	const monthQuery: SensorDataRequestDto = {
+		startTime: startOfMonth(selectedDay),
+		endTime: endOfMonth(selectedDay),
+		granularity: TimeGranularity.Day,
+		function: AggregationFunction.Max,
+		fields: [],
+	};
+
+	const query =
+		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
+	const { data, isLoading, isError } = useSensorData("noise", query);
+
 	return (
 		<main className="flex w-full flex-col place-items-center gap-4">
 			<Select
@@ -59,7 +94,12 @@ export default function Noise() {
 					</SelectItem>
 				</SelectContent>
 			</Select>
-			{view === "month" ? (
+
+			{isLoading ? (
+				<p>{"Loading..."}</p>
+			) : isError ? (
+				<p>{"Something went wrong when fetching sensor data"}</p>
+			) : view === "month" ? (
 				<Card className="sm: w-full md:w-4/5 lg:w-3/4">
 					<Calendar
 						fixedWeeks
@@ -87,9 +127,12 @@ export default function Noise() {
 				<WeeklyOverview />
 			) : (
 				<ChartLineDefault
-					chartData={data}
+					chartData={data ?? []}
 					chartTitle="Noise Exposure"
 					unit="db (TWA)"
+					startHour={8}
+					endHour={16}
+					maxY={130}
 				>
 					<ThresholdLine y={120} dangerLevel="DANGER" />
 					<ThresholdLine y={80} dangerLevel="WARNING" />

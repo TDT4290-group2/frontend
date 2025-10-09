@@ -10,9 +10,9 @@ export const useSensorData = (
 	sensor: Sensor,
 	sensorDataRequest: SensorDataRequestDto,
 ) => {
-	const { data, isLoading } = useQuery<SensorDataResponseDto[]>({
+	const { data, isLoading, isError } = useQuery<Array<SensorDataResponseDto>>({
 		queryKey: [sensor, sensorDataRequest],
-		queryFn: async (): Promise<SensorDataResponseDto[]> => {
+		queryFn: async (): Promise<Array<SensorDataResponseDto>> => {
 			const response = await fetch(`${baseURL}sensor/${sensor}/${uid}`, {
 				method: "POST",
 				headers: {
@@ -29,5 +29,5 @@ export const useSensorData = (
 		},
 	});
 
-	return { data, isLoading };
+	return { data, isLoading, isError };
 };

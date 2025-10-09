@@ -16,21 +16,7 @@ import { Card } from "../components/ui/card";
 import { type Event as _Event, WeekView } from "../components/weekly-view";
 import dustChartData from "../dummy/dust_chart_data.json";
 import eventsData from "../dummy/weekly-events.json";
-import { useSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
-import {
-	AggregationFunction,
-	type SensorDataRequestDto,
-	TimeGranularity,
-} from "../lib/dto";
-
-const exampleQuery: SensorDataRequestDto = {
-	startTime: new Date("2024-11-18T10:18:00+00:00"),
-	endTime: new Date("2024-11-18T10:20:00+00:00"),
-	granularity: 0,
-	function: 0,
-	fields: [],
-};
 
 const dust_data = dustChartData;
 
@@ -65,7 +51,6 @@ const events: Array<_Event> = raw.map((e) => ({
 export default function Dust() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 	const { selectedDay, setSelectedDay } = useDayContext();
-	const { data, isLoading } = useSensorData("noise", exampleQuery);
 
 	return (
 		<main className="flex w-full flex-col place-items-center gap-4">

@@ -29,7 +29,8 @@ type ContextProviderProps = {
 export const DayContextProvider: React.FC<ContextProviderProps> = ({
 	children,
 }) => {
-	const [selectedDay, setSelectedDay] = useState<Date>(new Date());
+	// const [selectedDay, setSelectedDay] = useState<Date>(new Date());
+	const [selectedDay, setSelectedDay] = useState<Date>(new Date("2024-11-18"));
 
 	return (
 		<DayContext.Provider value={{ selectedDay, setSelectedDay }}>
