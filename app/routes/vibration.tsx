@@ -40,9 +40,9 @@ export default function Vibration() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 
 	return (
-		<section className="w-full flex flex-col">
+		<section className="flex w-full flex-col">
 					<div className="flex flex-row">
-						<h1 className="text-3xl p-2">{"Vibration exposure"}</h1>
+						<h1 className="p-2 text-3xl">{"Vibration exposure"}</h1>
 						<div className="ml-auto">
 						<Select
 							value={view}
@@ -67,7 +67,7 @@ export default function Vibration() {
 					</div>
 					
 					<main className="flex w-full flex-col-reverse gap-4 md:flex-row">
-							<div className="flex flex-col gap-4 bg-[var(--card)] p-2 h-64 overflow-y-auto rounded-xl">
+							<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
 								<Notifications />
 							</div>
 		
