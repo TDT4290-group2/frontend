@@ -42,37 +42,38 @@ export default function Home() {
 	];
 
 	return (
-		<main className="flex flex-col md:flex-row w-full gap-4 md:items-start items-center">
-			<div className="flex flex-col flex-wrap w-fit md:flex-1 pl-2">
+		<div className="flex flex-col w-full gap-4 md:flex-row md:items-start items-center">
+			
+			<div className="flex flex-col gap-4 pl-2">
 				<Summary />
 			</div>
-			<div className="flex flex-col w-11/12 md:flex-2 ">
-				<div className="select-wrapper flex self-center justify-center text-center">
-				<Select
-					value={view}
-					onValueChange={(value) => setView(value as View | null)}
-				>
-					<SelectTrigger className="w-32 bg-background">
-						<SelectValue placeholder="View" />
-					</SelectTrigger>
-					<SelectContent className="w-32">
-						<SelectItem key={"day"} value={"day"}>
-							{"Day"}
-						</SelectItem>
-						<SelectItem key={"week"} value={"week"}>
-							{"Week"}
-						</SelectItem>
-						<SelectItem key={"month"} value={"month"}>
-							{"Month"}
-						</SelectItem>
-					</SelectContent>
-				</Select>
+			<div className="flex flex-1 flex-col gap-1">
+			<h1 className="text-3xl text-center md:pl-4 md:text-left">Overview of the {view}</h1>
+				<div className="select-wrapper self-end flex">
+					<Select
+						value={view}
+						onValueChange={(value) => setView(value as View | null)}
+					>
+						<SelectTrigger className="w-32 bg-background">
+							<SelectValue placeholder="View" />
+						</SelectTrigger>
+						<SelectContent className="w-32">
+							<SelectItem key={"day"} value={"day"}>
+								{"Day"}
+							</SelectItem>
+							<SelectItem key={"week"} value={"week"}>
+								{"Week"}
+							</SelectItem>
+							<SelectItem key={"month"} value={"month"}>
+								{"Month"}
+							</SelectItem>
+						</SelectContent>
+					</Select>
 				</div>
 				<div className="view-wrapper w-full">
-					<h1 className="text-3xl pl-4">Overview of the {view}</h1>
-					{view === "month" ? (
-						<>
-							<section className="flex w-full flex-col place-items-center p-2">
+					<section className="flex w-full flex-col place-items-center gap-4 pb-5">
+						{view === "month" ? (
+							<>
 								<Card className="w-full">
 									<Calendar
 										fixedWeeks
@@ -96,19 +97,14 @@ export default function Home() {
 										buttonVariant="ghost"
 									/>
 								</Card>
-							</section>
-						</>
-					) : view === "week" ? (
-						<>
-							<section className="flex w-full flex-col place-items-center p-2">
+							</>
+						) : view === "week" ? (
+							<>
 								{/* NOTE: Should use props, if none are provided then some default values are used. Like here */}
 								<WeekView />
-							</section>
-						</>
-					) : (
-						<>
-							<section className="flex w-full flex-col place-items-center p-2">
-								
+							</>
+						) : (
+							<>
 								<ChartLineDefault
 									chartData={tempDailyChartData}
 									chartTitle="Vibration Exposure"
@@ -117,12 +113,13 @@ export default function Home() {
 									<ThresholdLine y={120} dangerLevel="DANGER" />
 									{/* <ThresholdLine y={85} dangerLevel="WARNING" /> */}
 								</ChartLineDefault>
-							</section>
-						</>
-					)}
+							</>
+						)}
+						<DailyNotes />
+					</section>
 				</div>
 				
 			</div>
-		</main>
+		</div>
 	);
 }

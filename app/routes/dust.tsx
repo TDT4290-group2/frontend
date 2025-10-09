@@ -64,7 +64,7 @@ export default function Dust() {
 				</div>
 
 				<div className="flex flex-1 flex-col items-end gap-4">
-					<h1 className="text-3xl p-2 self-start">{"Dust exposure"}</h1>
+					<h1 className="text-3xl pl-4 self-start">{"Dust exposure"}</h1>
 					<div className="flex gap-4">
 						{view === "day" && (
 							<Button
