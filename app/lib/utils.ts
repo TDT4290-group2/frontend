@@ -13,3 +13,25 @@ export const parseAsView = parseAsStringLiteral(views);
 export type Sensor = "dust" | "noise" | "vibration";
 const sensors: Array<Sensor> = ["dust", "noise", "vibration"];
 export const parseAsSensor = parseAsStringLiteral(sensors);
+
+export const DangerTypes = {
+	high: "DANGER",
+	medium: "WARNING",
+	low: "SAFE",
+} as const;
+
+export type DangerLevel = (typeof DangerTypes)[keyof typeof DangerTypes];
+
+type DangerLevelInfo = {
+	label: string;
+	color: string;
+};
+
+export const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
+	DANGER: { label: "Keep under this threshold", color: "var(--danger)" },
+	WARNING: {
+		label: "",
+		color: "var(--warning)",
+	},
+	SAFE: { label: "", color: "var(--safe)" },
+};

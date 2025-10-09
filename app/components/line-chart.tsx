@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -14,6 +14,7 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
+import { type DangerLevel, dangerLevels } from "../lib/utils";
 
 export const description = "A line chart";
 
@@ -26,7 +27,7 @@ const chartConfig = {
 
 export function ChartLineDefault({
 	chartData,
-	// chartTitle,
+	chartTitle,
 	unit,
 	children,
 }: {
@@ -40,7 +41,9 @@ export function ChartLineDefault({
 }) {
 	return (
 		<Card className="w-full">
-			<CardHeader>{/* <CardTitle>{chartTitle}</CardTitle> */}</CardHeader>
+			<CardHeader>
+				<CardTitle>{chartTitle}</CardTitle>
+			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig}>
 					<LineChart
@@ -90,26 +93,6 @@ export function ChartLineDefault({
 		</Card>
 	);
 }
-
-const DangerTypes = {
-	high: "DANGER",
-	medium: "WARNING",
-} as const;
-
-type DangerLevel = (typeof DangerTypes)[keyof typeof DangerTypes];
-
-type DangerLevelInfo = {
-	label: string;
-	color: string;
-};
-
-const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
-	DANGER: { label: "Keep under this threshold", color: "red" },
-	WARNING: {
-		label: "",
-		color: "orange",
-	},
-};
 
 export function ThresholdLine({
 	y,

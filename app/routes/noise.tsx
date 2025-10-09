@@ -86,9 +86,9 @@ export default function Noise() {
 											danger: redDays,
 										}}
 										modifiersClassNames={{
-											safe: cn("bg-green-500 dark:bg-green-700"),
-											warning: cn("bg-orange-500 dark:bg-orange-700"),
-											danger: cn("bg-red-500 dark:bg-red-700"),
+											safe: cn("bg-[var(--safe)]"),
+											warning: cn("bg-[var(--warning)]"),
+											danger: cn("bg-[var(--danger)]"),
 											disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
 										}}
 										className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
@@ -102,7 +102,7 @@ export default function Noise() {
 								<ChartLineDefault
 									chartData={data}
 									chartTitle="Noise Exposure"
-									unit="TWA"
+									unit="db (TWA)"
 								>
 									<ThresholdLine y={120} dangerLevel="DANGER" />
 									<ThresholdLine y={80} dangerLevel="WARNING" />
