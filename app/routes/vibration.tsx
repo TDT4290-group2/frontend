@@ -13,6 +13,7 @@ import { Card } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import { WeeklyOverview } from "../components/weekly";
 import vibrationChartData from "../dummy/vibration_chart_data.json";
+import Summary from "../components/ui/summary";
 
 const data = vibrationChartData;
 
@@ -66,7 +67,8 @@ export default function Vibration() {
 				</div>
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
-				<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
+				<div className="flex flex-col gap-4">
+					<Summary exposureType="vibration" />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">

@@ -97,7 +97,7 @@ export default function Dust() {
 				</div>
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
-				<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
+				<div className="flex flex-col gap-4">
 					<Summary exposureType="dust" safeCount={8} warningCount={4}/>
 					<Notifications />
 				</div>

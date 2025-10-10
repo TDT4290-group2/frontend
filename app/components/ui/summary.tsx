@@ -2,24 +2,39 @@ import { cn, dangerLevels, DangerTypes, type Sensor } from "~/app/lib/utils";
 import { Card } from "./card";
 import { useIsMobile } from "~/app/hooks/use-mobile";
 
-export function Summary({exposureType, safeCount, warningCount, dangerCount, safeLabel, warningLabel, dangerLabel}
-    : {exposureType?: Sensor, safeCount?: number, warningCount?: number, dangerCount?: number, safeLabel?: string, warningLabel?: string, dangerLabel?: string}) {
+type SummaryProps = {
+    exposureType?: Sensor,
+    safeCount?: number,
+    warningCount?: number,
+    dangerCount?: number,
+    safeLabel?: string,
+    warningLabel?: string,
+    dangerLabel?: string
+}
 
-        // TODO - Apply universal colors - hardcoded as of now
-        const safeColor = "text-safe"; // i.e. Replace with dangerLevels[DangerTypes.low].color or something
-        const warningColor = "text-warning";
-        const dangerColor = "text-destructive";
+export function Summary({
+        exposureType,
+        safeCount,
+        warningCount,
+        dangerCount,
+        safeLabel,
+        warningLabel,
+        dangerLabel
+    } : SummaryProps){
 
-        const tempSensor: Sensor = "dust"; 
-        const summaryData = {
-            exposureType : exposureType || "Every sensor",
-            safeCount: safeCount || 24, 
-            warningCount: warningCount || 12, 
-            dangerCount: dangerCount || 3, 
-            safeLabel: safeLabel || "Safe days", 
-            warningLabel: warningLabel ||  "Days with warnings", 
-            dangerLabel: dangerLabel || "Days where threshold was exceeded"
-        }
+    const safeColor = "text-safe"; 
+    const warningColor = "text-warning";
+    const dangerColor = "text-destructive";
+
+    const summaryData = {
+        exposureType : exposureType || "Every sensor",
+        safeCount: safeCount || 24, 
+        warningCount: warningCount || 12, 
+        dangerCount: dangerCount || 3, 
+        safeLabel: safeLabel || "Safe days", 
+        warningLabel: warningLabel ||  "Days with warnings", 
+        dangerLabel: dangerLabel || "Days where threshold was exceeded"
+    }
     const isMobile = useIsMobile();
 
     return (
