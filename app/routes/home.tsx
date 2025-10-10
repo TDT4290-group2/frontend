@@ -1,4 +1,4 @@
-import { cn, parseAsView, type View } from "@/lib/utils";
+import { parseAsView, type View } from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -11,12 +11,11 @@ import { useQueryState } from "nuqs";
 import { DailyNotes } from "../components/daily-notes";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Button } from "../components/ui/button";
-import { Calendar } from "../components/ui/calendar";
-import { Card } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
 import { useDayContext } from "../lib/day-context";
+import { MonthlyView } from "../components/monthly-view";
 
 const tempDailyChartData = [
 	{ x: "08:00", y: 75 },
@@ -95,31 +94,7 @@ export default function Home() {
 					<div className="view-wrapper w-full">
 						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
 							{view === "month" ? (
-								<Card className="w-full">
-									<Calendar
-										fixedWeeks
-										showWeekNumber
-										disabled
-										mode="single"
-										weekStartsOn={1}
-										modifiers={{
-											safe: greenNoiseDays,
-											warning: yellowNoiseDays,
-											danger: redNoiseDays,
-										}}
-										modifiersClassNames={{
-											safe: cn("bg-[var(--safe)]"),
-											warning: cn("bg-[var(--warning)]"),
-											danger: cn("bg-[var(--danger)]"),
-											disabled: cn(
-												"m-2 rounded-2xl text-black dark:text-white",
-											),
-										}}
-										className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-										captionLayout="dropdown"
-										buttonVariant="ghost"
-									/>
-								</Card>
+								<MonthlyView safeDates={greenNoiseDays} warningDates={yellowNoiseDays} dangerDates={redNoiseDays} />
 							) : view === "week" ? (
 								<>
 									{/* NOTE: Should use props, if none are provided then some default values are used. Like here */}
