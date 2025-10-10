@@ -10,11 +10,7 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
-import {
-	QueryClient,
-	QueryClientProvider,
-	useQuery,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DayContextProvider } from "./lib/day-context";
 
 export const links: Route.LinksFunction = () => [

@@ -9,16 +9,15 @@ import {
 } from "@/ui/select";
 import { addDays, subDays } from "date-fns";
 import { useQueryState } from "nuqs";
-import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
+// import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
+import { Notifications } from "../components/ui/notifications";
+import Summary from "../components/ui/summary";
 import { type Event as _Event, WeekView } from "../components/weekly-view";
-import dustChartData from "../dummy/dust_chart_data.json";
 import eventsData from "../dummy/weekly-events.json";
 import { useDayContext } from "../lib/day-context";
-
-const dust_data = dustChartData;
 
 const greenDays = [
 	new Date(2025, 8, 1),
@@ -53,94 +52,104 @@ export default function Dust() {
 	const { selectedDay, setSelectedDay } = useDayContext();
 
 	return (
-		<main className="flex w-full flex-col place-items-center gap-4">
-			<div className="flex gap-4">
-				{view === "day" && (
-					<Button
-						onClick={() => setSelectedDay(subDays(selectedDay, 1))}
-						size={"icon"}
+		<section className="flex w-full flex-col">
+			<div className="flex flex-row">
+				<h1 className="p-2 text-3xl">{"Dust exposure"}</h1>
+				<div className="ml-auto flex flex-row gap-4">
+					{view === "day" && (
+						<Button
+							onClick={() => setSelectedDay(subDays(selectedDay, 1))}
+							size={"icon"}
+						>
+							{"<"}
+						</Button>
+					)}
+					<Select
+						value={view}
+						onValueChange={(value) => setView(value as View | null)}
 					>
-						{"<"}
-					</Button>
-				)}
-				<Select
-					value={view}
-					onValueChange={(value) => setView(value as View | null)}
-				>
-					<SelectTrigger className="w-32">
-						<SelectValue placeholder="View" />
-					</SelectTrigger>
-					<SelectContent className="w-32">
-						<SelectItem key={"day"} value={"day"}>
-							{"Day"}
-						</SelectItem>
-						<SelectItem key={"week"} value={"week"}>
-							{"Week"}
-						</SelectItem>
-						<SelectItem key={"month"} value={"month"}>
-							{"Month"}
-						</SelectItem>
-					</SelectContent>
-				</Select>
-				{view === "day" && (
-					<Button
-						onClick={() => setSelectedDay(addDays(selectedDay, 1))}
-						size={"icon"}
-					>
-						{">"}
-					</Button>
-				)}
+						<SelectTrigger className="w-32">
+							<SelectValue placeholder="View" />
+						</SelectTrigger>
+						<SelectContent className="w-32">
+							<SelectItem key={"day"} value={"day"}>
+								{"Day"}
+							</SelectItem>
+							<SelectItem key={"week"} value={"week"}>
+								{"Week"}
+							</SelectItem>
+							<SelectItem key={"month"} value={"month"}>
+								{"Month"}
+							</SelectItem>
+						</SelectContent>
+					</Select>
+					{view === "day" && (
+						<Button
+							onClick={() => setSelectedDay(addDays(selectedDay, 1))}
+							size={"icon"}
+						>
+							{">"}
+						</Button>
+					)}
+				</div>
 			</div>
-			{view === "month" ? (
-				<Card className="w-full md:w-4/5 lg:w-3/4">
-					<Calendar
-						defaultMonth={selectedDay}
-						fixedWeeks
-						showWeekNumber
-						disabled
-						mode="single"
-						weekStartsOn={1}
-						modifiers={{
-							safe: greenDays,
-							warning: yellowDays,
-							danger: redDays,
-						}}
-						modifiersClassNames={{
-							safe: cn("bg-[var(--safe)]"),
-							warning: cn("bg-[var(--warning)]"),
-							danger: cn("bg-[var(--danger)]"),
-							disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
-						}}
-						className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-						captionLayout="dropdown"
-						buttonVariant="default"
-					/>
-				</Card>
-			) : view === "week" ? (
-				<Card className="w-full md:w-4/5 lg:w-3/4">
-					<WeekView
-						initialDate={selectedDay}
-						dayStartHour={8}
-						dayEndHour={16}
-						weekStartsOn={1}
-						minuteStep={60}
-						events={events}
-						onEventClick={(event) => alert(event.dangerLevel)}
-					/>
-				</Card>
-			) : (
-				<ChartLineDefault
-					chartData={dust_data}
-					chartTitle={selectedDay.toLocaleDateString("en-GB", {
-						day: "numeric",
-						month: "long",
-					})}
-					unit="TWA"
-				>
-					<ThresholdLine y={120} dangerLevel="DANGER" />
-					<ThresholdLine y={80} dangerLevel="WARNING" />
-				</ChartLineDefault>
-			)}
-		</main>
+			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
+				<div className="flex flex-col gap-4">
+					<Summary exposureType="dust" safeCount={8} warningCount={4} />
+					<Notifications />
+				</div>
+				<div className="flex flex-1 flex-col items-end gap-4">
+					{view === "month" ? (
+						<Card className="w-full">
+							<Calendar
+								defaultMonth={selectedDay}
+								fixedWeeks
+								showWeekNumber
+								disabled
+								mode="single"
+								weekStartsOn={1}
+								modifiers={{
+									safe: greenDays,
+									warning: yellowDays,
+									danger: redDays,
+								}}
+								modifiersClassNames={{
+									safe: cn("bg-[var(--safe)]"),
+									warning: cn("bg-[var(--warning)]"),
+									danger: cn("bg-[var(--danger)]"),
+									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
+								}}
+								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
+								captionLayout="dropdown"
+								buttonVariant="default"
+							/>
+						</Card>
+					) : view === "week" ? (
+						<WeekView
+							initialDate={selectedDay}
+							dayStartHour={8}
+							dayEndHour={16}
+							weekStartsOn={1}
+							minuteStep={60}
+							events={events}
+							onEventClick={(event) => alert(event.dangerLevel)}
+						/>
+					) : (
+						<div />
+						// <ChartLineDefault
+						// 	chartData={data}
+						// 	chartTitle={selectedDay.toLocaleDateString("en-GB", {
+						// 		day: "numeric",
+						// 		month: "long",
+						// 	})}
+						// 	unit="TWA"
+						// >
+						// 	<ThresholdLine y={120} dangerLevel="DANGER" />
+						// 	<ThresholdLine y={80} dangerLevel="WARNING" />
+						// </ChartLineDefault>
+					)}
+				</div>
+			</div>
+		</section>
 	);
 }

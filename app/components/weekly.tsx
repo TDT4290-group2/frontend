@@ -41,7 +41,7 @@ export const WeeklyOverview = () => {
 	};
 
 	return (
-		<Card className="sm: w-full sm:p-2 md:w-4/5 lg:w-3/4">
+		<Card className="w-full">
 			<CardHeader className="weekly-labels p-3 pl-6">
 				<CardTitle className="text-2xl">{"Your weekly exposure"}</CardTitle>
 				<CardDescription className="pb-4">{getDateRange()}</CardDescription>
