@@ -1,4 +1,11 @@
-import { cn, parseAsView, type View } from "@/lib/utils";
+/** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
+import {
+	cn,
+	mapMonthDataToDangerLists,
+	mapWeekDataToEvents,
+	parseAsView,
+	type View,
+} from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -6,14 +13,22 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
-import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
+import {
+	addDays,
+	endOfMonth,
+	endOfWeek,
+	startOfMonth,
+	startOfWeek,
+	subDays,
+} from "date-fns";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
+import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
-import { WeeklyOverview } from "../components/weekly";
+import { WeekView } from "../components/weekly-view";
 import { useSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
 import {
@@ -22,30 +37,13 @@ import {
 	TimeGranularity,
 } from "../lib/dto";
 
-const greenDays = [
-	new Date(2025, 8, 1),
-	new Date(2025, 8, 5),
-	new Date(2025, 8, 4),
-	new Date(2025, 8, 9),
-	new Date(2025, 8, 10),
-	new Date(2025, 8, 12),
-	new Date(2025, 8, 15),
-	new Date(2025, 8, 16),
-	new Date(2025, 8, 18),
-	new Date(2025, 8, 19),
-];
-const yellowDays = [new Date(2025, 8, 2), new Date(2025, 8, 11)];
-const redDays = [
-	new Date(2025, 8, 3),
-	new Date(2025, 8, 17),
-	new Date(2025, 8, 8),
-];
-
 // biome-ignore lint: page components can be default exports
 export default function Noise() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 
-	const { selectedDay } = useDayContext();
+	const dayOffset = view === "day" ? 1 : view === "week" ? 7 : 30;
+
+	const { selectedDay, setSelectedDay } = useDayContext();
 
 	const dayQuery: SensorDataRequestDto = {
 		startTime: new Date(selectedDay.setHours(8)),
@@ -75,11 +73,19 @@ export default function Noise() {
 		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
 	const { data, isLoading, isError } = useSensorData("noise", query);
 
+	const { safe, warning, danger } = mapMonthDataToDangerLists(data ?? []);
+
 	return (
 		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
 				<h1 className="p-2 text-3xl">{"Noise exposure"}</h1>
-				<div className="ml-auto">
+				<div className="ml-auto flex flex-row gap-4">
+					<Button
+						onClick={() => setSelectedDay(subDays(selectedDay, dayOffset))}
+						size={"icon"}
+					>
+						{"<"}
+					</Button>
 					<Select
 						value={view}
 						onValueChange={(value) => setView(value as View | null)}
@@ -99,6 +105,12 @@ export default function Noise() {
 							</SelectItem>
 						</SelectContent>
 					</Select>
+					<Button
+						onClick={() => setSelectedDay(addDays(selectedDay, dayOffset))}
+						size={"icon"}
+					>
+						{">"}
+					</Button>
 				</div>
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
@@ -114,15 +126,16 @@ export default function Noise() {
 					) : view === "month" ? (
 						<Card className="w-full">
 							<Calendar
+								defaultMonth={selectedDay}
 								fixedWeeks
 								showWeekNumber
 								disabled
 								mode="single"
 								weekStartsOn={1}
 								modifiers={{
-									safe: greenDays,
-									warning: yellowDays,
-									danger: redDays,
+									safe: safe,
+									warning: warning,
+									danger: danger,
 								}}
 								modifiersClassNames={{
 									safe: cn("bg-[var(--safe)]"),
@@ -136,11 +149,23 @@ export default function Noise() {
 							/>
 						</Card>
 					) : view === "week" ? (
-						<WeeklyOverview />
+						<WeekView
+							initialDate={selectedDay}
+							dayStartHour={8}
+							dayEndHour={16}
+							weekStartsOn={1}
+							minuteStep={60}
+							events={mapWeekDataToEvents(data ?? [])}
+							onEventClick={(event) => alert(event.dangerLevel)}
+						/>
 					) : (
 						<ChartLineDefault
 							chartData={data ?? []}
-							chartTitle="Noise Exposure"
+							chartTitle={selectedDay.toLocaleDateString("en-GB", {
+								day: "numeric",
+								month: "long",
+								year: "numeric",
+							})}
 							unit="db (TWA)"
 							startHour={8}
 							endHour={16}

@@ -56,14 +56,12 @@ export default function Dust() {
 			<div className="flex flex-row">
 				<h1 className="p-2 text-3xl">{"Dust exposure"}</h1>
 				<div className="ml-auto flex flex-row gap-4">
-					{view === "day" && (
-						<Button
-							onClick={() => setSelectedDay(subDays(selectedDay, 1))}
-							size={"icon"}
-						>
-							{"<"}
-						</Button>
-					)}
+					<Button
+						onClick={() => setSelectedDay(subDays(selectedDay, 1))}
+						size={"icon"}
+					>
+						{"<"}
+					</Button>
 					<Select
 						value={view}
 						onValueChange={(value) => setView(value as View | null)}
@@ -83,14 +81,12 @@ export default function Dust() {
 							</SelectItem>
 						</SelectContent>
 					</Select>
-					{view === "day" && (
-						<Button
-							onClick={() => setSelectedDay(addDays(selectedDay, 1))}
-							size={"icon"}
-						>
-							{">"}
-						</Button>
-					)}
+					<Button
+						onClick={() => setSelectedDay(addDays(selectedDay, 1))}
+						size={"icon"}
+					>
+						{">"}
+					</Button>
 				</div>
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">

@@ -206,10 +206,10 @@ export function Header({
 	showTodayButton = true,
 	todayButton,
 	onToday,
-	showPrevButton = true,
+	showPrevButton = false,
 	prevButton,
 	onPrev,
-	showNextButton = true,
+	showNextButton = false,
 	nextButton,
 	onNext,
 }: {
