@@ -6,6 +6,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item"
+import { Card } from "./card"
 
 const notifications = [
   {
@@ -32,11 +33,11 @@ const notifications = [
 
 export function Notifications() {
   return (
-    <div className="flex w-full max-w-md flex-col gap-6">
+    <Card className="w-full px-4 gap-0">
       <ItemGroup className="gap-1">
         {notifications.map((notification) => (
           <Item key={notification.title} variant="outline" asChild role="listitem" className=" bg-[var(--background)] rounded-3xl border-3 border-[var(--border)]">
-            <a href="#">
+            <li>
               <ItemMedia variant="image">
                 <img 
                   src={
@@ -66,10 +67,10 @@ export function Notifications() {
               <ItemContent className="flex-none text-center">
                 <ItemDescription>{notification.date}</ItemDescription>
               </ItemContent>
-            </a>
+            </li>
           </Item>
         ))}
       </ItemGroup>
-    </div>
+    </Card>
   )
 }

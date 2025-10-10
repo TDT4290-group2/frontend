@@ -56,51 +56,52 @@ export default function Dust() {
 
 	return (
 		<section className="flex w-full flex-col">
-			<main className="flex w-full flex-col-reverse gap-4 md:flex-row">
-				<div className="flex flex-col gap-4 pl-2">
-					<Summary exposureType="dust" safeCount={8} warningCount={4} />
+			<div className="flex flex-row">
+				<h1 className="p-2 text-3xl">{"Dust exposure"}</h1>
+				<div className="ml-auto flex flex-row gap-4">
+					{view === "day" && (
+						<Button
+							onClick={() => setSelectedDay(subDays(selectedDay, 1))}
+							size={"icon"}
+						>
+							{"<"}
+						</Button>
+					)}
+					<Select
+						value={view}
+						onValueChange={(value) => setView(value as View | null)}
+					>
+						<SelectTrigger className="w-32">
+							<SelectValue placeholder="View" />
+						</SelectTrigger>
+						<SelectContent className="w-32">
+							<SelectItem key={"day"} value={"day"}>
+								{"Day"}
+							</SelectItem>
+							<SelectItem key={"week"} value={"week"}>
+								{"Week"}
+							</SelectItem>
+							<SelectItem key={"month"} value={"month"}>
+								{"Month"}
+							</SelectItem>
+						</SelectContent>
+					</Select>
+					{view === "day" && (
+						<Button
+							onClick={() => setSelectedDay(addDays(selectedDay, 1))}
+							size={"icon"}
+						>
+							{">"}
+						</Button>
+					)}
+				</div>
+			</div>
+			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
+				<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
+					<Summary exposureType="dust" safeCount={8} warningCount={4}/>
 					<Notifications />
 				</div>
-
 				<div className="flex flex-1 flex-col items-end gap-4">
-					<h1 className="self-start pl-4 text-3xl">{"Dust exposure"}</h1>
-					<div className="flex gap-4">
-						{view === "day" && (
-							<Button
-								onClick={() => setSelectedDay(subDays(selectedDay, 1))}
-								size={"icon"}
-							>
-								{"<"}
-							</Button>
-						)}
-						<Select
-							value={view}
-							onValueChange={(value) => setView(value as View | null)}
-						>
-							<SelectTrigger className="w-32">
-								<SelectValue placeholder="View" />
-							</SelectTrigger>
-							<SelectContent className="w-32">
-								<SelectItem key={"day"} value={"day"}>
-									{"Day"}
-								</SelectItem>
-								<SelectItem key={"week"} value={"week"}>
-									{"Week"}
-								</SelectItem>
-								<SelectItem key={"month"} value={"month"}>
-									{"Month"}
-								</SelectItem>
-							</SelectContent>
-						</Select>
-						{view === "day" && (
-							<Button
-								onClick={() => setSelectedDay(addDays(selectedDay, 1))}
-								size={"icon"}
-							>
-								{">"}
-							</Button>
-						)}
-					</div>
 					{view === "month" ? (
 						<Card className="w-full">
 							<Calendar
@@ -134,7 +135,7 @@ export default function Dust() {
 							weekStartsOn={1}
 							minuteStep={60}
 							events={events}
-							onEventClick={(event) => alert(event.dangerLevel)}
+							onEventClick={(event) => console.log("Hour event clicked: ", event.dangerLevel)}
 						/>
 					) : (
 						<ChartLineDefault
@@ -150,7 +151,7 @@ export default function Dust() {
 						</ChartLineDefault>
 					)}
 				</div>
-			</main>
+			</div>
 		</section>
 	);
 }
