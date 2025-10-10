@@ -11,6 +11,7 @@ import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
+import Summary from "../components/ui/summary";
 import { WeeklyOverview } from "../components/weekly";
 import noiseChartData from "../dummy/noise_chart_data.json";
 
@@ -66,7 +67,8 @@ export default function Noise() {
 				</div>
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
-				<div className="flex h-64 flex-col gap-4 overflow-y-auto rounded-xl bg-[var(--card)] p-2">
+				<div className="flex flex-col gap-4">
+					<Summary exposureType="noise" />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">

@@ -1,4 +1,4 @@
-import { cn, parseAsSensor, type Sensor } from "@/lib/utils";
+import { cn, parseAsView, type View } from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -6,35 +6,19 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
+import { addDays, subDays } from "date-fns";
 import { useQueryState } from "nuqs";
 import { DailyNotes } from "../components/daily-notes";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
+import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
-import { WeeklyOverview } from "../components/weekly";
+import { Notifications } from "../components/ui/notifications";
+import Summary from "../components/ui/summary";
+import { WeekView } from "../components/weekly-view";
+import { useDayContext } from "../lib/day-context";
 
-// import noiseChartData from "../dummy/noise_chart_data.json";
-// import vibrationChartData from "../dummy/vibration_chart_data.json";
-// import dustChartData from "../dummy/dust_chart_data.json";
-
-// const noiseData = noiseChartData;
-// const vibrationData = vibrationChartData;
-// const dustData = dustChartData;
-
-// Dummy data for line charts
-const noiseChartData = [
-	{ x: "08:00", y: 75 },
-	{ x: "10:00", y: 88 },
-	{ x: "12:00", y: 92 },
-	{ x: "14:00", y: 85 },
-];
-const vibrationChartData = [
-	{ x: "08:00", y: 75 },
-	{ x: "10:00", y: 88 },
-	{ x: "12:00", y: 92 },
-	{ x: "14:00", y: 85 },
-];
-const dustChartData = [
+const tempDailyChartData = [
 	{ x: "08:00", y: 75 },
 	{ x: "10:00", y: 88 },
 	{ x: "12:00", y: 92 },
@@ -50,11 +34,8 @@ export function meta() {
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
-	const [sensor, setSensor] = useQueryState(
-		"sensor",
-		parseAsSensor.withDefault("dust"),
-	);
-
+	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
+	const { selectedDay, setSelectedDay } = useDayContext();
 	const greenNoiseDays = [new Date(2025, 8, 1), new Date(2025, 8, 5)];
 	const yellowNoiseDays = [new Date(2025, 8, 2), new Date(2025, 8, 6)];
 	const redNoiseDays = [
@@ -64,163 +45,101 @@ export default function Home() {
 	];
 
 	return (
-		<main className="flex w-full flex-col place-items-center gap-4">
-			<Select
-				value={sensor}
-				onValueChange={(value) => setSensor(value as Sensor | null)}
-			>
-				<SelectTrigger className="w-32">
-					<SelectValue placeholder="View" />
-				</SelectTrigger>
-				<SelectContent className="w-32">
-					<SelectItem key={"dust"} value={"dust"}>
-						{"Dust"}
-					</SelectItem>
-					<SelectItem key={"noise"} value={"noise"}>
-						{"Noise"}
-					</SelectItem>
-					<SelectItem key={"vibration"} value={"vibration"}>
-						{"Vibration"}
-					</SelectItem>
-				</SelectContent>
-			</Select>
-			{sensor === "dust" ? (
-				<>
-					<h1 className="text-3xl">{"Your dust overview"}</h1>
-					<section className="flex w-full flex-col place-items-center p-2">
-						<h2 className="text-2xl">{"Daily dust exposure"}</h2>
-						<ChartLineDefault
-							chartData={dustChartData}
-							chartTitle="Dust Exposure"
-							unit="db (TWA)"
+		<div className="flex w-full flex-col items-center md:items-start">
+			<div className="mb-4 flex w-full flex-col items-center gap-2 md:mb-0 md:flex-row md:justify-between">
+				<h1 className="p-2 text-3xl">{`Overview of the ${view}`}</h1>
+				<div className="flex flex-row gap-4">
+					{view === "day" && (
+						<Button
+							onClick={() => setSelectedDay(subDays(selectedDay, 1))}
+							size={"icon"}
 						>
-							<ThresholdLine y={120} dangerLevel="DANGER" />
-							{/* <ThresholdLine y={85} dangerLevel="WARNING" /> */}
-						</ChartLineDefault>
-					</section>
-					<section className="flex w-full flex-col place-items-center p-2">
-						<h2 className="text-2xl">{"Weekly dust exposure"}</h2>
-						<WeeklyOverview />
-					</section>
-					<section className="flex w-full flex-col place-items-center p-2">
-						<h2 className="text-2xl">{"Monthly dust exposure"}</h2>
-						<Card className="sm: w-full md:w-4/5 lg:w-3/4">
-							<Calendar
-								fixedWeeks
-								showWeekNumber
-								disabled
-								mode="single"
-								weekStartsOn={1}
-								modifiers={{
-									safe: greenNoiseDays,
-									warning: yellowNoiseDays,
-									danger: redNoiseDays,
-								}}
-								modifiersClassNames={{
-									safe: cn("bg-[var(--safe)]"),
-									warning: cn("bg-[var(--warning)]"),
-									danger: cn("bg-[var(--danger)]"),
-									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
-								}}
-								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-								captionLayout="dropdown"
-								buttonVariant="ghost"
-							/>
-						</Card>
-					</section>
-				</>
-			) : sensor === "noise" ? (
-				<>
-					<h1 className="text-3xl">{"Your noise overview"}</h1>
-					<section className="flex w-full flex-col place-items-center p-2">
-						<h2 className="text-2xl">{"Daily noise exposure"}</h2>
-						<ChartLineDefault
-							chartData={noiseChartData}
-							chartTitle="Noise Exposure"
-							unit="db (TWA)"
+							{"<"}
+						</Button>
+					)}
+					<Select
+						value={view}
+						onValueChange={(value) => setView(value as View | null)}
+					>
+						<SelectTrigger className="w-32">
+							<SelectValue placeholder="View" />
+						</SelectTrigger>
+						<SelectContent className="w-32">
+							<SelectItem key={"day"} value={"day"}>
+								{"Day"}
+							</SelectItem>
+							<SelectItem key={"week"} value={"week"}>
+								{"Week"}
+							</SelectItem>
+							<SelectItem key={"month"} value={"month"}>
+								{"Month"}
+							</SelectItem>
+						</SelectContent>
+					</Select>
+					{view === "day" && (
+						<Button
+							onClick={() => setSelectedDay(addDays(selectedDay, 1))}
+							size={"icon"}
 						>
-							<ThresholdLine y={120} dangerLevel="DANGER" />
-							{/* <ThresholdLine y={85} dangerLevel="WARNING" /> */}
-						</ChartLineDefault>
-					</section>
-					<section className="flex w-full flex-col place-items-center p-2">
-						<h2 className="text-2xl">{"Weekly noise exposure"}</h2>
-						<WeeklyOverview />
-					</section>
-					<section className="flex w-full flex-col place-items-center p-2">
-						<h2 className="text-2xl">{"Monthly noise exposure"}</h2>
-						<Card className="sm: w-full md:w-4/5 lg:w-3/4">
-							<Calendar
-								fixedWeeks
-								showWeekNumber
-								disabled
-								mode="single"
-								weekStartsOn={1}
-								modifiers={{
-									safe: greenNoiseDays,
-									warning: yellowNoiseDays,
-									danger: redNoiseDays,
-								}}
-								modifiersClassNames={{
-									safe: cn("bg-green-500 dark:bg-green-700"),
-									warning: cn("bg-orange-500 dark:bg-orange-700"),
-									danger: cn("bg-red-500 dark:bg-red-700"),
-									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
-								}}
-								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-								captionLayout="dropdown"
-								buttonVariant="ghost"
-							/>
-						</Card>
-					</section>
-				</>
-			) : (
-				<>
-					<h1 className="text-3xl">{"Your vibration overview"}</h1>
-					<section className="flex w-full flex-col place-items-center p-2">
-						<h2 className="text-2xl">{"Daily vibration exposure"}</h2>
-						<ChartLineDefault
-							chartData={vibrationChartData}
-							chartTitle="Vibration Exposure"
-							unit="db (TWA)"
-						>
-							<ThresholdLine y={120} dangerLevel="DANGER" />
-							{/* <ThresholdLine y={85} dangerLevel="WARNING" /> */}
-						</ChartLineDefault>
-					</section>
-					<section className="flex w-full flex-col place-items-center p-2">
-						<h2 className="text-2xl">{"Weekly vibration exposure"}</h2>
-						<WeeklyOverview />
-					</section>
-					<section className="flex w-full flex-col place-items-center p-2">
-						<h2 className="text-2xl">{"Monthly vibration exposure"}</h2>
-						<Card className="sm: w-full md:w-4/5 lg:w-3/4">
-							<Calendar
-								fixedWeeks
-								showWeekNumber
-								disabled
-								mode="single"
-								weekStartsOn={1}
-								modifiers={{
-									safe: greenNoiseDays,
-									warning: yellowNoiseDays,
-									danger: redNoiseDays,
-								}}
-								modifiersClassNames={{
-									safe: cn("bg-green-500 dark:bg-green-700"),
-									warning: cn("bg-orange-500 dark:bg-orange-700"),
-									danger: cn("bg-red-500 dark:bg-red-700"),
-									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
-								}}
-								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-								captionLayout="dropdown"
-								buttonVariant="ghost"
-							/>
-						</Card>
-					</section>
-				</>
-			)}
-			<DailyNotes />
-		</main>
+							{">"}
+						</Button>
+					)}
+				</div>
+			</div>
+			<div className="flex w-full flex-col gap-4 md:flex-row">
+				<div className="flex flex-col gap-4">
+					<Summary />
+					<Notifications />
+				</div>
+				<div className="flex flex-1 flex-col gap-1">
+					<div className="view-wrapper w-full">
+						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
+							{view === "month" ? (
+								<Card className="w-full">
+									<Calendar
+										fixedWeeks
+										showWeekNumber
+										disabled
+										mode="single"
+										weekStartsOn={1}
+										modifiers={{
+											safe: greenNoiseDays,
+											warning: yellowNoiseDays,
+											danger: redNoiseDays,
+										}}
+										modifiersClassNames={{
+											safe: cn("bg-[var(--safe)]"),
+											warning: cn("bg-[var(--warning)]"),
+											danger: cn("bg-[var(--danger)]"),
+											disabled: cn(
+												"m-2 rounded-2xl text-black dark:text-white",
+											),
+										}}
+										className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
+										captionLayout="dropdown"
+										buttonVariant="ghost"
+									/>
+								</Card>
+							) : view === "week" ? (
+								<>
+									{/* NOTE: Should use props, if none are provided then some default values are used. Like here */}
+									<WeekView />
+								</>
+							) : (
+								<ChartLineDefault
+									chartData={tempDailyChartData}
+									chartTitle="Vibration Exposure"
+									unit="db (TWA)"
+								>
+									<ThresholdLine y={120} dangerLevel="DANGER" />
+									{/* <ThresholdLine y={85} dangerLevel="WARNING" /> */}
+								</ChartLineDefault>
+							)}
+							<DailyNotes />
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
 	);
 }
