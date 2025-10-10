@@ -98,7 +98,7 @@ export default function Dust() {
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary exposureType="dust" safeCount={8} warningCount={4}/>
+					<Summary exposureType="dust" safeCount={8} warningCount={4} />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
@@ -135,7 +135,7 @@ export default function Dust() {
 							weekStartsOn={1}
 							minuteStep={60}
 							events={events}
-							onEventClick={(event) => console.log("Hour event clicked: ", event.dangerLevel)}
+							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
 					) : (
 						<ChartLineDefault

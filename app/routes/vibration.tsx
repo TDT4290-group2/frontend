@@ -11,9 +11,9 @@ import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
+import Summary from "../components/ui/summary";
 import { WeeklyOverview } from "../components/weekly";
 import vibrationChartData from "../dummy/vibration_chart_data.json";
-import Summary from "../components/ui/summary";
 
 const data = vibrationChartData;
 

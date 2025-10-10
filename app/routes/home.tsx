@@ -13,10 +13,10 @@ import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
 import { Card } from "../components/ui/card";
+import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
 import { useDayContext } from "../lib/day-context";
-import { Notifications } from "../components/ui/notifications";
 
 const tempDailyChartData = [
 	{ x: "08:00", y: 75 },
@@ -46,7 +46,7 @@ export default function Home() {
 
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
-			<div className="flex flex-col items-center gap-2 mb-4 w-full md:flex-row md:justify-between md:mb-0">
+			<div className="mb-4 flex w-full flex-col items-center gap-2 md:mb-0 md:flex-row md:justify-between">
 				<h1 className="p-2 text-3xl">{`Overview of the ${view}`}</h1>
 				<div className="flex flex-row gap-4">
 					{view === "day" && (
@@ -92,7 +92,6 @@ export default function Home() {
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">
-					
 					<div className="view-wrapper w-full">
 						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
 							{view === "month" ? (
@@ -112,7 +111,9 @@ export default function Home() {
 											safe: cn("bg-[var(--safe)]"),
 											warning: cn("bg-[var(--warning)]"),
 											danger: cn("bg-[var(--danger)]"),
-											disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
+											disabled: cn(
+												"m-2 rounded-2xl text-black dark:text-white",
+											),
 										}}
 										className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
 										captionLayout="dropdown"
