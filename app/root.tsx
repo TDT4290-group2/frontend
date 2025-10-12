@@ -11,6 +11,7 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { DayContextProvider } from "./lib/day-context";
 
 export const links: Route.LinksFunction = () => [
@@ -53,6 +54,9 @@ export default function App() {
 			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
 				<DayContextProvider>
 					<NuqsAdapter>
+						{import.meta.env.DEV && (
+							<ReactQueryDevtools initialIsOpen={false} />
+						)}
 						<Outlet />
 					</NuqsAdapter>
 				</DayContextProvider>

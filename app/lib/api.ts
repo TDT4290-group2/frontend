@@ -11,7 +11,7 @@ export const useSensorData = (
 	sensorDataRequest: SensorDataRequestDto,
 ) => {
 	const { data, isLoading, isError } = useQuery<Array<SensorDataResponseDto>>({
-		queryKey: [sensor, sensorDataRequest],
+		queryKey: ["sensorData", sensor, sensorDataRequest],
 		queryFn: async (): Promise<Array<SensorDataResponseDto>> => {
 			const response = await fetch(`${baseURL}sensor/${sensor}/${uid}`, {
 				method: "POST",
@@ -27,6 +27,7 @@ export const useSensorData = (
 
 			return response.json();
 		},
+		staleTime: 10 * 60 * 1000, //10 min
 	});
 
 	return { data, isLoading, isError };

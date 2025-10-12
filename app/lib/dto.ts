@@ -14,7 +14,7 @@ export enum AggregationFunction {
 
 export type SensorDataRequestDto = {
 	startTime: Date;
-	endTime?: Date;
+	endTime: Date;
 	granularity: TimeGranularity;
 	function: AggregationFunction;
 	fields?: Array<string>;

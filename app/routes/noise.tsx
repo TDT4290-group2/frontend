@@ -1,8 +1,11 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 import {
 	cn,
+	getNextDay,
+	getPrevDay,
 	mapMonthDataToDangerLists,
 	mapWeekDataToEvents,
+	noiseThresholds,
 	parseAsView,
 	type View,
 } from "@/lib/utils";
@@ -13,14 +16,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
-import {
-	addDays,
-	endOfMonth,
-	endOfWeek,
-	startOfMonth,
-	startOfWeek,
-	subDays,
-} from "date-fns";
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Button } from "../components/ui/button";
@@ -40,8 +36,6 @@ import {
 // biome-ignore lint: page components can be default exports
 export default function Noise() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
-
-	const dayOffset = view === "day" ? 1 : view === "week" ? 7 : 30;
 
 	const { selectedDay, setSelectedDay } = useDayContext();
 
@@ -81,7 +75,7 @@ export default function Noise() {
 				<h1 className="p-2 text-3xl">{"Noise exposure"}</h1>
 				<div className="ml-auto flex flex-row gap-4">
 					<Button
-						onClick={() => setSelectedDay(subDays(selectedDay, dayOffset))}
+						onClick={() => setSelectedDay(getPrevDay(selectedDay, view))}
 						size={"icon"}
 					>
 						{"<"}
@@ -106,7 +100,7 @@ export default function Noise() {
 						</SelectContent>
 					</Select>
 					<Button
-						onClick={() => setSelectedDay(addDays(selectedDay, dayOffset))}
+						onClick={() => setSelectedDay(getNextDay(selectedDay, view))}
 						size={"icon"}
 					>
 						{">"}
@@ -120,14 +114,18 @@ export default function Noise() {
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
 					{isLoading ? (
-						<p>{"Loading data..."}</p>
+						<Card className="flex h-24 w-full items-center">
+							<p>{"Loading data..."}</p>
+						</Card>
 					) : isError ? (
-						<p>{"Something went wrong while fetching sensor data."}</p>
+						<Card className="flex h-24 w-full items-center">
+							<p>{"Something went wrong while fetching sensor data."}</p>
+						</Card>
 					) : view === "month" ? (
 						<Card className="w-full">
 							<Calendar
-								defaultMonth={selectedDay}
-								fixedWeeks
+								month={selectedDay}
+								hideNavigation
 								showWeekNumber
 								disabled
 								mode="single"
@@ -144,13 +142,12 @@ export default function Noise() {
 									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
 								}}
 								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-								captionLayout="dropdown"
+								captionLayout="label"
 								buttonVariant="ghost"
 							/>
 						</Card>
 					) : view === "week" ? (
 						<WeekView
-							initialDate={selectedDay}
 							dayStartHour={8}
 							dayEndHour={16}
 							weekStartsOn={1}
@@ -171,8 +168,11 @@ export default function Noise() {
 							endHour={16}
 							maxY={130}
 						>
-							<ThresholdLine y={120} dangerLevel="DANGER" />
-							<ThresholdLine y={80} dangerLevel="WARNING" />
+							<ThresholdLine y={noiseThresholds.danger} dangerLevel="DANGER" />
+							<ThresholdLine
+								y={noiseThresholds.warning}
+								dangerLevel="WARNING"
+							/>
 						</ChartLineDefault>
 					)}
 				</div>

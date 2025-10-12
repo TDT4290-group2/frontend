@@ -1,4 +1,14 @@
 import { type ClassValue, clsx } from "clsx";
+import {
+	addDays,
+	addMonths,
+	addWeeks,
+	startOfMonth,
+	startOfWeek,
+	subDays,
+	subMonths,
+	subWeeks,
+} from "date-fns";
 import { parseAsStringLiteral } from "nuqs";
 import { twMerge } from "tailwind-merge";
 import type { Event } from "../components/weekly-view";
@@ -44,18 +54,17 @@ export const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
 	},
 };
 
-//TODO: make generic thresholds
-const noiseThresholds = [80, 130];
+export const noiseThresholds = { warning: 80, danger: 130 };
 
 export const mapWeekDataToEvents = (
 	data: Array<SensorDataResponseDto>,
 ): Array<Event> =>
 	data.map((item) => {
 		let dangerLevel: DangerLevel = "SAFE";
-		if (item.value > noiseThresholds[0]) {
+		if (item.value > noiseThresholds.warning) {
 			dangerLevel = "WARNING";
 		}
-		if (item.value > noiseThresholds[1]) {
+		if (item.value > noiseThresholds.danger) {
 			dangerLevel = "DANGER";
 		}
 
@@ -78,9 +87,9 @@ export const mapMonthDataToDangerLists = (
 	const danger: Array<Date> = [];
 
 	Object.values(data).forEach((item) => {
-		if (item.value < noiseThresholds[0]) {
+		if (item.value < noiseThresholds.warning) {
 			safe.push(new Date(item.time));
-		} else if (item.value < noiseThresholds[1]) {
+		} else if (item.value < noiseThresholds.danger) {
 			warning.push(new Date(item.time));
 		} else {
 			danger.push(new Date(item.time));
@@ -88,4 +97,24 @@ export const mapMonthDataToDangerLists = (
 	});
 
 	return { safe, warning, danger };
+};
+
+export const getPrevDay = (selectedDay: Date, view: View): Date => {
+	if (view === "day") {
+		return subDays(selectedDay, 1);
+	}
+	if (view === "week") {
+		return startOfWeek(subWeeks(selectedDay, 1), { weekStartsOn: 1 });
+	}
+	return startOfMonth(subMonths(selectedDay, 1));
+};
+
+export const getNextDay = (selectedDay: Date, view: View): Date => {
+	if (view === "day") {
+		return addDays(selectedDay, 1);
+	}
+	if (view === "week") {
+		return startOfWeek(addWeeks(selectedDay, 1), { weekStartsOn: 1 });
+	}
+	return startOfMonth(addMonths(selectedDay, 1));
 };
