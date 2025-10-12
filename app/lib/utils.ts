@@ -55,6 +55,7 @@ export const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
 };
 
 export const noiseThresholds = { warning: 80, danger: 130 };
+export const vibrationThresholds = { warning: 80, danger: 100 };
 
 export const mapWeekDataToEvents = (
 	data: Array<SensorDataResponseDto>,
