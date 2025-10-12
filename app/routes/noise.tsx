@@ -21,7 +21,7 @@ import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
-import { Card } from "../components/ui/card";
+import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
@@ -155,6 +155,17 @@ export default function Noise() {
 							events={mapWeekDataToEvents(data ?? [])}
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
+					) : !data || data.length === 0 ? (
+						<Card className="flex h-24 w-full items-center">
+							<CardTitle>
+								{selectedDay.toLocaleDateString("en-GB", {
+									day: "numeric",
+									month: "long",
+									year: "numeric",
+								})}
+							</CardTitle>
+							<p>{"No exposure data found for this day"}</p>
+						</Card>
 					) : (
 						<ChartLineDefault
 							chartData={data ?? []}

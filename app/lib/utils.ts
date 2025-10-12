@@ -54,8 +54,10 @@ export const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
 	},
 };
 
+//Temporary thresholds
 export const noiseThresholds = { warning: 80, danger: 130 };
 export const vibrationThresholds = { warning: 80, danger: 100 };
+export const dustThresholds = { warning: 30, danger: 50 };
 
 export const mapWeekDataToEvents = (
 	data: Array<SensorDataResponseDto>,
