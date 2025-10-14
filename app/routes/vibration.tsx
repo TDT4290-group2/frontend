@@ -44,7 +44,6 @@ export default function Vibration() {
 		endTime: new Date(selectedDay.setHours(16)),
 		granularity: TimeGranularity.Minute,
 		function: AggregationFunction.Avg,
-		fields: [],
 	};
 
 	const weekQuery: SensorDataRequestDto = {
@@ -52,7 +51,6 @@ export default function Vibration() {
 		endTime: endOfWeek(selectedDay),
 		granularity: TimeGranularity.Hour,
 		function: AggregationFunction.Max,
-		fields: [],
 	};
 
 	const monthQuery: SensorDataRequestDto = {
@@ -60,7 +58,6 @@ export default function Vibration() {
 		endTime: endOfMonth(selectedDay),
 		granularity: TimeGranularity.Day,
 		function: AggregationFunction.Max,
-		fields: [],
 	};
 
 	const query =
@@ -110,7 +107,7 @@ export default function Vibration() {
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary exposureType="vibration" />
+					<Summary exposureType={"vibration"} view={view} data={data} />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">

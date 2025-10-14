@@ -78,7 +78,7 @@ export default function Home() {
 
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
-			<div className="mb-4 flex w-full flex-col items-center gap-2 md:mb-0 md:flex-row md:justify-between">
+			<div className="mb-4 flex w-full flex-col items-start gap-2 md:mb-0 md:flex-row md:justify-between">
 				<h1 className="p-2 text-3xl">{`Overview of the ${view}`}</h1>
 				<div className="flex flex-row gap-4">
 					<Button
