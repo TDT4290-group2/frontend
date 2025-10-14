@@ -1,4 +1,4 @@
-import { cn, dustThresholds, getNextDay, getPrevDay, mapMonthDataToDangerLists, mapWeekDataToEvents, noiseThresholds, parseAsView, summarizeDanger, summarizeSafe, summarizeWarnings, type View } from "@/lib/utils";
+import { cn, dustThresholds, getNextDay, getPrevDay, mapMonthDataToDangerLists, mapWeekDataToEvents, noiseThresholds, parseAsView, summarizeDanger, summarizeForDays, summarizeSafe, summarizeWarnings, type View } from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -63,11 +63,6 @@ export default function Home() {
 
 	const { data, isLoading, isError } = useSensorData("dust", query);
 	const { safe, warning, danger } = mapMonthDataToDangerLists(data ?? []);
-	const summary = {
-		safe: summarizeSafe("dust", data ?? []),
-		warning: summarizeWarnings("dust", data ?? []),
-		danger: summarizeDanger("dust", data ?? [])
-	} 
 
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
@@ -109,7 +104,7 @@ export default function Home() {
 			</div>
 			<div className="flex w-full flex-col gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary safeCount={summary.safe} warningCount={summary.warning} dangerCount={summary.danger}/>
+					<Summary view={view} data={data}/>
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">

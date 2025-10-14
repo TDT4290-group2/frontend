@@ -1,44 +1,65 @@
-import { cn, dangerLevels, DangerTypes, type Sensor } from "~/app/lib/utils";
+import { cn, dangerLevels, DangerTypes, summarizeDanger, summarizeForDays, summarizeSafe, summarizeWarnings, type Sensor, type View } from "~/app/lib/utils";
 import { Card } from "./card";
 import { useIsMobile } from "~/app/hooks/use-mobile";
+import type { SensorDataResponseDto } from "~/app/lib/dto";
 
 type SummaryProps = {
     exposureType?: Sensor,
-    safeCount?: number,
-    warningCount?: number,
-    dangerCount?: number,
-    safeLabel?: string,
-    warningLabel?: string,
-    dangerLabel?: string
+    data: SensorDataResponseDto[] | undefined,
+    view: View,
 }
+
+type SummaryLabel = Record<"safe" | "warning" | "danger", string>
 
 export function Summary({
         exposureType,
-        safeCount,
-        warningCount,
-        dangerCount,
-        safeLabel,
-        warningLabel,
-        dangerLabel
+        data,
+        view
     } : SummaryProps){
 
     const safeColor = "text-safe"; 
     const warningColor = "text-warning";
     const dangerColor = "text-destructive";
 
-    const defaultLabels = {
+    const defaultLabels: SummaryLabel = {
         safe: DangerTypes.low,
         warning: DangerTypes.medium,
         danger: DangerTypes.high
     }
-    const summaryData = {
+
+    const viewLabelConfig: Record<View, SummaryLabel> = {
+        day: {
+            safe: "Hours with safe amount of exposure",
+            warning: "Hours where a warning was issued due to exposure",
+            danger: "Hours of exposure above limit"
+        },
+        week: {
+            safe: "Hours with safe amount of exposure",
+            warning: "Hours where a warning was issued due to exposure",
+            danger: "Hours of exposure above limit"
+        },
+        month: {
+            safe: "Days where no limit was close to exceeding",
+            warning: "Days where a warning was issued due to exposure",
+            danger: "Days where exposure exceeded limit"
+        }
+    }
+
+    const summaryData = view === "day" ? {
+		safeCount: summarizeForDays("safe", "dust", data ?? []),
+		warningCount: summarizeForDays("warning", "dust", data ?? []),
+		dangerCount: summarizeForDays("danger", "dust", data ?? []),
+	} : {
+		safeCount: summarizeSafe("dust", data ?? []),
+		warningCount: summarizeWarnings("dust", data ?? []),
+		dangerCount: summarizeDanger("dust", data ?? [])
+	} 
+    
+    const summaryLabels = {
         exposureType : exposureType || "Every sensor",
-        safeCount: safeCount || 0, 
-        warningCount: warningCount || 0, 
-        dangerCount: dangerCount || 0, 
-        safeLabel: safeLabel || defaultLabels.safe, 
-        warningLabel: warningLabel || defaultLabels.warning, 
-        dangerLabel: dangerLabel || defaultLabels.danger
+        safeLabel: viewLabelConfig[view].safe || defaultLabels.safe, 
+        warningLabel: viewLabelConfig[view].warning || defaultLabels.warning, 
+        dangerLabel: viewLabelConfig[view].danger || defaultLabels.danger
     }
     const isMobile = useIsMobile();
 
@@ -49,7 +70,7 @@ export function Summary({
             </div>
             <div className="exposure-subheader">
                 <h4 className="text-sm text-center md:text-right text-slate-400">
-                    <span> {summaryData.exposureType} </span>
+                    <span> {summaryLabels.exposureType} </span>
                 </h4>
             </div>
             <div className="exposures-wrapper flex flex-row md:flex-col gap-4 md:gap-0 justify-center ">
@@ -59,7 +80,7 @@ export function Summary({
                         {summaryData.safeCount}
                     </span>
                     <span className={cn("text-xs ml-1 md:text-sm md:ml-2", safeColor)}>
-                        {isMobile ? defaultLabels.safe : summaryData.safeLabel}
+                        {isMobile ? defaultLabels.safe : summaryLabels.safeLabel}
                     </span>
                 </div>
                 {/* Warning */}
@@ -68,7 +89,7 @@ export function Summary({
                         {summaryData.warningCount}
                     </span>
                     <span className={cn("text-xs ml-1 md:text-sm md:ml-2", warningColor)}>
-                        {isMobile ? defaultLabels.warning : summaryData.warningLabel}
+                        {isMobile ? defaultLabels.warning : summaryLabels.warningLabel}
                     </span>
                 </div>
                 {/* Danger */}
@@ -77,7 +98,7 @@ export function Summary({
                         {summaryData.dangerCount}
                     </span>
                     <span className={cn("text-xs ml-1 md:text-sm md:ml-2", dangerColor)}>
-                        {isMobile ? defaultLabels.danger : summaryData.dangerLabel}
+                        {isMobile ? defaultLabels.danger : summaryLabels.dangerLabel}
                     </span>
                     
                 </div>

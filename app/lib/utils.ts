@@ -158,3 +158,15 @@ export const summarizeSafe = (exposureType: Sensor, data: Array<SensorDataRespon
 	return data.filter(item => !isEmptyDataItem(item) && item.value < maxValue).length;
 }
 const isEmptyDataItem = (item: SensorDataResponseDto): boolean => (!item || item.value === null || item.value === 0)
+
+export const summarizeForDays = (warningLevel: "safe" | "warning" | "danger",exposureType: Sensor, data: Array<SensorDataResponseDto>): number => {
+	let hours = 0;
+	if (warningLevel === "safe") hours = minutesSummaryConversion(summarizeSafe(exposureType, data));
+	else if (warningLevel === "warning") hours = minutesSummaryConversion(summarizeWarnings(exposureType, data));
+	else if (warningLevel === "danger") hours = minutesSummaryConversion(summarizeDanger(exposureType, data));
+	return hours;
+}
+
+const minutesSummaryConversion = (number: number): number => {
+	return Math.round(number / 60);
+}

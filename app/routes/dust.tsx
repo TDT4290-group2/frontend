@@ -7,9 +7,6 @@ import {
 	mapMonthDataToDangerLists,
 	mapWeekDataToEvents,
 	parseAsView,
-	summarizeDanger,
-	summarizeSafe,
-	summarizeWarnings,
 	type View,
 } from "@/lib/utils";
 import {
@@ -72,12 +69,6 @@ export default function Dust() {
 
 	const { safe, warning, danger } = mapMonthDataToDangerLists(data ?? []);
 
-	const summary = {
-		safe: summarizeSafe("dust", data ?? []),
-		warning: summarizeWarnings("dust", data ?? []),
-		danger: summarizeDanger("dust", data ?? [])
-	} 
-
 	return (
 		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
@@ -118,7 +109,7 @@ export default function Dust() {
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary exposureType="dust" safeCount={summary.safe} warningCount={summary.warning} dangerCount={summary.danger}/>
+					<Summary exposureType={"dust"} view={view} data={data}/>
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
