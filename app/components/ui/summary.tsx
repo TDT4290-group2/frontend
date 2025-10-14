@@ -26,14 +26,19 @@ export function Summary({
     const warningColor = "text-warning";
     const dangerColor = "text-destructive";
 
+    const defaultLabels = {
+        safe: DangerTypes.low,
+        warning: DangerTypes.medium,
+        danger: DangerTypes.high
+    }
     const summaryData = {
         exposureType : exposureType || "Every sensor",
-        safeCount: safeCount || 24, 
-        warningCount: warningCount || 12, 
-        dangerCount: dangerCount || 3, 
-        safeLabel: safeLabel || "Safe days", 
-        warningLabel: warningLabel ||  "Days with warnings", 
-        dangerLabel: dangerLabel || "Days where threshold was exceeded"
+        safeCount: safeCount || 0, 
+        warningCount: warningCount || 0, 
+        dangerCount: dangerCount || 0, 
+        safeLabel: safeLabel || defaultLabels.safe, 
+        warningLabel: warningLabel || defaultLabels.warning, 
+        dangerLabel: dangerLabel || defaultLabels.danger
     }
     const isMobile = useIsMobile();
 
@@ -54,7 +59,7 @@ export function Summary({
                         {summaryData.safeCount}
                     </span>
                     <span className={cn("text-xs ml-1 md:text-sm md:ml-2", safeColor)}>
-                        {isMobile ? DangerTypes.low : summaryData.safeLabel}
+                        {isMobile ? defaultLabels.safe : summaryData.safeLabel}
                     </span>
                 </div>
                 {/* Warning */}
@@ -63,7 +68,7 @@ export function Summary({
                         {summaryData.warningCount}
                     </span>
                     <span className={cn("text-xs ml-1 md:text-sm md:ml-2", warningColor)}>
-                        {isMobile ? DangerTypes.medium : summaryData.warningLabel}
+                        {isMobile ? defaultLabels.warning : summaryData.warningLabel}
                     </span>
                 </div>
                 {/* Danger */}
@@ -72,7 +77,7 @@ export function Summary({
                         {summaryData.dangerCount}
                     </span>
                     <span className={cn("text-xs ml-1 md:text-sm md:ml-2", dangerColor)}>
-                        {isMobile ? DangerTypes.high : summaryData.dangerLabel}
+                        {isMobile ? defaultLabels.danger : summaryData.dangerLabel}
                     </span>
                     
                 </div>
