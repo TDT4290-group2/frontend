@@ -25,6 +25,7 @@ export const parseAsView = parseAsStringLiteral(views);
 export type Sensor = "dust" | "noise" | "vibration";
 const sensors: Array<Sensor> = ["dust", "noise", "vibration"];
 export const parseAsSensor = parseAsStringLiteral(sensors);
+export type DangerKeywords = "safe" | "warning" | "danger";
 
 export const DangerTypes = {
 	high: "DANGER",
@@ -108,6 +109,50 @@ export const mapMonthDataToDangerLists = (
 		if (item.value < noiseThresholds.warning) {
 			safe.push(new Date(item.time));
 		} else if (item.value < noiseThresholds.danger) {
+			warning.push(new Date(item.time));
+		} else {
+			danger.push(new Date(item.time));
+		}
+	});
+
+	return { safe, warning, danger };
+};
+
+export const mapSensorDataToMonthLists = (
+	data: Array<SensorDataResponseDto>,
+	relevantSensor: Sensor | undefined
+): Record<DangerKeywords, Date[]> => {
+	if (!relevantSensor) {
+		// Handle data for ALL sensors
+		const dustData = mapSensorDataToMonthLists(data, "dust");
+		const noiseData = mapSensorDataToMonthLists(data, "noise");
+		const vibrationData = mapSensorDataToMonthLists(data, "vibration");
+		return {
+			safe: [
+				...dustData.safe,
+				...noiseData.safe,
+				...vibrationData.safe
+			],
+			warning: [
+				...dustData.warning,
+				...noiseData.warning,
+				...vibrationData.warning
+			],
+			danger: [
+				...dustData.danger,
+				...noiseData.danger,
+				...vibrationData.danger
+			]
+		};
+	}
+	const safe: Array<Date> = [];
+	const warning: Array<Date> = [];
+	const danger: Array<Date> = [];
+
+	Object.values(data).forEach((item) => {
+		if (item.value < thresholds[relevantSensor].warning) {
+			safe.push(new Date(item.time));
+		} else if (item.value < thresholds[relevantSensor].danger) {
 			warning.push(new Date(item.time));
 		} else {
 			danger.push(new Date(item.time));

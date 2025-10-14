@@ -62,7 +62,6 @@ export default function Home() {
 			view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
 
 	const { data, isLoading, isError } = useSensorData("dust", query);
-	const { safe, warning, danger } = mapMonthDataToDangerLists(data ?? []);
 
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
@@ -120,7 +119,7 @@ export default function Home() {
 								</Card>
 							) : view === "month" ? (
 								<Card className="w-full">
-									<MonthlyView selectedDay={selectedDay} safeDates={safe} warningDates={warning} dangerDates={danger} />
+									<MonthlyView selectedDay={selectedDay} data={data ?? []} />
 								</Card>
 							) : view === "week" ? (
 								<>

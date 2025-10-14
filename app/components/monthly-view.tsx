@@ -1,24 +1,25 @@
 import type { CalendarDay, Modifiers } from "react-day-picker";
-import { cn } from "../lib/utils";
+import { cn, mapSensorDataToMonthLists, type DangerKeywords, type Sensor } from "../lib/utils";
 import { Calendar } from "./ui/calendar";
 import { Card } from "./ui/card";
-import { useDayContext } from "../lib/day-context";
+import type { SensorDataResponseDto } from "../lib/dto";
 
 type MonthlyProps = {
     selectedDay: Date,
-    safeDates: Date[],
-    warningDates: Date[],
-    dangerDates: Date[],
+    exposureType?: Sensor,
+    data: SensorDataResponseDto[] | undefined
 }
 
-export function MonthlyView({selectedDay, safeDates, warningDates, dangerDates}: MonthlyProps){
+export function MonthlyView({selectedDay, exposureType, data}: MonthlyProps){
 
     // UTILS
 
-    function getDayType(day: Date): "safe" | "warning" | "danger" | "none" {
-        if (hasData(safeDates, day)) return "safe";
-        if (hasData(warningDates, day)) return "warning";
-        if (hasData(dangerDates, day)) return "danger";
+    const monthData = mapSensorDataToMonthLists(data ?? [], exposureType);
+
+    function getDayType(day: Date): DangerKeywords | "none" {
+        if (hasData(monthData.safe, day)) return "safe";
+        if (hasData(monthData.warning, day)) return "warning";
+        if (hasData(monthData.danger, day)) return "danger";
         return "none";
     }
 
@@ -79,11 +80,7 @@ export function MonthlyView({selectedDay, safeDates, warningDates, dangerDates}:
                 components={{
                     DayButton: CustomDay
                 }}
-                modifiers={{
-                    safe: safeDates,
-                    warning: warningDates,
-                    danger: dangerDates,
-                }}
+                modifiers={{...monthData}}
                 className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
                 captionLayout="dropdown"
                 buttonVariant="default"
