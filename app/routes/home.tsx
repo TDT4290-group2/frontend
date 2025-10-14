@@ -120,7 +120,7 @@ export default function Home() {
 								</Card>
 							) : view === "month" ? (
 								<Card className="w-full">
-									<MonthlyView safeDates={safe} warningDates={warning} dangerDates={danger} />
+									<MonthlyView selectedDay={selectedDay} safeDates={safe} warningDates={warning} dangerDates={danger} />
 								</Card>
 							) : view === "week" ? (
 								<>
