@@ -17,7 +17,7 @@ export type SensorDataRequestDto = {
 	endTime: Date;
 	granularity: TimeGranularity;
 	function: AggregationFunction;
-	fields?: Array<string>;
+	field?: string;
 };
 
 export type SensorDataResponseDto = {

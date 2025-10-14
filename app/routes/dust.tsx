@@ -43,7 +43,7 @@ export default function Dust() {
 		endTime: new Date(selectedDay.setHours(16)),
 		granularity: TimeGranularity.Minute,
 		function: AggregationFunction.Avg,
-		fields: ["pm1_stel"],
+		field: "pm1_stel",
 	};
 
 	const weekQuery: SensorDataRequestDto = {
@@ -51,7 +51,7 @@ export default function Dust() {
 		endTime: endOfWeek(selectedDay),
 		granularity: TimeGranularity.Hour,
 		function: AggregationFunction.Avg,
-		fields: ["pm1_stel"],
+		field: "pm1_stel",
 	};
 
 	const monthQuery: SensorDataRequestDto = {
@@ -59,7 +59,7 @@ export default function Dust() {
 		endTime: endOfMonth(selectedDay),
 		granularity: TimeGranularity.Day,
 		function: AggregationFunction.Avg,
-		fields: ["pm1_stel"],
+		field: "pm1_stel",
 	};
 
 	const query =
