@@ -44,7 +44,6 @@ export default function Noise() {
 		endTime: new Date(selectedDay.setHours(16)),
 		granularity: TimeGranularity.Minute,
 		function: AggregationFunction.Avg,
-		fields: [],
 	};
 
 	const weekQuery: SensorDataRequestDto = {
@@ -52,7 +51,6 @@ export default function Noise() {
 		endTime: endOfWeek(selectedDay),
 		granularity: TimeGranularity.Hour,
 		function: AggregationFunction.Max,
-		fields: [],
 	};
 
 	const monthQuery: SensorDataRequestDto = {
@@ -60,7 +58,6 @@ export default function Noise() {
 		endTime: endOfMonth(selectedDay),
 		granularity: TimeGranularity.Day,
 		function: AggregationFunction.Max,
-		fields: [],
 	};
 
 	const query =

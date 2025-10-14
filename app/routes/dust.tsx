@@ -7,9 +7,6 @@ import {
 	mapMonthDataToDangerLists,
 	mapWeekDataToEvents,
 	parseAsView,
-	summarizeDanger,
-	summarizeSafe,
-	summarizeWarnings,
 	type View,
 } from "@/lib/utils";
 import {
@@ -46,7 +43,7 @@ export default function Dust() {
 		endTime: new Date(selectedDay.setHours(16)),
 		granularity: TimeGranularity.Minute,
 		function: AggregationFunction.Avg,
-		fields: ["pm1_stel"],
+		field: "pm1_stel",
 	};
 
 	const weekQuery: SensorDataRequestDto = {
@@ -54,7 +51,7 @@ export default function Dust() {
 		endTime: endOfWeek(selectedDay),
 		granularity: TimeGranularity.Hour,
 		function: AggregationFunction.Avg,
-		fields: ["pm1_stel"],
+		field: "pm1_stel",
 	};
 
 	const monthQuery: SensorDataRequestDto = {
@@ -62,7 +59,7 @@ export default function Dust() {
 		endTime: endOfMonth(selectedDay),
 		granularity: TimeGranularity.Day,
 		function: AggregationFunction.Avg,
-		fields: ["pm1_stel"],
+		field: "pm1_stel",
 	};
 
 	const query =
@@ -71,12 +68,6 @@ export default function Dust() {
 	const { data, isLoading, isError } = useSensorData("dust", query);
 
 	const { safe, warning, danger } = mapMonthDataToDangerLists(data ?? []);
-
-	const summary = {
-		safe: summarizeSafe("dust", data ?? []),
-		warning: summarizeWarnings("dust", data ?? []),
-		danger: summarizeDanger("dust", data ?? [])
-	} 
 
 	return (
 		<section className="flex w-full flex-col">
@@ -118,7 +109,7 @@ export default function Dust() {
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary exposureType="dust" safeCount={summary.safe} warningCount={summary.warning} dangerCount={summary.danger}/>
+					<Summary exposureType={"dust"} view={view} data={data}/>
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
