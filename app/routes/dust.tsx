@@ -22,7 +22,6 @@ import {
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
-// import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
 import { Card, CardTitle } from "../components/ui/card";
@@ -82,7 +81,7 @@ export default function Dust() {
 	return (
 		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
-				<h1 className="p-2 text-3xl">{"Vibration exposure"}</h1>
+				<h1 className="p-2 text-3xl">{"Dust exposure"}</h1>
 				<div className="ml-auto flex flex-row gap-4">
 					<Button
 						onClick={() => setSelectedDay(getPrevDay(selectedDay, view))}
