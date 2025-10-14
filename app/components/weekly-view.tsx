@@ -18,7 +18,7 @@ import {
 	startOfWeek,
 } from "date-fns";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useDayContext } from "../lib/day-context";
 import { cn, type DangerLevel, dangerLevels } from "../lib/utils";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
@@ -206,10 +206,10 @@ export function Header({
 	showTodayButton = true,
 	todayButton,
 	onToday,
-	showPrevButton = true,
+	showPrevButton = false,
 	prevButton,
 	onPrev,
-	showNextButton = true,
+	showNextButton = false,
 	nextButton,
 	onNext,
 }: {
@@ -295,7 +295,6 @@ export function Header({
 }
 
 export function useWeekView({
-	initialDate,
 	minuteStep = 30,
 	weekStartsOn = 1,
 	dayStartHour,
@@ -306,7 +305,6 @@ export function useWeekView({
 	disabledWeek,
 }:
 	| {
-			initialDate?: Date;
 			minuteStep?: number;
 			dayStartHour?: number;
 			dayEndHour?: number;
@@ -317,29 +315,27 @@ export function useWeekView({
 			disabledWeek?: (startDayOfWeek: Date) => boolean;
 	  }
 	| undefined = {}) {
-	const [startOfTheWeek, setStartOfTheWeek] = useState(
-		startOfWeek(startOfDay(initialDate || new Date()), { weekStartsOn }),
-	);
+	const { selectedDay, setSelectedDay } = useDayContext();
 
 	const nextWeek = () => {
-		const _nextWeek = addDays(startOfTheWeek, 7);
+		const _nextWeek = addDays(selectedDay, 7);
 		if (disabledWeek?.(_nextWeek)) return;
-		setStartOfTheWeek(_nextWeek);
+		setSelectedDay(_nextWeek);
 	};
 
 	const previousWeek = () => {
-		const _previousWeek = addDays(startOfTheWeek, -7);
+		const _previousWeek = addDays(selectedDay, -7);
 		if (disabledWeek?.(_previousWeek)) return;
-		setStartOfTheWeek(_previousWeek);
+		setSelectedDay(_previousWeek);
 	};
 
 	const goToToday = () => {
-		setStartOfTheWeek(startOfWeek(startOfDay(new Date()), { weekStartsOn }));
+		setSelectedDay(startOfWeek(startOfDay(new Date()), { weekStartsOn }));
 	};
 
 	const days = eachDayOfInterval({
-		start: startOfTheWeek,
-		end: addDays(startOfTheWeek, 6),
+		start: selectedDay,
+		end: addDays(selectedDay, 6),
 	}).map((day) => ({
 		date: day,
 		isToday: isToday(day),
@@ -418,7 +414,6 @@ export type Event = {
 };
 
 export function WeekView({
-	initialDate,
 	minuteStep = 30,
 	weekStartsOn = 1,
 	dayStartHour = 8,
@@ -431,7 +426,6 @@ export function WeekView({
 	events,
 	onEventClick,
 }: {
-	initialDate?: Date;
 	minuteStep?: number;
 	weekStartsOn?: Day;
 	dayStartHour?: number;
@@ -446,7 +440,6 @@ export function WeekView({
 	onEventClick?: (event: Event) => void;
 }) {
 	const { days, nextWeek, previousWeek, goToToday, viewTitle } = useWeekView({
-		initialDate,
 		minuteStep,
 		weekStartsOn,
 		dayStartHour,
@@ -465,7 +458,11 @@ export function WeekView({
 					onNext={nextWeek}
 					onPrev={previousWeek}
 					onToday={goToToday}
-					showTodayButton={!isSameWeek(days[0].date, new Date())}
+					showTodayButton={
+						!isSameWeek(days[0].date, new Date(), {
+							weekStartsOn: weekStartsOn,
+						})
+					}
 				/>
 				<div className="flex flex-1 select-none flex-col overflow-hidden">
 					<div className="isolate flex flex-1 flex-col overflow-auto">

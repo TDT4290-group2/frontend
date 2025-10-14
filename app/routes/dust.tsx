@@ -1,5 +1,14 @@
 /** biome-ignore-all lint/suspicious/noAlert: We use alert for testing, but will be changed later */
-import { cn, type DangerLevel, parseAsView, type View } from "@/lib/utils";
+import {
+	cn,
+	dustThresholds,
+	getNextDay,
+	getPrevDay,
+	mapMonthDataToDangerLists,
+	mapWeekDataToEvents,
+	parseAsView,
+	type View,
+} from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -7,66 +16,70 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
-import { addDays, subDays } from "date-fns";
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
-import { Card } from "../components/ui/card";
+import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
-import { type Event as _Event, WeekView } from "../components/weekly-view";
-import dustChartData from "../dummy/dust_chart_data.json";
-import eventsData from "../dummy/weekly-events.json";
+import { WeekView } from "../components/weekly-view";
+import { useSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
-
-const data = dustChartData;
-
-const greenDays = [
-	new Date(2025, 8, 1),
-	new Date(2025, 8, 5),
-	new Date(2025, 8, 4),
-	new Date(2025, 8, 9),
-	new Date(2025, 8, 10),
-	new Date(2025, 8, 12),
-	new Date(2025, 8, 15),
-	new Date(2025, 8, 16),
-	new Date(2025, 8, 18),
-	new Date(2025, 8, 19),
-];
-const yellowDays = [new Date(2025, 8, 2), new Date(2025, 8, 11)];
-const redDays = [
-	new Date(2025, 8, 3),
-	new Date(2025, 8, 17),
-	new Date(2025, 8, 8),
-];
-
-const raw = eventsData;
-
-const events: Array<_Event> = raw.map((e) => ({
-	startDate: new Date(e.startDate),
-	endDate: new Date(e.endDate),
-	dangerLevel: e.dangerLevel as DangerLevel,
-}));
+import {
+	AggregationFunction,
+	type SensorDataRequestDto,
+	TimeGranularity,
+} from "../lib/dto";
 
 // biome-ignore lint: page components can be default exports
 export default function Dust() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 	const { selectedDay, setSelectedDay } = useDayContext();
 
+	const dayQuery: SensorDataRequestDto = {
+		startTime: new Date(selectedDay.setHours(8)),
+		endTime: new Date(selectedDay.setHours(16)),
+		granularity: TimeGranularity.Minute,
+		function: AggregationFunction.Avg,
+		field: "pm1_stel",
+	};
+
+	const weekQuery: SensorDataRequestDto = {
+		startTime: startOfWeek(selectedDay),
+		endTime: endOfWeek(selectedDay),
+		granularity: TimeGranularity.Hour,
+		function: AggregationFunction.Avg,
+		field: "pm1_stel",
+	};
+
+	const monthQuery: SensorDataRequestDto = {
+		startTime: startOfMonth(selectedDay),
+		endTime: endOfMonth(selectedDay),
+		granularity: TimeGranularity.Day,
+		function: AggregationFunction.Avg,
+		field: "pm1_stel",
+	};
+
+	const query =
+		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
+
+	const { data, isLoading, isError } = useSensorData("dust", query);
+
+	const { safe, warning, danger } = mapMonthDataToDangerLists(data ?? []);
+
 	return (
 		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
 				<h1 className="p-2 text-3xl">{"Dust exposure"}</h1>
 				<div className="ml-auto flex flex-row gap-4">
-					{view === "day" && (
-						<Button
-							onClick={() => setSelectedDay(subDays(selectedDay, 1))}
-							size={"icon"}
-						>
-							{"<"}
-						</Button>
-					)}
+					<Button
+						onClick={() => setSelectedDay(getPrevDay(selectedDay, view))}
+						size={"icon"}
+					>
+						{"<"}
+					</Button>
 					<Select
 						value={view}
 						onValueChange={(value) => setView(value as View | null)}
@@ -86,35 +99,41 @@ export default function Dust() {
 							</SelectItem>
 						</SelectContent>
 					</Select>
-					{view === "day" && (
-						<Button
-							onClick={() => setSelectedDay(addDays(selectedDay, 1))}
-							size={"icon"}
-						>
-							{">"}
-						</Button>
-					)}
+					<Button
+						onClick={() => setSelectedDay(getNextDay(selectedDay, view))}
+						size={"icon"}
+					>
+						{">"}
+					</Button>
 				</div>
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary exposureType="dust" safeCount={8} warningCount={4} />
+					<Summary exposureType="dust" />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
-					{view === "month" ? (
+					{isLoading ? (
+						<Card className="flex h-24 w-full items-center">
+							<p>{"Loading data..."}</p>
+						</Card>
+					) : isError ? (
+						<Card className="flex h-24 w-full items-center">
+							<p>{"Something went wrong while fetching sensor data."}</p>
+						</Card>
+					) : view === "month" ? (
 						<Card className="w-full">
 							<Calendar
-								defaultMonth={selectedDay}
-								fixedWeeks
+								month={selectedDay}
+								hideNavigation
 								showWeekNumber
 								disabled
 								mode="single"
 								weekStartsOn={1}
 								modifiers={{
-									safe: greenDays,
-									warning: yellowDays,
-									danger: redDays,
+									safe: safe,
+									warning: warning,
+									danger: danger,
 								}}
 								modifiersClassNames={{
 									safe: cn("bg-[var(--safe)]"),
@@ -123,31 +142,45 @@ export default function Dust() {
 									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
 								}}
 								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-								captionLayout="dropdown"
-								buttonVariant="default"
+								captionLayout="label"
+								buttonVariant="ghost"
 							/>
 						</Card>
 					) : view === "week" ? (
 						<WeekView
-							initialDate={selectedDay}
 							dayStartHour={8}
 							dayEndHour={16}
 							weekStartsOn={1}
 							minuteStep={60}
-							events={events}
+							events={mapWeekDataToEvents(data ?? [])}
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
+					) : !data || data.length === 0 ? (
+						<Card className="flex h-24 w-full items-center">
+							<CardTitle>
+								{selectedDay.toLocaleDateString("en-GB", {
+									day: "numeric",
+									month: "long",
+									year: "numeric",
+								})}
+							</CardTitle>
+							<p>{"No exposure data found for this day"}</p>
+						</Card>
 					) : (
 						<ChartLineDefault
-							chartData={data}
+							chartData={data ?? []}
 							chartTitle={selectedDay.toLocaleDateString("en-GB", {
 								day: "numeric",
 								month: "long",
+								year: "numeric",
 							})}
-							unit="TWA"
+							unit="points"
+							startHour={8}
+							endHour={16}
+							maxY={110}
 						>
-							<ThresholdLine y={120} dangerLevel="DANGER" />
-							<ThresholdLine y={80} dangerLevel="WARNING" />
+							<ThresholdLine y={dustThresholds.danger} dangerLevel="DANGER" />
+							<ThresholdLine y={dustThresholds.warning} dangerLevel="WARNING" />
 						</ChartLineDefault>
 					)}
 				</div>

@@ -10,6 +10,8 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { DayContextProvider } from "./lib/day-context";
 
 export const links: Route.LinksFunction = () => [
@@ -43,16 +45,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
 	);
 }
 
+const queryClient = new QueryClient();
+
 // biome-ignore lint: page components can be default exports
 export default function App() {
 	return (
-		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-			<DayContextProvider>
-				<NuqsAdapter>
-					<Outlet />
-				</NuqsAdapter>
-			</DayContextProvider>
-		</ThemeProvider>
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+				<DayContextProvider>
+					<NuqsAdapter>
+						{import.meta.env.DEV && (
+							<ReactQueryDevtools initialIsOpen={false} />
+						)}
+						<Outlet />
+					</NuqsAdapter>
+				</DayContextProvider>
+			</ThemeProvider>
+		</QueryClientProvider>
 	);
 }
 

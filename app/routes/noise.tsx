@@ -1,4 +1,14 @@
-import { cn, parseAsView, type View } from "@/lib/utils";
+/** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
+import {
+	cn,
+	getNextDay,
+	getPrevDay,
+	mapMonthDataToDangerLists,
+	mapWeekDataToEvents,
+	noiseThresholds,
+	parseAsView,
+	type View,
+} from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -6,45 +16,67 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
+import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
-import { Card } from "../components/ui/card";
+import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
-import { WeeklyOverview } from "../components/weekly";
-import noiseChartData from "../dummy/noise_chart_data.json";
-
-const data = noiseChartData;
-
-const greenDays = [
-	new Date(2025, 8, 1),
-	new Date(2025, 8, 5),
-	new Date(2025, 8, 4),
-	new Date(2025, 8, 9),
-	new Date(2025, 8, 10),
-	new Date(2025, 8, 12),
-	new Date(2025, 8, 15),
-	new Date(2025, 8, 16),
-	new Date(2025, 8, 18),
-	new Date(2025, 8, 19),
-];
-const yellowDays = [new Date(2025, 8, 2), new Date(2025, 8, 11)];
-const redDays = [
-	new Date(2025, 8, 3),
-	new Date(2025, 8, 17),
-	new Date(2025, 8, 8),
-];
+import { WeekView } from "../components/weekly-view";
+import { useSensorData } from "../lib/api";
+import { useDayContext } from "../lib/day-context";
+import {
+	AggregationFunction,
+	type SensorDataRequestDto,
+	TimeGranularity,
+} from "../lib/dto";
 
 // biome-ignore lint: page components can be default exports
 export default function Noise() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 
+	const { selectedDay, setSelectedDay } = useDayContext();
+
+	const dayQuery: SensorDataRequestDto = {
+		startTime: new Date(selectedDay.setHours(8)),
+		endTime: new Date(selectedDay.setHours(16)),
+		granularity: TimeGranularity.Minute,
+		function: AggregationFunction.Avg,
+	};
+
+	const weekQuery: SensorDataRequestDto = {
+		startTime: startOfWeek(selectedDay),
+		endTime: endOfWeek(selectedDay),
+		granularity: TimeGranularity.Hour,
+		function: AggregationFunction.Max,
+	};
+
+	const monthQuery: SensorDataRequestDto = {
+		startTime: startOfMonth(selectedDay),
+		endTime: endOfMonth(selectedDay),
+		granularity: TimeGranularity.Day,
+		function: AggregationFunction.Max,
+	};
+
+	const query =
+		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
+	const { data, isLoading, isError } = useSensorData("noise", query);
+
+	const { safe, warning, danger } = mapMonthDataToDangerLists(data ?? []);
+
 	return (
 		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
 				<h1 className="p-2 text-3xl">{"Noise exposure"}</h1>
-				<div className="ml-auto">
+				<div className="ml-auto flex flex-row gap-4">
+					<Button
+						onClick={() => setSelectedDay(getPrevDay(selectedDay, view))}
+						size={"icon"}
+					>
+						{"<"}
+					</Button>
 					<Select
 						value={view}
 						onValueChange={(value) => setView(value as View | null)}
@@ -64,6 +96,12 @@ export default function Noise() {
 							</SelectItem>
 						</SelectContent>
 					</Select>
+					<Button
+						onClick={() => setSelectedDay(getNextDay(selectedDay, view))}
+						size={"icon"}
+					>
+						{">"}
+					</Button>
 				</div>
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
@@ -72,18 +110,27 @@ export default function Noise() {
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
-					{view === "month" ? (
+					{isLoading ? (
+						<Card className="flex h-24 w-full items-center">
+							<p>{"Loading data..."}</p>
+						</Card>
+					) : isError ? (
+						<Card className="flex h-24 w-full items-center">
+							<p>{"Something went wrong while fetching sensor data."}</p>
+						</Card>
+					) : view === "month" ? (
 						<Card className="w-full">
 							<Calendar
-								fixedWeeks
+								month={selectedDay}
+								hideNavigation
 								showWeekNumber
 								disabled
 								mode="single"
 								weekStartsOn={1}
 								modifiers={{
-									safe: greenDays,
-									warning: yellowDays,
-									danger: redDays,
+									safe: safe,
+									warning: warning,
+									danger: danger,
 								}}
 								modifiersClassNames={{
 									safe: cn("bg-[var(--safe)]"),
@@ -92,20 +139,48 @@ export default function Noise() {
 									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
 								}}
 								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-								captionLayout="dropdown"
+								captionLayout="label"
 								buttonVariant="ghost"
 							/>
 						</Card>
 					) : view === "week" ? (
-						<WeeklyOverview />
+						<WeekView
+							dayStartHour={8}
+							dayEndHour={16}
+							weekStartsOn={1}
+							minuteStep={60}
+							events={mapWeekDataToEvents(data ?? [])}
+							onEventClick={(event) => alert(event.dangerLevel)}
+						/>
+					) : !data || data.length === 0 ? (
+						<Card className="flex h-24 w-full items-center">
+							<CardTitle>
+								{selectedDay.toLocaleDateString("en-GB", {
+									day: "numeric",
+									month: "long",
+									year: "numeric",
+								})}
+							</CardTitle>
+							<p>{"No exposure data found for this day"}</p>
+						</Card>
 					) : (
 						<ChartLineDefault
-							chartData={data}
-							chartTitle="Noise Exposure"
+							chartData={data ?? []}
+							chartTitle={selectedDay.toLocaleDateString("en-GB", {
+								day: "numeric",
+								month: "long",
+								year: "numeric",
+							})}
 							unit="db (TWA)"
+							startHour={8}
+							endHour={16}
+							maxY={130}
 						>
-							<ThresholdLine y={120} dangerLevel="DANGER" />
-							<ThresholdLine y={80} dangerLevel="WARNING" />
+							<ThresholdLine y={noiseThresholds.danger} dangerLevel="DANGER" />
+							<ThresholdLine
+								y={noiseThresholds.warning}
+								dangerLevel="WARNING"
+							/>
 						</ChartLineDefault>
 					)}
 				</div>
