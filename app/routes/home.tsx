@@ -1,4 +1,4 @@
-import { cn, dustThresholds, getNextDay, getPrevDay, mapMonthDataToDangerLists, mapWeekDataToEvents, noiseThresholds, parseAsView, type View } from "@/lib/utils";
+import { cn, dustThresholds, getNextDay, getPrevDay, mapMonthDataToDangerLists, mapWeekDataToEvents, noiseThresholds, parseAsView, summarizeDanger, summarizeSafe, summarizeWarnings, type View } from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -29,6 +29,7 @@ export function meta() {
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
+	//! Currently set up for dust - but need to implement all types.
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 	const { selectedDay, setSelectedDay } = useDayContext();
 
@@ -38,7 +39,7 @@ export default function Home() {
 		endTime: new Date(selectedDay.setHours(16)),
 		granularity: TimeGranularity.Minute,
 		function: AggregationFunction.Avg,
-		fields: ["pm1_stel"],
+		field: "pm1_stel",
 	};
 
 	const weekQuery: SensorDataRequestDto = {
@@ -46,7 +47,7 @@ export default function Home() {
 		endTime: endOfWeek(selectedDay),
 		granularity: TimeGranularity.Hour,
 		function: AggregationFunction.Avg,
-		fields: ["pm1_stel"],
+		field: "pm1_stel",
 	};
 
 	const monthQuery: SensorDataRequestDto = {
@@ -54,7 +55,7 @@ export default function Home() {
 		endTime: endOfMonth(selectedDay),
 		granularity: TimeGranularity.Day,
 		function: AggregationFunction.Avg,
-		fields: ["pm1_stel"],
+		field: "pm1_stel",
 	};
 
 	const query =
@@ -62,6 +63,11 @@ export default function Home() {
 
 	const { data, isLoading, isError } = useSensorData("dust", query);
 	const { safe, warning, danger } = mapMonthDataToDangerLists(data ?? []);
+	const summary = {
+		safe: summarizeSafe("dust", data ?? []),
+		warning: summarizeWarnings("dust", data ?? []),
+		danger: summarizeDanger("dust", data ?? [])
+	} 
 
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
@@ -103,7 +109,7 @@ export default function Home() {
 			</div>
 			<div className="flex w-full flex-col gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary />
+					<Summary safeCount={summary.safe} warningCount={summary.warning} dangerCount={summary.danger}/>
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">
@@ -138,7 +144,7 @@ export default function Home() {
 											disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
 										}}
 										className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-										captionLayout="dropdown"
+										captionLayout="label"
 										buttonVariant="ghost"
 									/>
 								</Card>
