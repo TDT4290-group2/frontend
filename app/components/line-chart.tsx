@@ -128,7 +128,7 @@ export function ThresholdLine({
 }: {
 	y: number;
 	dangerLevel: DangerLevel;
-	label?: string,
+	label?: string;
 }) {
 	const color = dangerLevels[dangerLevel].color;
 	const lineLabel = label ?? dangerLevels[dangerLevel].label;

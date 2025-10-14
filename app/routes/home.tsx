@@ -1,4 +1,13 @@
-import { cn, dustThresholds, getNextDay, getPrevDay, mapMonthDataToDangerLists, mapWeekDataToEvents, noiseThresholds, parseAsView, summarizeDanger, summarizeForDays, summarizeSafe, summarizeWarnings, type View } from "@/lib/utils";
+/** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
+import {
+	dustThresholds,
+	getNextDay,
+	getPrevDay,
+	mapWeekDataToEvents,
+	noiseThresholds,
+	parseAsView,
+	type View,
+} from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -10,16 +19,19 @@ import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { DailyNotes } from "../components/daily-notes";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
+import { MonthlyView } from "../components/monthly-view";
 import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
-import { useDayContext } from "../lib/day-context";
-import { MonthlyView } from "../components/monthly-view";
-
 import { useSensorData } from "../lib/api";
-import { AggregationFunction, TimeGranularity, type SensorDataRequestDto } from "../lib/dto";
+import { useDayContext } from "../lib/day-context";
+import {
+	AggregationFunction,
+	type SensorDataRequestDto,
+	TimeGranularity,
+} from "../lib/dto";
 
 export function meta() {
 	return [
@@ -60,7 +72,7 @@ export default function Home() {
 	};
 
 	const query =
-			view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
+		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
 
 	const { data, isLoading, isError } = useSensorData("dust", query);
 
@@ -104,7 +116,7 @@ export default function Home() {
 			</div>
 			<div className="flex w-full flex-col gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary view={view} data={data}/>
+					<Summary view={view} data={data} />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">
@@ -119,20 +131,16 @@ export default function Home() {
 									<p>{"Something went wrong while fetching sensor data."}</p>
 								</Card>
 							) : view === "month" ? (
-								<Card className="w-full">
-									<MonthlyView selectedDay={selectedDay} data={data ?? []} />
-								</Card>
+								<MonthlyView selectedDay={selectedDay} data={data ?? []} />
 							) : view === "week" ? (
-								<>
-									<WeekView 
-										dayStartHour={8}
-										dayEndHour={16}
-										weekStartsOn={1}
-										minuteStep={60}
-										events={mapWeekDataToEvents(data ?? [])}
-										onEventClick={(event) => alert(event.dangerLevel)}
-									/>
-								</>
+								<WeekView
+									dayStartHour={8}
+									dayEndHour={16}
+									weekStartsOn={1}
+									minuteStep={60}
+									events={mapWeekDataToEvents(data ?? [])}
+									onEventClick={(event) => alert(event.dangerLevel)}
+								/>
 							) : !data || data.length === 0 ? (
 								<Card className="flex h-24 w-full items-center">
 									<CardTitle>
@@ -157,9 +165,21 @@ export default function Home() {
 									endHour={16}
 									maxY={110}
 								>
-									<ThresholdLine y={dustThresholds.danger} label="Dust" dangerLevel="DANGER" />
-									<ThresholdLine y={noiseThresholds.danger} label="Noise" dangerLevel="DANGER" />
-									<ThresholdLine y={noiseThresholds.danger} label="Vibration" dangerLevel="DANGER" />
+									<ThresholdLine
+										y={dustThresholds.danger}
+										label="Dust"
+										dangerLevel="DANGER"
+									/>
+									<ThresholdLine
+										y={noiseThresholds.danger}
+										label="Noise"
+										dangerLevel="DANGER"
+									/>
+									<ThresholdLine
+										y={noiseThresholds.danger}
+										label="Vibration"
+										dangerLevel="DANGER"
+									/>
 								</ChartLineDefault>
 							)}
 							<DailyNotes />

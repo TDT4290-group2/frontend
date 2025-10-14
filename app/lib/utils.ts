@@ -61,19 +61,19 @@ export const vibrationThresholds = { warning: 80, danger: 100 };
 export const dustThresholds = { warning: 30, danger: 50 };
 
 export const thresholds: Record<Sensor, { warning: number; danger: number }> = {
-	"dust": {
-		warning: 30, 
-		danger: 50
+	dust: {
+		warning: 30,
+		danger: 50,
 	},
-	"noise": {
-		warning: 80, 
-		danger: 130
+	noise: {
+		warning: 80,
+		danger: 130,
 	},
-	"vibration": {
-		warning: 80, 
-		danger: 100
-	}
-}
+	vibration: {
+		warning: 80,
+		danger: 100,
+	},
+};
 
 export const mapWeekDataToEvents = (
 	data: Array<SensorDataResponseDto>,
@@ -120,7 +120,7 @@ export const mapMonthDataToDangerLists = (
 
 export const mapSensorDataToMonthLists = (
 	data: Array<SensorDataResponseDto>,
-	relevantSensor: Sensor | undefined
+	relevantSensor: Sensor | undefined,
 ): Record<DangerKeywords, Date[]> => {
 	if (!relevantSensor) {
 		// Handle data for ALL sensors
@@ -128,21 +128,17 @@ export const mapSensorDataToMonthLists = (
 		const noiseData = mapSensorDataToMonthLists(data, "noise");
 		const vibrationData = mapSensorDataToMonthLists(data, "vibration");
 		return {
-			safe: [
-				...dustData.safe,
-				...noiseData.safe,
-				...vibrationData.safe
-			],
+			safe: [...dustData.safe, ...noiseData.safe, ...vibrationData.safe],
 			warning: [
 				...dustData.warning,
 				...noiseData.warning,
-				...vibrationData.warning
+				...vibrationData.warning,
 			],
 			danger: [
 				...dustData.danger,
 				...noiseData.danger,
-				...vibrationData.danger
-			]
+				...vibrationData.danger,
+			],
 		};
 	}
 	const safe: Array<Date> = [];
@@ -183,35 +179,58 @@ export const getNextDay = (selectedDay: Date, view: View): Date => {
 };
 
 // For counting records of limits exceeded - simple counting, might need it more advanced?
-export const summarizeDanger = (exposureType: Sensor, data: Array<SensorDataResponseDto>): number => {
+export const summarizeDanger = (
+	exposureType: Sensor,
+	data: Array<SensorDataResponseDto>,
+): number => {
 	if (data.length <= 0) return 0;
 	const dangerLevel = thresholds[exposureType].danger;
-	return data.reduce((count, item) => item.value > dangerLevel ? count + 1 : count, 0);
-}
+	return data.reduce(
+		(count, item) => (item.value > dangerLevel ? count + 1 : count),
+		0,
+	);
+};
 
-export const summarizeWarnings = (exposureType: Sensor, data: Array<SensorDataResponseDto>): number => {
+export const summarizeWarnings = (
+	exposureType: Sensor,
+	data: Array<SensorDataResponseDto>,
+): number => {
 	if (data.length <= 0) return 0;
 	const warningLevel = thresholds[exposureType].warning;
-	return data.reduce((count, item) => item.value > warningLevel ? count + 1 : count, 0);
-}
+	return data.reduce(
+		(count, item) => (item.value > warningLevel ? count + 1 : count),
+		0,
+	);
+};
 
 // To be used after getting counts of warnings and dangers
-export const summarizeSafe = (exposureType: Sensor, data: Array<SensorDataResponseDto>): number => {
+export const summarizeSafe = (
+	exposureType: Sensor,
+	data: Array<SensorDataResponseDto>,
+): number => {
 	if (data.length <= 0) return 0;
 	const maxValue = thresholds[exposureType].warning;
-	
-	return data.filter(item => !isEmptyDataItem(item) && item.value < maxValue).length;
-}
-const isEmptyDataItem = (item: SensorDataResponseDto): boolean => (!item || item.value === null || item.value === 0)
 
-export const summarizeForDays = (warningLevel: "safe" | "warning" | "danger",exposureType: Sensor, data: Array<SensorDataResponseDto>): number => {
+	return data.filter((item) => !isEmptyDataItem(item) && item.value < maxValue)
+		.length;
+};
+const isEmptyDataItem = (item: SensorDataResponseDto): boolean =>
+	!item || item.value === null || item.value === 0;
+
+export const summarizeForDays = (
+	warningLevel: "safe" | "warning" | "danger",
+	exposureType: Sensor,
+	data: Array<SensorDataResponseDto>,
+): number => {
 	let hours = 0;
-	if (warningLevel === "safe") hours = minutesSummaryConversion(summarizeSafe(exposureType, data));
-	else if (warningLevel === "warning") hours = minutesSummaryConversion(summarizeWarnings(exposureType, data));
-	else if (warningLevel === "danger") hours = minutesSummaryConversion(summarizeDanger(exposureType, data));
+	if (warningLevel === "safe")
+		hours = minutesSummaryConversion(summarizeSafe(exposureType, data));
+	else if (warningLevel === "warning")
+		hours = minutesSummaryConversion(summarizeWarnings(exposureType, data));
+	else if (warningLevel === "danger")
+		hours = minutesSummaryConversion(summarizeDanger(exposureType, data));
 	return hours;
-}
+};
 
-const minutesSummaryConversion = (number: number): number => {
-	return Math.round(number / 60);
-}
+const minutesSummaryConversion = (number: number): number =>
+	Math.round(number / 60);

@@ -109,7 +109,7 @@ export default function Dust() {
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary exposureType={"dust"} view={view} data={data}/>
+					<Summary exposureType={"dust"} view={view} data={data} />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
