@@ -45,41 +45,6 @@ export function MonthlyView({ selectedDay, exposureType, data }: MonthlyProps) {
 		alert(`${alertLabels[clickedType]} ${clickedDay.toLocaleDateString()}`);
 	};
 
-	// Custom component that renders within a day in the month grid to achieve better interaction
-	function CustomDay(
-		props: {
-			day: CalendarDay;
-			modifiers: Modifiers;
-		} & React.ButtonHTMLAttributes<HTMLButtonElement>,
-	) {
-		const { day, className, ...buttonProps } = props;
-		const dayDate = day.date;
-		const type = getDayType(dayDate);
-
-		let relevantClassname = "cursor-pointer hover:brightness-85";
-
-		if (type === "safe") relevantClassname = `bg-safe ${relevantClassname}`;
-		else if (type === "warning")
-			relevantClassname = `bg-warning ${relevantClassname}`;
-		else if (type === "danger")
-			relevantClassname = `bg-danger ${relevantClassname}`;
-		else relevantClassname = "noData";
-
-		return (
-			<button
-				type="button"
-				disabled={relevantClassname === "noData"}
-				className={cn(
-					"h-11/12 w-11/12 rounded-lg",
-					relevantClassname,
-					className,
-				)}
-				onClick={() => handleDayClick(dayDate)}
-				{...buttonProps}
-			/>
-		);
-	}
-
 	return (
 		<Card className="w-full">
 			<Calendar
@@ -89,7 +54,13 @@ export function MonthlyView({ selectedDay, exposureType, data }: MonthlyProps) {
 				weekStartsOn={1}
 				onDayClick={(day) => handleDayClick(day)}
 				components={{
-					DayButton: CustomDay,
+					DayButton: (props) => (
+                        <CustomDay
+                            {...props}
+                            getDayType={getDayType}
+                            handleDayClick={handleDayClick}
+                        />
+                    ),
 				}}
 				modifiers={{ ...monthData }}
 				className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
@@ -99,4 +70,43 @@ export function MonthlyView({ selectedDay, exposureType, data }: MonthlyProps) {
 			/>
 		</Card>
 	);
+}
+
+type CustomDayProps = {
+    day: CalendarDay;
+    modifiers: Modifiers;
+    className?: string;
+    getDayType: (day: Date) => DangerKeywords | "none";
+    handleDayClick: (day: Date) => void;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+export function CustomDay({
+    day,
+    className,
+    getDayType,
+    handleDayClick,
+    ...buttonProps
+}: CustomDayProps) {
+    const dayDate = day.date;
+    const type = getDayType(dayDate);
+
+    let relevantClassname = "cursor-pointer hover:brightness-85";
+    if (type === "safe") relevantClassname = `bg-safe ${relevantClassname}`;
+    else if (type === "warning") relevantClassname = `bg-warning ${relevantClassname}`;
+    else if (type === "danger") relevantClassname = `bg-danger ${relevantClassname}`;
+    else relevantClassname = "noData";
+
+    return (
+        <button
+            type="button"
+            disabled={relevantClassname === "noData"}
+            className={cn(
+                "h-11/12 w-11/12 rounded-lg",
+                relevantClassname,
+                className,
+            )}
+            onClick={() => handleDayClick(dayDate)}
+            {...buttonProps}
+        />
+    );
 }
