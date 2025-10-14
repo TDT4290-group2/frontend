@@ -59,6 +59,21 @@ export const noiseThresholds = { warning: 80, danger: 130 };
 export const vibrationThresholds = { warning: 80, danger: 100 };
 export const dustThresholds = { warning: 30, danger: 50 };
 
+export const thresholds: Record<Sensor, { warning: number; danger: number }> = {
+	"dust": {
+		warning: 30, 
+		danger: 50
+	},
+	"noise": {
+		warning: 80, 
+		danger: 130
+	},
+	"vibration": {
+		warning: 80, 
+		danger: 100
+	}
+}
+
 export const mapWeekDataToEvents = (
 	data: Array<SensorDataResponseDto>,
 ): Array<Event> =>
@@ -121,3 +136,25 @@ export const getNextDay = (selectedDay: Date, view: View): Date => {
 	}
 	return startOfMonth(addMonths(selectedDay, 1));
 };
+
+// For counting records of limits exceeded - simple counting, might need it more advanced?
+export const summarizeDanger = (exposureType: Sensor, data: Array<SensorDataResponseDto>): number => {
+	if (data.length <= 0) return 0;
+	const dangerLevel = thresholds[exposureType].danger;
+	return data.reduce((count, item) => item.value > dangerLevel ? count + 1 : count, 0);
+}
+
+export const summarizeWarnings = (exposureType: Sensor, data: Array<SensorDataResponseDto>): number => {
+	if (data.length <= 0) return 0;
+	const warningLevel = thresholds[exposureType].warning;
+	return data.reduce((count, item) => item.value > warningLevel ? count + 1 : count, 0);
+}
+
+// To be used after getting counts of warnings and dangers
+export const summarizeSafe = (exposureType: Sensor, data: Array<SensorDataResponseDto>): number => {
+	if (data.length <= 0) return 0;
+	const maxValue = thresholds[exposureType].warning;
+	
+	return data.filter(item => !isEmptyDataItem(item) && item.value < maxValue).length;
+}
+const isEmptyDataItem = (item: SensorDataResponseDto): boolean => (!item || item.value === null || item.value === 0)
