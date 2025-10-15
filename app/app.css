@@ -44,6 +44,7 @@ body {
 	--color-accent: var(--accent);
 	--color-accent-foreground: var(--accent-foreground);
 	--color-destructive: var(--destructive);
+	--color-danger: var(--danger);
 	--color-warning: var(--warning);
 	--color-safe: var(--safe);
 	--color-border: var(--border);

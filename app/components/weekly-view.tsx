@@ -334,8 +334,8 @@ export function useWeekView({
 	};
 
 	const days = eachDayOfInterval({
-		start: selectedDay,
-		end: addDays(selectedDay, 6),
+		start: startOfWeek(selectedDay, { weekStartsOn: 1 }),
+		end: addDays(startOfWeek(selectedDay, { weekStartsOn: 1 }), 6),
 	}).map((day) => ({
 		date: day,
 		isToday: isToday(day),

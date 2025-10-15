@@ -25,6 +25,7 @@ export const parseAsView = parseAsStringLiteral(views);
 export type Sensor = "dust" | "noise" | "vibration";
 const sensors: Array<Sensor> = ["dust", "noise", "vibration"];
 export const parseAsSensor = parseAsStringLiteral(sensors);
+export type DangerKeywords = "safe" | "warning" | "danger";
 
 export const DangerTypes = {
 	high: "DANGER",
@@ -54,20 +55,38 @@ export const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
 	},
 };
 
-//Temporary thresholds
-export const noiseThresholds = { warning: 80, danger: 130 };
-export const vibrationThresholds = { warning: 80, danger: 100 };
-export const dustThresholds = { warning: 30, danger: 50 };
+type Threshold = {
+	warning: number;
+	danger: number;
+};
+
+export const thresholds: Record<Sensor, Threshold> = {
+	dust: {
+		warning: 80,
+		danger: 100,
+	},
+	noise: {
+		warning: 80,
+		danger: 130,
+	},
+	vibration: {
+		warning: 80,
+		danger: 100,
+	},
+};
 
 export const mapWeekDataToEvents = (
 	data: Array<SensorDataResponseDto>,
-): Array<Event> =>
-	data.map((item) => {
+	sensor: Sensor,
+): Array<Event> => {
+	const _thresholds = thresholds[sensor];
+
+	return data.map((item) => {
 		let dangerLevel: DangerLevel = "SAFE";
-		if (item.value > noiseThresholds.warning) {
+		if (item.value > _thresholds.warning) {
 			dangerLevel = "WARNING";
 		}
-		if (item.value > noiseThresholds.danger) {
+		if (item.value > _thresholds.danger) {
 			dangerLevel = "DANGER";
 		}
 
@@ -81,18 +100,62 @@ export const mapWeekDataToEvents = (
 			dangerLevel: dangerLevel,
 		};
 	});
+};
 
 export const mapMonthDataToDangerLists = (
 	data: Array<SensorDataResponseDto>,
+	sensor: Sensor,
 ) => {
 	const safe: Array<Date> = [];
 	const warning: Array<Date> = [];
 	const danger: Array<Date> = [];
 
+	const _thresholds = thresholds[sensor];
+
 	Object.values(data).forEach((item) => {
-		if (item.value < noiseThresholds.warning) {
+		if (item.value < _thresholds.warning) {
 			safe.push(new Date(item.time));
-		} else if (item.value < noiseThresholds.danger) {
+		} else if (item.value < _thresholds.danger) {
+			warning.push(new Date(item.time));
+		} else {
+			danger.push(new Date(item.time));
+		}
+	});
+
+	return { safe, warning, danger };
+};
+
+export const mapSensorDataToMonthLists = (
+	data: Array<SensorDataResponseDto>,
+	relevantSensor: Sensor | undefined,
+): Record<DangerKeywords, Array<Date>> => {
+	if (!relevantSensor) {
+		// Handle data for ALL sensors
+		const dustData = mapSensorDataToMonthLists(data, "dust");
+		const noiseData = mapSensorDataToMonthLists(data, "noise");
+		const vibrationData = mapSensorDataToMonthLists(data, "vibration");
+		return {
+			safe: [...dustData.safe, ...noiseData.safe, ...vibrationData.safe],
+			warning: [
+				...dustData.warning,
+				...noiseData.warning,
+				...vibrationData.warning,
+			],
+			danger: [
+				...dustData.danger,
+				...noiseData.danger,
+				...vibrationData.danger,
+			],
+		};
+	}
+	const safe: Array<Date> = [];
+	const warning: Array<Date> = [];
+	const danger: Array<Date> = [];
+
+	Object.values(data).forEach((item) => {
+		if (item.value < thresholds[relevantSensor].warning) {
+			safe.push(new Date(item.time));
+		} else if (item.value < thresholds[relevantSensor].danger) {
 			warning.push(new Date(item.time));
 		} else {
 			danger.push(new Date(item.time));

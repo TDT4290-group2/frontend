@@ -124,19 +124,21 @@ export function ChartLineDefault({
 export function ThresholdLine({
 	y,
 	dangerLevel,
+	label,
 }: {
 	y: number;
 	dangerLevel: DangerLevel;
+	label?: string;
 }) {
 	const color = dangerLevels[dangerLevel].color;
-	const label = dangerLevels[dangerLevel].label;
+	const lineLabel = label ?? dangerLevels[dangerLevel].label;
 	return (
 		<ReferenceLine
 			y={y}
 			stroke={color}
 			strokeDasharray="4 4"
 			label={{
-				value: label,
+				value: lineLabel,
 				position: "left",
 				fill: color,
 				offset: -150,
