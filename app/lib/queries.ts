@@ -39,25 +39,25 @@ const fieldMap: Record<Sensor, string | undefined> = {
 };
 
 function getStartEnd(view: View, selectedDay: Date) {
-	switch (view) {
-		case "day":
-			return {
-				startTime: new Date(selectedDay.setHours(8)),
-				endTime: new Date(selectedDay.setHours(16)),
-			};
-		case "week":
-			return {
-				startTime: startOfWeek(selectedDay),
-				endTime: endOfWeek(selectedDay),
-			};
-		case "month":
-			return {
-				startTime: startOfMonth(selectedDay),
-				endTime: endOfMonth(selectedDay),
-			};
-		default:
-			throw new Error("Invalid view");
+	if (view === "day") {
+		return {
+			startTime: new Date(selectedDay.setHours(8)),
+			endTime: new Date(selectedDay.setHours(16)),
+		};
 	}
+	if (view === "week") {
+		return {
+			startTime: startOfWeek(selectedDay),
+			endTime: endOfWeek(selectedDay),
+		};
+	}
+	if (view === "month") {
+		return {
+			startTime: startOfMonth(selectedDay),
+			endTime: endOfMonth(selectedDay),
+		};
+	}
+	throw new Error("Invalid view");
 }
 
 export function buildSensorQuery(

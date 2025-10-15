@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
+/** biome-ignore-all lint/correctness/noNestedComponentDefinitions: CustomDay is intentionally defined inside MonthlyView for prop access. */
 import type { CalendarDay, Modifiers } from "react-day-picker";
 import type { SensorDataResponseDto } from "../lib/dto";
 import {
@@ -55,12 +56,12 @@ export function MonthlyView({ selectedDay, exposureType, data }: MonthlyProps) {
 				onDayClick={(day) => handleDayClick(day)}
 				components={{
 					DayButton: (props) => (
-                        <CustomDay
-                            {...props}
-                            getDayType={getDayType}
-                            handleDayClick={handleDayClick}
-                        />
-                    ),
+						<CustomDay
+							{...props}
+							getDayType={getDayType}
+							handleDayClick={handleDayClick}
+						/>
+					),
 				}}
 				modifiers={{ ...monthData }}
 				className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
@@ -73,40 +74,37 @@ export function MonthlyView({ selectedDay, exposureType, data }: MonthlyProps) {
 }
 
 type CustomDayProps = {
-    day: CalendarDay;
-    modifiers: Modifiers;
-    className?: string;
-    getDayType: (day: Date) => DangerKeywords | "none";
-    handleDayClick: (day: Date) => void;
+	day: CalendarDay;
+	modifiers: Modifiers;
+	className?: string;
+	getDayType: (day: Date) => DangerKeywords | "none";
+	handleDayClick: (day: Date) => void;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function CustomDay({
-    day,
-    className,
-    getDayType,
-    handleDayClick,
-    ...buttonProps
+	day,
+	className,
+	getDayType,
+	handleDayClick,
+	...buttonProps
 }: CustomDayProps) {
-    const dayDate = day.date;
-    const type = getDayType(dayDate);
+	const dayDate = day.date;
+	const type = getDayType(dayDate);
 
-    let relevantClassname = "cursor-pointer hover:brightness-85";
-    if (type === "safe") relevantClassname = `bg-safe ${relevantClassname}`;
-    else if (type === "warning") relevantClassname = `bg-warning ${relevantClassname}`;
-    else if (type === "danger") relevantClassname = `bg-danger ${relevantClassname}`;
-    else relevantClassname = "noData";
+	let relevantClassname = "cursor-pointer hover:brightness-85";
+	if (type === "safe") relevantClassname = `bg-safe ${relevantClassname}`;
+	else if (type === "warning")
+		relevantClassname = `bg-warning ${relevantClassname}`;
+	else if (type === "danger")
+		relevantClassname = `bg-danger ${relevantClassname}`;
+	else relevantClassname = "noData";
 
-    return (
-        <button
-            type="button"
-            disabled={relevantClassname === "noData"}
-            className={cn(
-                "h-11/12 w-11/12 rounded-lg",
-                relevantClassname,
-                className,
-            )}
-            onClick={() => handleDayClick(dayDate)}
-            {...buttonProps}
-        />
-    );
+	return (
+		<button
+			type="button"
+			disabled={relevantClassname === "noData"}
+			className={cn("h-11/12 w-11/12 rounded-lg", relevantClassname, className)}
+			{...buttonProps}
+		/>
+	);
 }

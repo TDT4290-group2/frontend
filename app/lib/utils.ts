@@ -121,7 +121,7 @@ export const mapMonthDataToDangerLists = (
 export const mapSensorDataToMonthLists = (
 	data: Array<SensorDataResponseDto>,
 	relevantSensor: Sensor | undefined,
-): Record<DangerKeywords, Date[]> => {
+): Record<DangerKeywords, Array<Date>> => {
 	if (!relevantSensor) {
 		// Handle data for ALL sensors
 		const dustData = mapSensorDataToMonthLists(data, "dust");
