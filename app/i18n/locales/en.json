@@ -1,0 +1,27 @@
+{
+  "exposure_summary": {
+    "title": "Exposure Summary",
+    "greenText": "Safe days",
+    "orangeText": "Days with warnings",
+    "redText": "Days where threshold was exceeded"
+  },
+  "layout": {
+    "overview": "Overview",
+    "dust": "Dust",
+    "vibration": "Vibration",
+    "noise": "Noise"
+  },
+  "overview" : {
+    "title": "Overview of {{view}}",
+    "day": "day",
+    "week": "week",
+    "month": "month"
+  },
+  "notifications": {
+    "dust": "Dust",
+    "vibration": "Vibration",
+    "noise": "Noise",
+    "warning": "Warning",
+    "danger": "Danger"
+  }
+}

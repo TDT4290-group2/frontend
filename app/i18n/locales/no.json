@@ -1,0 +1,27 @@
+{
+  "exposure_summary": {
+    "title": "Eksponeringer",
+    "greenText": "Sikre dager",
+    "orangeText": "Dager med advarsler",
+    "redText": "Dager hvor grensen ble overskredet"
+  },
+  "layout": {
+    "overview": "Oversikt",
+    "dust": "Støv",
+    "vibration": "Vibrasjon",
+    "noise": "Støy"
+  },
+  "overview" : {
+    "title": "Oversikt over {{view}}",
+    "day": "dag",
+    "week": "uke",
+    "month": "måned"
+  },
+    "notifications": {
+    "dust": "Støv",
+    "vibration": "Vibrasjon",
+    "noise": "Støy",
+    "warning": "Advarsel",
+    "danger": "Fare"
+  }
+}

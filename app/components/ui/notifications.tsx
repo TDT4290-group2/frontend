@@ -7,31 +7,43 @@ import {
   ItemTitle,
 } from "@/components/ui/item"
 import { Card } from "./card"
+import { useTranslation } from "react-i18next";
 
-const notifications = [
-  {
-    title: "Noise",
-    type: "Warning",
-    date: "Wed 1st April 9.41 AM",
-  },
-  {
-    title: "Vibration",
-    type: "Danger",
-    date: "Thu 24th May 2.04 PM",
-  },
-  {
-    title: "Dust",
-    type: "Warning",
-    date: "Mon 4th Mar 8.53 AM",
-  },
-  {
-    title: "Dust",
-    type: "Warning",
-    date: "Mon 4th Mar 8.53 AM",
-  },
-]
 
 export function Notifications() {
+  const { t, i18n } = useTranslation();
+  
+  const notifications = [
+    {
+      title: "Noise",
+      translatedTitle: t("notifications.noise"),
+      type: "Warning",
+      typeTranslated: t("notifications.warning"),
+      date: "01.04 9.41",
+    },
+    {
+      title: "Vibration",
+      translatedTitle: t("notifications.vibration"),
+      type: "Danger",
+      typeTranslated: t("notifications.danger"),
+      date: "24.05 14.04",
+    },
+    {
+      title: "Dust",
+      translatedTitle: t("notifications.dust"),
+      type: "Warning",
+      typeTranslated: t("notifications.warning"),
+      date: "04.03 8.53",
+    },
+    {
+      title: "Dust",
+      translatedTitle: t("notifications.dust"),
+      type: "Warning",
+      typeTranslated: t("notifications.warning"),
+      date: "04.03 8.53",
+    },
+  ];
+  
   return (
     <Card className="w-full px-4 gap-0 h-64 overflow-y-auto ">
       <ItemGroup className="gap-1">
@@ -54,14 +66,14 @@ export function Notifications() {
               </ItemMedia>
               <ItemContent>
                 <ItemTitle className="line-clamp-1">
-                  {notification.title}
+                  {notification.translatedTitle}
                 </ItemTitle>
                 <ItemDescription className={
                   notification.type === "Warning" ? "text-[var(--warning)]" : 
                   notification.type === "Danger" ? "text-[var(--danger)]" : 
                   ""
                   }>
-                  {notification.type}
+                  {notification.typeTranslated}
                 </ItemDescription>
               </ItemContent>
               <ItemContent className="flex-none text-center">

@@ -1,5 +1,13 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/ui/select";
 import {
 	Drawer,
 	DrawerClose,
@@ -60,11 +68,13 @@ function HomeLink() {
 export default function Layout() {
 	const isMobile = useIsMobile();
 
+	const { t, i18n } = useTranslation();
+
 	const links: Array<{ to: To; label: string }> = [
-		{ to: href("/"), label: "Overview" },
-		{ to: href("/dust"), label: "Dust" },
-		{ to: href("/vibration"), label: "Vibration" },
-		{ to: href("/noise"), label: "Noise" },
+		{ to: href("/"), label: t("layout.overview") },
+		{ to: href("/dust"), label: t("layout.dust") },
+		{ to: href("/vibration"), label: t("layout.vibration") },
+		{ to: href("/noise"), label: t("layout.noise") },
 	];
 
 	return (
@@ -94,8 +104,22 @@ export default function Layout() {
 							</nav>
 						</>
 					)}
-
-					<ModeToggle />
+					<div className="flex flex-row">
+						<Select onValueChange={(value) => i18n.changeLanguage(value)}>
+							<SelectTrigger className="w-32">
+								<SelectValue placeholder="Language" />
+							</SelectTrigger>
+							<SelectContent className="w-32">
+								<SelectItem key={"en"} value={"en"}>
+									{"English"}
+								</SelectItem>
+								<SelectItem key={"no"} value={"no"}>
+									{"Norwegian"}
+								</SelectItem>
+							</SelectContent>
+						</Select>
+						<ModeToggle />
+					</div>
 				</header>
 				<main className="m-2 flex items-center justify-center">
 					<Outlet />

@@ -1,6 +1,7 @@
 import { cn, dangerLevels, DangerTypes, type Sensor } from "~/app/lib/utils";
 import { Card } from "./card";
 import { useIsMobile } from "~/app/hooks/use-mobile";
+import { useTranslation } from "react-i18next";
 
 type SummaryProps = {
     exposureType?: Sensor,
@@ -26,6 +27,8 @@ export function Summary({
     const warningColor = "text-warning";
     const dangerColor = "text-destructive";
 
+    const { t, i18n } = useTranslation();
+
     const summaryData = {
         exposureType : exposureType || "Every sensor",
         safeCount: safeCount || 24, 
@@ -40,7 +43,7 @@ export function Summary({
     return (
         <Card className="flex flex-col w-full p-5 gap-0 shadow ">
             <div className="md:pl-2 md:pb-2 border-b-2 border-b-slate-300">
-                <h2 className="text-xl text-center md:text-left md:text-2xl">Exposure Summary</h2>
+                <h2 className="text-xl text-center md:text-left md:text-2xl">{t("exposure_summary.title")}</h2>
             </div>
             <div className="exposure-subheader">
                 <h4 className="text-sm text-center md:text-right text-slate-400">
