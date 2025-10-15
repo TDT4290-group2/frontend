@@ -1,13 +1,11 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 import {
-	cn,
 	getNextDay,
 	getPrevDay,
-	mapMonthDataToDangerLists,
 	mapWeekDataToEvents,
 	parseAsView,
+	thresholds,
 	type View,
-	vibrationThresholds,
 } from "@/lib/utils";
 import {
 	Select,
@@ -19,8 +17,8 @@ import {
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
+import { MonthlyView } from "../components/monthly-view";
 import { Button } from "../components/ui/button";
-import { Calendar } from "../components/ui/calendar";
 import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
@@ -44,7 +42,6 @@ export default function Vibration() {
 		endTime: new Date(selectedDay.setHours(16)),
 		granularity: TimeGranularity.Minute,
 		function: AggregationFunction.Avg,
-		fields: [],
 	};
 
 	const weekQuery: SensorDataRequestDto = {
@@ -52,7 +49,6 @@ export default function Vibration() {
 		endTime: endOfWeek(selectedDay),
 		granularity: TimeGranularity.Hour,
 		function: AggregationFunction.Max,
-		fields: [],
 	};
 
 	const monthQuery: SensorDataRequestDto = {
@@ -60,15 +56,12 @@ export default function Vibration() {
 		endTime: endOfMonth(selectedDay),
 		granularity: TimeGranularity.Day,
 		function: AggregationFunction.Max,
-		fields: [],
 	};
 
 	const query =
 		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
 
 	const { data, isLoading, isError } = useSensorData("vibration", query);
-
-	const { safe, warning, danger } = mapMonthDataToDangerLists(data ?? []);
 
 	return (
 		<section className="flex w-full flex-col">
@@ -110,7 +103,7 @@ export default function Vibration() {
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary exposureType="vibration" />
+					<Summary exposureType={"vibration"} view={view} data={data} />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
@@ -123,37 +116,14 @@ export default function Vibration() {
 							<p>{"Something went wrong while fetching sensor data."}</p>
 						</Card>
 					) : view === "month" ? (
-						<Card className="w-full">
-							<Calendar
-								month={selectedDay}
-								hideNavigation
-								showWeekNumber
-								disabled
-								mode="single"
-								weekStartsOn={1}
-								modifiers={{
-									safe: safe,
-									warning: warning,
-									danger: danger,
-								}}
-								modifiersClassNames={{
-									safe: cn("bg-[var(--safe)]"),
-									warning: cn("bg-[var(--warning)]"),
-									danger: cn("bg-[var(--danger)]"),
-									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
-								}}
-								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-								captionLayout="label"
-								buttonVariant="ghost"
-							/>
-						</Card>
+						<MonthlyView selectedDay={selectedDay} data={data ?? []} />
 					) : view === "week" ? (
 						<WeekView
 							dayStartHour={8}
 							dayEndHour={16}
 							weekStartsOn={1}
 							minuteStep={60}
-							events={mapWeekDataToEvents(data ?? [])}
+							events={mapWeekDataToEvents(data ?? [], "vibration")}
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
 					) : !data || data.length === 0 ? (
@@ -181,11 +151,11 @@ export default function Vibration() {
 							maxY={110}
 						>
 							<ThresholdLine
-								y={vibrationThresholds.danger}
+								y={thresholds.vibration.danger}
 								dangerLevel="DANGER"
 							/>
 							<ThresholdLine
-								y={vibrationThresholds.warning}
+								y={thresholds.vibration.warning}
 								dangerLevel="WARNING"
 							/>
 						</ChartLineDefault>

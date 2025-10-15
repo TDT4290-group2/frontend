@@ -1,26 +1,75 @@
-import { cn, dangerLevels, DangerTypes, type Sensor } from "~/app/lib/utils";
+import { cn, dangerLevels, DangerTypes, thresholds, type Sensor, type View } from "~/app/lib/utils";
 import { Card } from "./card";
 import { useIsMobile } from "~/app/hooks/use-mobile";
+import type { SensorDataResponseDto } from "~/app/lib/dto";
 import { useTranslation } from "react-i18next";
 
 type SummaryProps = {
-    exposureType?: Sensor,
-    safeCount?: number,
-    warningCount?: number,
-    dangerCount?: number,
-    safeLabel?: string,
-    warningLabel?: string,
-    dangerLabel?: string
+    exposureType: Sensor,
+    data: SensorDataResponseDto[] | undefined,
+    view: View,
 }
+
+
+const getSummaryData = (view: View, sensor: Sensor, data: Array<SensorDataResponseDto>) => {
+    const summaryData = {safeCount: 0, dangerCount: 0, warningCount: 0}
+
+    const threshold =  thresholds[sensor];
+    console.log(thresholds)
+
+    if (view === "month") {
+        for (const item of data) {
+            if (item.value < threshold.warning) {
+                summaryData.safeCount++;
+            }
+            else if (item.value < threshold.danger) {
+                summaryData.warningCount++;
+            }
+            else {
+                summaryData.dangerCount++;
+            }
+        }
+    }
+    else if (view === "week") {
+        for (const item of data) {
+            if (item.value < threshold.warning) {
+                summaryData.safeCount++;
+            }
+            else if (item.value < threshold.danger) {
+                summaryData.warningCount++;
+            }
+            else {
+                summaryData.dangerCount++;
+            }
+        }
+    }
+    else {
+        for (const item of data) {
+            if (item.value < threshold.warning) {
+                summaryData.safeCount++;
+            }
+            else if (item.value < threshold.danger) {
+                summaryData.warningCount++;
+            }
+            else {
+                summaryData.dangerCount++;
+            }
+        }
+        summaryData.dangerCount = Math.ceil(summaryData.dangerCount / 60)
+        summaryData.warningCount = Math.round(summaryData.warningCount / 60)
+        summaryData.safeCount = Math.floor(summaryData.safeCount / 60)
+    }
+
+    return summaryData;
+
+}
+
+type SummaryLabel = Record<"safe" | "warning" | "danger", string>
 
 export function Summary({
         exposureType,
-        safeCount,
-        warningCount,
-        dangerCount,
-        safeLabel,
-        warningLabel,
-        dangerLabel
+        data,
+        view
     } : SummaryProps){
 
     const safeColor = "text-safe"; 
@@ -29,14 +78,37 @@ export function Summary({
 
     const { t, i18n } = useTranslation();
 
-    const summaryData = {
+    const defaultLabels: SummaryLabel = {
+        safe: DangerTypes.low,
+        warning: DangerTypes.medium,
+        danger: DangerTypes.high
+    }
+
+    const viewLabelConfig: Record<View, SummaryLabel> = {
+        day: {
+            safe: "Hours with safe amount of exposure",
+            warning: "Hours where a warning was issued due to exposure",
+            danger: "Hours of exposure above limit"
+        },
+        week: {
+            safe: "Hours with safe amount of exposure",
+            warning: "Hours where a warning was issued due to exposure",
+            danger: "Hours of exposure above limit"
+        },
+        month: {
+            safe: "Days where no limit was close to exceeding",
+            warning: "Days where a warning was issued due to exposure",
+            danger: "Days where exposure exceeded limit"
+        }
+    }
+
+    const summaryData = getSummaryData(view, exposureType, data ?? []);
+    
+    const summaryLabels = {
         exposureType : exposureType || "Every sensor",
-        safeCount: safeCount || 24, 
-        warningCount: warningCount || 12, 
-        dangerCount: dangerCount || 3, 
-        safeLabel: safeLabel || "Safe days", 
-        warningLabel: warningLabel ||  "Days with warnings", 
-        dangerLabel: dangerLabel || "Days where threshold was exceeded"
+        safeLabel: viewLabelConfig[view].safe || defaultLabels.safe, 
+        warningLabel: viewLabelConfig[view].warning || defaultLabels.warning, 
+        dangerLabel: viewLabelConfig[view].danger || defaultLabels.danger
     }
     const isMobile = useIsMobile();
 
@@ -47,7 +119,7 @@ export function Summary({
             </div>
             <div className="exposure-subheader">
                 <h4 className="text-sm text-center md:text-right text-slate-400">
-                    <span> {summaryData.exposureType} </span>
+                    <span> {summaryLabels.exposureType} </span>
                 </h4>
             </div>
             <div className="exposures-wrapper flex flex-row md:flex-col gap-4 md:gap-0 justify-center ">
@@ -57,7 +129,7 @@ export function Summary({
                         {summaryData.safeCount}
                     </span>
                     <span className={cn("text-xs ml-1 md:text-sm md:ml-2", safeColor)}>
-                        {isMobile ? DangerTypes.low : summaryData.safeLabel}
+                        {isMobile ? defaultLabels.safe : summaryLabels.safeLabel}
                     </span>
                 </div>
                 {/* Warning */}
@@ -66,7 +138,7 @@ export function Summary({
                         {summaryData.warningCount}
                     </span>
                     <span className={cn("text-xs ml-1 md:text-sm md:ml-2", warningColor)}>
-                        {isMobile ? DangerTypes.medium : summaryData.warningLabel}
+                        {isMobile ? defaultLabels.warning : summaryLabels.warningLabel}
                     </span>
                 </div>
                 {/* Danger */}
@@ -75,7 +147,7 @@ export function Summary({
                         {summaryData.dangerCount}
                     </span>
                     <span className={cn("text-xs ml-1 md:text-sm md:ml-2", dangerColor)}>
-                        {isMobile ? DangerTypes.high : summaryData.dangerLabel}
+                        {isMobile ? defaultLabels.danger : summaryLabels.dangerLabel}
                     </span>
                     
                 </div>

@@ -1,12 +1,10 @@
 /** biome-ignore-all lint/suspicious/noAlert: We use alert for testing, but will be changed later */
 import {
-	cn,
-	dustThresholds,
 	getNextDay,
 	getPrevDay,
-	mapMonthDataToDangerLists,
 	mapWeekDataToEvents,
 	parseAsView,
+	thresholds,
 	type View,
 } from "@/lib/utils";
 import {
@@ -19,8 +17,8 @@ import {
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
+import { MonthlyView } from "../components/monthly-view";
 import { Button } from "../components/ui/button";
-import { Calendar } from "../components/ui/calendar";
 import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
@@ -67,8 +65,6 @@ export default function Dust() {
 
 	const { data, isLoading, isError } = useSensorData("dust", query);
 
-	const { safe, warning, danger } = mapMonthDataToDangerLists(data ?? []);
-
 	return (
 		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
@@ -109,7 +105,7 @@ export default function Dust() {
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary exposureType="dust" />
+					<Summary exposureType={"dust"} view={view} data={data} />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
@@ -122,37 +118,14 @@ export default function Dust() {
 							<p>{"Something went wrong while fetching sensor data."}</p>
 						</Card>
 					) : view === "month" ? (
-						<Card className="w-full">
-							<Calendar
-								month={selectedDay}
-								hideNavigation
-								showWeekNumber
-								disabled
-								mode="single"
-								weekStartsOn={1}
-								modifiers={{
-									safe: safe,
-									warning: warning,
-									danger: danger,
-								}}
-								modifiersClassNames={{
-									safe: cn("bg-[var(--safe)]"),
-									warning: cn("bg-[var(--warning)]"),
-									danger: cn("bg-[var(--danger)]"),
-									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
-								}}
-								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-								captionLayout="label"
-								buttonVariant="ghost"
-							/>
-						</Card>
+						<MonthlyView selectedDay={selectedDay} data={data ?? []} />
 					) : view === "week" ? (
 						<WeekView
 							dayStartHour={8}
 							dayEndHour={16}
 							weekStartsOn={1}
 							minuteStep={60}
-							events={mapWeekDataToEvents(data ?? [])}
+							events={mapWeekDataToEvents(data ?? [], "dust")}
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
 					) : !data || data.length === 0 ? (
@@ -179,8 +152,11 @@ export default function Dust() {
 							endHour={16}
 							maxY={110}
 						>
-							<ThresholdLine y={dustThresholds.danger} dangerLevel="DANGER" />
-							<ThresholdLine y={dustThresholds.warning} dangerLevel="WARNING" />
+							<ThresholdLine y={thresholds.dust.danger} dangerLevel="DANGER" />
+							<ThresholdLine
+								y={thresholds.dust.warning}
+								dangerLevel="WARNING"
+							/>
 						</ChartLineDefault>
 					)}
 				</div>
