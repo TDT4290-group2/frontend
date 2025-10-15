@@ -4,6 +4,7 @@ import {
 	getPrevDay,
 	mapWeekDataToEvents,
 	parseAsView,
+	sensors,
 	thresholds,
 	type View,
 } from "@/lib/utils";
@@ -31,6 +32,8 @@ import {
 	type SensorDataRequestDto,
 	TimeGranularity,
 } from "../lib/dto";
+import { useMemo } from "react";
+import { buildSensorQuery } from "../lib/queries";
 
 export function meta() {
 	return [
@@ -41,37 +44,9 @@ export function meta() {
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
-	//! Currently set up for dust - but need to implement all types.
+	
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 	const { selectedDay, setSelectedDay } = useDayContext();
-
-	// TEMP queries - need to be adjusted so data for all sensors are fetched
-	const dayQuery: SensorDataRequestDto = {
-		startTime: new Date(selectedDay.setHours(8)),
-		endTime: new Date(selectedDay.setHours(16)),
-		granularity: TimeGranularity.Minute,
-		function: AggregationFunction.Avg,
-		field: "pm1_stel",
-	};
-
-	const weekQuery: SensorDataRequestDto = {
-		startTime: startOfWeek(selectedDay),
-		endTime: endOfWeek(selectedDay),
-		granularity: TimeGranularity.Hour,
-		function: AggregationFunction.Avg,
-		field: "pm1_stel",
-	};
-
-	const monthQuery: SensorDataRequestDto = {
-		startTime: startOfMonth(selectedDay),
-		endTime: endOfMonth(selectedDay),
-		granularity: TimeGranularity.Day,
-		function: AggregationFunction.Avg,
-		field: "pm1_stel",
-	};
-
-	const query =
-		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
 
 	const { data, isLoading, isError } = useSensorData("dust", query);
 
