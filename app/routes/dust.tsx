@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/suspicious/noAlert: We use alert for testing, but will be changed later */
 import {
-	dustThresholds,
 	getNextDay,
 	getPrevDay,
 	mapWeekDataToEvents,
 	parseAsView,
+	thresholds,
 	type View,
 } from "@/lib/utils";
 import {
@@ -125,7 +125,7 @@ export default function Dust() {
 							dayEndHour={16}
 							weekStartsOn={1}
 							minuteStep={60}
-							events={mapWeekDataToEvents(data ?? [])}
+							events={mapWeekDataToEvents(data ?? [], "dust")}
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
 					) : !data || data.length === 0 ? (
@@ -152,8 +152,11 @@ export default function Dust() {
 							endHour={16}
 							maxY={110}
 						>
-							<ThresholdLine y={dustThresholds.danger} dangerLevel="DANGER" />
-							<ThresholdLine y={dustThresholds.warning} dangerLevel="WARNING" />
+							<ThresholdLine y={thresholds.dust.danger} dangerLevel="DANGER" />
+							<ThresholdLine
+								y={thresholds.dust.warning}
+								dangerLevel="WARNING"
+							/>
 						</ChartLineDefault>
 					)}
 				</div>

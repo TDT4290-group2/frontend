@@ -1,12 +1,66 @@
-import { cn, dangerLevels, DangerTypes, summarizeDanger, summarizeForDays, summarizeSafe, summarizeWarnings, type Sensor, type View } from "~/app/lib/utils";
+import { cn, dangerLevels, DangerTypes, thresholds, type Sensor, type View } from "~/app/lib/utils";
 import { Card } from "./card";
 import { useIsMobile } from "~/app/hooks/use-mobile";
 import type { SensorDataResponseDto } from "~/app/lib/dto";
 
 type SummaryProps = {
-    exposureType?: Sensor,
+    exposureType: Sensor,
     data: SensorDataResponseDto[] | undefined,
     view: View,
+}
+
+
+const getSummaryData = (view: View, sensor: Sensor, data: Array<SensorDataResponseDto>) => {
+    const summaryData = {safeCount: 0, dangerCount: 0, warningCount: 0}
+
+    const threshold =  thresholds[sensor];
+    console.log(thresholds)
+
+    if (view === "month") {
+        for (const item of data) {
+            if (item.value < threshold.warning) {
+                summaryData.safeCount++;
+            }
+            else if (item.value < threshold.danger) {
+                summaryData.warningCount++;
+            }
+            else {
+                summaryData.dangerCount++;
+            }
+        }
+    }
+    else if (view === "week") {
+        for (const item of data) {
+            if (item.value < threshold.warning) {
+                summaryData.safeCount++;
+            }
+            else if (item.value < threshold.danger) {
+                summaryData.warningCount++;
+            }
+            else {
+                summaryData.dangerCount++;
+            }
+        }
+    }
+    else {
+        for (const item of data) {
+            if (item.value < threshold.warning) {
+                summaryData.safeCount++;
+            }
+            else if (item.value < threshold.danger) {
+                summaryData.warningCount++;
+            }
+            else {
+                summaryData.dangerCount++;
+            }
+        }
+        summaryData.dangerCount = Math.ceil(summaryData.dangerCount / 60)
+        summaryData.warningCount = Math.round(summaryData.warningCount / 60)
+        summaryData.safeCount = Math.floor(summaryData.safeCount / 60)
+    }
+
+    return summaryData;
+
 }
 
 type SummaryLabel = Record<"safe" | "warning" | "danger", string>
@@ -45,15 +99,7 @@ export function Summary({
         }
     }
 
-    const summaryData = view === "day" ? {
-		safeCount: summarizeForDays("safe", "dust", data ?? []),
-		warningCount: summarizeForDays("warning", "dust", data ?? []),
-		dangerCount: summarizeForDays("danger", "dust", data ?? []),
-	} : {
-		safeCount: summarizeSafe("dust", data ?? []),
-		warningCount: summarizeWarnings("dust", data ?? []),
-		dangerCount: summarizeDanger("dust", data ?? [])
-	} 
+    const summaryData = getSummaryData(view, exposureType, data ?? []);
     
     const summaryLabels = {
         exposureType : exposureType || "Every sensor",

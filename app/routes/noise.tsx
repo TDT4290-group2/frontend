@@ -3,8 +3,8 @@ import {
 	getNextDay,
 	getPrevDay,
 	mapWeekDataToEvents,
-	noiseThresholds,
 	parseAsView,
+	thresholds,
 	type View,
 } from "@/lib/utils";
 import {
@@ -122,7 +122,7 @@ export default function Noise() {
 							dayEndHour={16}
 							weekStartsOn={1}
 							minuteStep={60}
-							events={mapWeekDataToEvents(data ?? [])}
+							events={mapWeekDataToEvents(data ?? [], "noise")}
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
 					) : !data || data.length === 0 ? (
@@ -149,9 +149,9 @@ export default function Noise() {
 							endHour={16}
 							maxY={130}
 						>
-							<ThresholdLine y={noiseThresholds.danger} dangerLevel="DANGER" />
+							<ThresholdLine y={thresholds.noise.danger} dangerLevel="DANGER" />
 							<ThresholdLine
-								y={noiseThresholds.warning}
+								y={thresholds.noise.warning}
 								dangerLevel="WARNING"
 							/>
 						</ChartLineDefault>

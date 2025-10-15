@@ -4,8 +4,8 @@ import {
 	getPrevDay,
 	mapWeekDataToEvents,
 	parseAsView,
+	thresholds,
 	type View,
-	vibrationThresholds,
 } from "@/lib/utils";
 import {
 	Select,
@@ -123,7 +123,7 @@ export default function Vibration() {
 							dayEndHour={16}
 							weekStartsOn={1}
 							minuteStep={60}
-							events={mapWeekDataToEvents(data ?? [])}
+							events={mapWeekDataToEvents(data ?? [], "vibration")}
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
 					) : !data || data.length === 0 ? (
@@ -151,11 +151,11 @@ export default function Vibration() {
 							maxY={110}
 						>
 							<ThresholdLine
-								y={vibrationThresholds.danger}
+								y={thresholds.vibration.danger}
 								dangerLevel="DANGER"
 							/>
 							<ThresholdLine
-								y={vibrationThresholds.warning}
+								y={thresholds.vibration.warning}
 								dangerLevel="WARNING"
 							/>
 						</ChartLineDefault>

@@ -1,11 +1,10 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 import {
-	dustThresholds,
 	getNextDay,
 	getPrevDay,
 	mapWeekDataToEvents,
-	noiseThresholds,
 	parseAsView,
+	thresholds,
 	type View,
 } from "@/lib/utils";
 import {
@@ -116,7 +115,7 @@ export default function Home() {
 			</div>
 			<div className="flex w-full flex-col gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary view={view} data={data} />
+					<Summary view={view} exposureType="dust" data={data} />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">
@@ -138,7 +137,7 @@ export default function Home() {
 									dayEndHour={16}
 									weekStartsOn={1}
 									minuteStep={60}
-									events={mapWeekDataToEvents(data ?? [])}
+									events={mapWeekDataToEvents(data ?? [], "dust")}
 									onEventClick={(event) => alert(event.dangerLevel)}
 								/>
 							) : !data || data.length === 0 ? (
@@ -166,17 +165,17 @@ export default function Home() {
 									maxY={110}
 								>
 									<ThresholdLine
-										y={dustThresholds.danger}
+										y={thresholds.dust.danger}
 										label="Dust"
 										dangerLevel="DANGER"
 									/>
 									<ThresholdLine
-										y={noiseThresholds.danger}
+										y={thresholds.noise.danger}
 										label="Noise"
 										dangerLevel="DANGER"
 									/>
 									<ThresholdLine
-										y={noiseThresholds.danger}
+										y={thresholds.vibration.danger}
 										label="Vibration"
 										dangerLevel="DANGER"
 									/>

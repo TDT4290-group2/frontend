@@ -55,15 +55,15 @@ export const dangerLevels: Record<DangerLevel, DangerLevelInfo> = {
 	},
 };
 
-//Temporary thresholds
-export const noiseThresholds = { warning: 80, danger: 130 };
-export const vibrationThresholds = { warning: 80, danger: 100 };
-export const dustThresholds = { warning: 30, danger: 50 };
+type Threshold = {
+	warning: number;
+	danger: number;
+};
 
-export const thresholds: Record<Sensor, { warning: number; danger: number }> = {
+export const thresholds: Record<Sensor, Threshold> = {
 	dust: {
-		warning: 30,
-		danger: 50,
+		warning: 80,
+		danger: 100,
 	},
 	noise: {
 		warning: 80,
@@ -77,13 +77,16 @@ export const thresholds: Record<Sensor, { warning: number; danger: number }> = {
 
 export const mapWeekDataToEvents = (
 	data: Array<SensorDataResponseDto>,
-): Array<Event> =>
-	data.map((item) => {
+	sensor: Sensor,
+): Array<Event> => {
+	const _thresholds = thresholds[sensor];
+
+	return data.map((item) => {
 		let dangerLevel: DangerLevel = "SAFE";
-		if (item.value > noiseThresholds.warning) {
+		if (item.value > _thresholds.warning) {
 			dangerLevel = "WARNING";
 		}
-		if (item.value > noiseThresholds.danger) {
+		if (item.value > _thresholds.danger) {
 			dangerLevel = "DANGER";
 		}
 
@@ -97,18 +100,22 @@ export const mapWeekDataToEvents = (
 			dangerLevel: dangerLevel,
 		};
 	});
+};
 
 export const mapMonthDataToDangerLists = (
 	data: Array<SensorDataResponseDto>,
+	sensor: Sensor,
 ) => {
 	const safe: Array<Date> = [];
 	const warning: Array<Date> = [];
 	const danger: Array<Date> = [];
 
+	const _thresholds = thresholds[sensor];
+
 	Object.values(data).forEach((item) => {
-		if (item.value < noiseThresholds.warning) {
+		if (item.value < _thresholds.warning) {
 			safe.push(new Date(item.time));
-		} else if (item.value < noiseThresholds.danger) {
+		} else if (item.value < _thresholds.danger) {
 			warning.push(new Date(item.time));
 		} else {
 			danger.push(new Date(item.time));
@@ -177,60 +184,3 @@ export const getNextDay = (selectedDay: Date, view: View): Date => {
 	}
 	return startOfMonth(addMonths(selectedDay, 1));
 };
-
-// For counting records of limits exceeded - simple counting, might need it more advanced?
-export const summarizeDanger = (
-	exposureType: Sensor,
-	data: Array<SensorDataResponseDto>,
-): number => {
-	if (data.length <= 0) return 0;
-	const dangerLevel = thresholds[exposureType].danger;
-	return data.reduce(
-		(count, item) => (item.value > dangerLevel ? count + 1 : count),
-		0,
-	);
-};
-
-export const summarizeWarnings = (
-	exposureType: Sensor,
-	data: Array<SensorDataResponseDto>,
-): number => {
-	if (data.length <= 0) return 0;
-	const warningLevel = thresholds[exposureType].warning;
-	return data.reduce(
-		(count, item) => (item.value > warningLevel ? count + 1 : count),
-		0,
-	);
-};
-
-// To be used after getting counts of warnings and dangers
-export const summarizeSafe = (
-	exposureType: Sensor,
-	data: Array<SensorDataResponseDto>,
-): number => {
-	if (data.length <= 0) return 0;
-	const maxValue = thresholds[exposureType].warning;
-
-	return data.filter((item) => !isEmptyDataItem(item) && item.value < maxValue)
-		.length;
-};
-const isEmptyDataItem = (item: SensorDataResponseDto): boolean =>
-	!item || item.value === null || item.value === 0;
-
-export const summarizeForDays = (
-	warningLevel: "safe" | "warning" | "danger",
-	exposureType: Sensor,
-	data: Array<SensorDataResponseDto>,
-): number => {
-	let hours = 0;
-	if (warningLevel === "safe")
-		hours = minutesSummaryConversion(summarizeSafe(exposureType, data));
-	else if (warningLevel === "warning")
-		hours = minutesSummaryConversion(summarizeWarnings(exposureType, data));
-	else if (warningLevel === "danger")
-		hours = minutesSummaryConversion(summarizeDanger(exposureType, data));
-	return hours;
-};
-
-const minutesSummaryConversion = (number: number): number =>
-	Math.round(number / 60);
