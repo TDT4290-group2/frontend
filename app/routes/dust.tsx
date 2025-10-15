@@ -1,10 +1,8 @@
 /** biome-ignore-all lint/suspicious/noAlert: We use alert for testing, but will be changed later */
 import {
-	cn,
 	dustThresholds,
 	getNextDay,
 	getPrevDay,
-	mapMonthDataToDangerLists,
 	mapWeekDataToEvents,
 	parseAsView,
 	type View,
@@ -19,8 +17,8 @@ import {
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
+import { MonthlyView } from "../components/monthly-view";
 import { Button } from "../components/ui/button";
-import { Calendar } from "../components/ui/calendar";
 import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
@@ -66,8 +64,6 @@ export default function Dust() {
 		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
 
 	const { data, isLoading, isError } = useSensorData("dust", query);
-
-	const { safe, warning, danger } = mapMonthDataToDangerLists(data ?? []);
 
 	return (
 		<section className="flex w-full flex-col">
@@ -122,30 +118,7 @@ export default function Dust() {
 							<p>{"Something went wrong while fetching sensor data."}</p>
 						</Card>
 					) : view === "month" ? (
-						<Card className="w-full">
-							<Calendar
-								month={selectedDay}
-								hideNavigation
-								showWeekNumber
-								disabled
-								mode="single"
-								weekStartsOn={1}
-								modifiers={{
-									safe: safe,
-									warning: warning,
-									danger: danger,
-								}}
-								modifiersClassNames={{
-									safe: cn("bg-[var(--safe)]"),
-									warning: cn("bg-[var(--warning)]"),
-									danger: cn("bg-[var(--danger)]"),
-									disabled: cn("m-2 rounded-2xl text-black dark:text-white"),
-								}}
-								className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-								captionLayout="label"
-								buttonVariant="ghost"
-							/>
-						</Card>
+						<MonthlyView selectedDay={selectedDay} data={data ?? []} />
 					) : view === "week" ? (
 						<WeekView
 							dayStartHour={8}
