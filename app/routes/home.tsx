@@ -4,7 +4,7 @@ import {
 	getPrevDay,
 	mapWeekDataToEvents,
 	parseAsView,
-	thresholds,
+	type Sensor,
 	type View,
 } from "@/lib/utils";
 import {
@@ -14,10 +14,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
-import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
+import { DailyBarChart } from "../components/daily-bar-chart";
 import { DailyNotes } from "../components/daily-notes";
-import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { MonthlyView } from "../components/monthly-view";
 import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
@@ -26,11 +25,8 @@ import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
 import { useSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
-import {
-	AggregationFunction,
-	type SensorDataRequestDto,
-	TimeGranularity,
-} from "../lib/dto";
+import type { SensorDataResponseDto } from "../lib/dto";
+import { buildSensorQuery } from "../lib/queries";
 
 export function meta() {
 	return [
@@ -45,35 +41,37 @@ export default function Home() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 	const { selectedDay, setSelectedDay } = useDayContext();
 
-	// TEMP queries - need to be adjusted so data for all sensors are fetched
-	const dayQuery: SensorDataRequestDto = {
-		startTime: new Date(selectedDay.setHours(8)),
-		endTime: new Date(selectedDay.setHours(16)),
-		granularity: TimeGranularity.Minute,
-		function: AggregationFunction.Avg,
-		field: "pm1_stel",
-	};
+	const {
+		data: dustData,
+		isLoading: dustLoading,
+		isError: dustError,
+	} = useSensorData("dust", buildSensorQuery("dust", view, selectedDay));
+	const {
+		data: noiseData,
+		isLoading: noiseLoading,
+		isError: noiseError,
+	} = useSensorData("noise", buildSensorQuery("noise", view, selectedDay));
+	const {
+		data: vibrationData,
+		isLoading: vibLoading,
+		isError: vibError,
+	} = useSensorData(
+		"vibration",
+		buildSensorQuery("vibration", view, selectedDay),
+	);
 
-	const weekQuery: SensorDataRequestDto = {
-		startTime: startOfWeek(selectedDay),
-		endTime: endOfWeek(selectedDay),
-		granularity: TimeGranularity.Hour,
-		function: AggregationFunction.Avg,
-		field: "pm1_stel",
-	};
+	const isLoading = dustLoading || vibLoading || noiseLoading;
+	const isError = dustError || vibError || noiseError;
+	const noData =
+		(!dustData || dustData.length === 0) &&
+		(!noiseData || noiseData.length === 0) &&
+		(!vibrationData || vibrationData.length === 0);
 
-	const monthQuery: SensorDataRequestDto = {
-		startTime: startOfMonth(selectedDay),
-		endTime: endOfMonth(selectedDay),
-		granularity: TimeGranularity.Day,
-		function: AggregationFunction.Avg,
-		field: "pm1_stel",
-	};
-
-	const query =
-		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
-
-	const { data, isLoading, isError } = useSensorData("dust", query);
+	const allSensorData = {
+		dust: dustData ?? [],
+		noise: noiseData ?? [],
+		vibration: vibrationData ?? [],
+	} as Record<Sensor, Array<SensorDataResponseDto>>;
 
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
@@ -115,7 +113,7 @@ export default function Home() {
 			</div>
 			<div className="flex w-full flex-col gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary view={view} exposureType="dust" data={data} />
+					<Summary view={view} exposureType="dust" data={dustData} />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">
@@ -130,17 +128,17 @@ export default function Home() {
 									<p>{"Something went wrong while fetching sensor data."}</p>
 								</Card>
 							) : view === "month" ? (
-								<MonthlyView selectedDay={selectedDay} data={data ?? []} />
+								<MonthlyView selectedDay={selectedDay} data={dustData ?? []} />
 							) : view === "week" ? (
 								<WeekView
 									dayStartHour={8}
 									dayEndHour={16}
 									weekStartsOn={1}
 									minuteStep={60}
-									events={mapWeekDataToEvents(data ?? [], "dust")}
+									events={mapWeekDataToEvents(dustData ?? [], "dust")}
 									onEventClick={(event) => alert(event.dangerLevel)}
 								/>
-							) : !data || data.length === 0 ? (
+							) : noData ? (
 								<Card className="flex h-24 w-full items-center">
 									<CardTitle>
 										{selectedDay.toLocaleDateString("en-GB", {
@@ -152,34 +150,16 @@ export default function Home() {
 									<p>{"No exposure data found for this day"}</p>
 								</Card>
 							) : (
-								<ChartLineDefault
-									chartData={data ?? []}
+								<DailyBarChart
+									data={allSensorData}
 									chartTitle={selectedDay.toLocaleDateString("en-GB", {
 										day: "numeric",
 										month: "long",
 										year: "numeric",
 									})}
-									unit="points"
 									startHour={8}
 									endHour={16}
-									maxY={110}
-								>
-									<ThresholdLine
-										y={thresholds.dust.danger}
-										label="Dust"
-										dangerLevel="DANGER"
-									/>
-									<ThresholdLine
-										y={thresholds.noise.danger}
-										label="Noise"
-										dangerLevel="DANGER"
-									/>
-									<ThresholdLine
-										y={thresholds.vibration.danger}
-										label="Vibration"
-										dangerLevel="DANGER"
-									/>
-								</ChartLineDefault>
+								></DailyBarChart>
 							)}
 							<DailyNotes />
 						</section>
