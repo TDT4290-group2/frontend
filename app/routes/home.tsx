@@ -25,11 +25,12 @@ import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
-import { useSensorData } from "../lib/api";
+import { useAllSensorData, useSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
 import {
 	AggregationFunction,
 	type SensorDataRequestDto,
+	type SensorDataResponseDto,
 	TimeGranularity,
 } from "../lib/dto";
 import { useMemo } from "react";
@@ -48,7 +49,12 @@ export default function Home() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 	const { selectedDay, setSelectedDay } = useDayContext();
 
-	const { data, isLoading, isError } = useSensorData("dust", query);
+	const { everySensorData, isLoadingAny, isErrorAny } = useAllSensorData(
+		view,
+		selectedDay,
+	);
+
+	const rawData = everySensorData.flatMap(res => res.data ?? [])
 
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
@@ -90,32 +96,39 @@ export default function Home() {
 			</div>
 			<div className="flex w-full flex-col gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary view={view} exposureType="dust" data={data} />
+					<Summary
+						exposureType="all"
+						view={view}
+						data={everySensorData ?? []}
+					/>
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">
 					<div className="view-wrapper w-full">
 						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
-							{isLoading ? (
+							{isLoadingAny ? (
 								<Card className="flex h-24 w-full items-center">
 									<p>{"Loading data..."}</p>
 								</Card>
-							) : isError ? (
+							) : isErrorAny ? (
 								<Card className="flex h-24 w-full items-center">
 									<p>{"Something went wrong while fetching sensor data."}</p>
 								</Card>
 							) : view === "month" ? (
-								<MonthlyView selectedDay={selectedDay} data={data ?? []} />
+								<MonthlyView
+									selectedDay={selectedDay}
+									data={[]}
+								/>
 							) : view === "week" ? (
 								<WeekView
 									dayStartHour={8}
 									dayEndHour={16}
 									weekStartsOn={1}
 									minuteStep={60}
-									events={mapWeekDataToEvents(data ?? [], "dust")}
+									events={mapWeekDataToEvents([], "dust")}
 									onEventClick={(event) => alert(event.dangerLevel)}
 								/>
-							) : !data || data.length === 0 ? (
+							) : !everySensorData || everySensorData.length === 0 ? (
 								<Card className="flex h-24 w-full items-center">
 									<CardTitle>
 										{selectedDay.toLocaleDateString("en-GB", {
@@ -128,7 +141,7 @@ export default function Home() {
 								</Card>
 							) : (
 								<ChartLineDefault
-									chartData={data ?? []}
+									chartData={[]}
 									chartTitle={selectedDay.toLocaleDateString("en-GB", {
 										day: "numeric",
 										month: "long",

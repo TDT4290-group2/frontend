@@ -41,7 +41,7 @@ export const useSensorData = (
 	return { data, isLoading, isError };
 };
 
-type SensorDataResult = {
+export type SensorDataResult = {
 	sensor: Sensor;
 	data: Array<SensorDataResponseDto> | undefined;
 	isLoading: boolean;
