@@ -1,8 +1,8 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
-import type { SensorDataRequestDto, SensorDataResponseDto } from "./dto";
-import { sensors, type Sensor, type View } from "./utils";
 import { useMemo } from "react";
+import type { SensorDataRequestDto, SensorDataResponseDto } from "./dto";
 import { buildSensorQuery } from "./queries";
+import { type Sensor, sensors, type View } from "./utils";
 
 const baseURL = "http://localhost:5063/api/";
 
@@ -27,7 +27,6 @@ const fetchSensorData = async (
 	return response.json();
 };
 
-
 export const useSensorData = (
 	sensor: Sensor,
 	sensorDataRequest: SensorDataRequestDto,
@@ -49,10 +48,10 @@ export type SensorDataResult = {
 };
 
 type AllSensorData = {
-    everySensorData: Array<SensorDataResult>;
-    isLoadingAny: boolean;
-    isErrorAny: boolean;
-}
+	everySensorData: Array<SensorDataResult>;
+	isLoadingAny: boolean;
+	isErrorAny: boolean;
+};
 
 export const useAllSensorData = (
 	view: View,

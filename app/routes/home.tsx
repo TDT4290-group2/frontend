@@ -4,7 +4,6 @@ import {
 	getPrevDay,
 	mapWeekDataToEvents,
 	parseAsView,
-	sensors,
 	thresholds,
 	type View,
 } from "@/lib/utils";
@@ -15,7 +14,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
-import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { DailyNotes } from "../components/daily-notes";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
@@ -25,16 +23,8 @@ import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
-import { useAllSensorData, useSensorData } from "../lib/api";
+import { useAllSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
-import {
-	AggregationFunction,
-	type SensorDataRequestDto,
-	type SensorDataResponseDto,
-	TimeGranularity,
-} from "../lib/dto";
-import { useMemo } from "react";
-import { buildSensorQuery } from "../lib/queries";
 
 export function meta() {
 	return [
@@ -45,7 +35,6 @@ export function meta() {
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
-	
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 	const { selectedDay, setSelectedDay } = useDayContext();
 
@@ -54,7 +43,7 @@ export default function Home() {
 		selectedDay,
 	);
 
-	const rawData = everySensorData.flatMap(res => res.data ?? [])
+	const rawData = everySensorData.flatMap((res) => res.data ?? []);
 
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
@@ -115,10 +104,7 @@ export default function Home() {
 									<p>{"Something went wrong while fetching sensor data."}</p>
 								</Card>
 							) : view === "month" ? (
-								<MonthlyView
-									selectedDay={selectedDay}
-									data={rawData ?? []}
-								/>
+								<MonthlyView selectedDay={selectedDay} data={rawData ?? []} />
 							) : view === "week" ? (
 								<WeekView
 									dayStartHour={8}
