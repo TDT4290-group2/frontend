@@ -28,8 +28,20 @@ import { useDayContext } from "../lib/day-context";
 import {
 	AggregationFunction,
 	type SensorDataRequestDto,
+	type SensorDataResponseDto,
 	TimeGranularity,
 } from "../lib/dto";
+
+const makeCumulative = (data: Array<SensorDataResponseDto>) => {
+	if (!data) {
+		return [];
+	}
+	let sum = 0;
+	return data.map((point) => {
+		sum += point.value;
+		return { time: point.time, value: sum };
+	});
+};
 
 // biome-ignore lint: page components can be default exports
 export default function Vibration() {
@@ -139,7 +151,7 @@ export default function Vibration() {
 						</Card>
 					) : (
 						<ChartLineDefault
-							chartData={data ?? []}
+							chartData={makeCumulative(data)}
 							chartTitle={selectedDay.toLocaleDateString("en-GB", {
 								day: "numeric",
 								month: "long",
@@ -148,7 +160,8 @@ export default function Vibration() {
 							unit="points"
 							startHour={8}
 							endHour={16}
-							maxY={110}
+							maxY={450}
+							lineType="monotone"
 						>
 							<ThresholdLine
 								y={thresholds.vibration.danger}
