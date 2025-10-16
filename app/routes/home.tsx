@@ -117,7 +117,7 @@ export default function Home() {
 							) : view === "month" ? (
 								<MonthlyView
 									selectedDay={selectedDay}
-									data={[]}
+									data={rawData ?? []}
 								/>
 							) : view === "week" ? (
 								<WeekView
@@ -125,7 +125,7 @@ export default function Home() {
 									dayEndHour={16}
 									weekStartsOn={1}
 									minuteStep={60}
-									events={mapWeekDataToEvents([], "dust")}
+									events={mapWeekDataToEvents(rawData ?? [], "dust")}
 									onEventClick={(event) => alert(event.dangerLevel)}
 								/>
 							) : !everySensorData || everySensorData.length === 0 ? (
@@ -141,7 +141,7 @@ export default function Home() {
 								</Card>
 							) : (
 								<ChartLineDefault
-									chartData={[]}
+									chartData={rawData ?? []}
 									chartTitle={selectedDay.toLocaleDateString("en-GB", {
 										day: "numeric",
 										month: "long",
