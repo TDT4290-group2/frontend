@@ -92,7 +92,7 @@ export const mapWeekDataToEvents = (
 
 		const startDate = new Date(item.time);
 		const endDate = new Date(item.time);
-		endDate.setHours(endDate.getHours() + 1);
+		endDate.setUTCHours(endDate.getUTCHours() + 1);
 
 		return {
 			startDate: startDate,
