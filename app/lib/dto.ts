@@ -1,3 +1,5 @@
+import type { Sensor } from "./utils";
+
 export enum TimeGranularity {
 	Minute,
 	Hour,
@@ -23,4 +25,18 @@ export type SensorDataRequestDto = {
 export type SensorDataResponseDto = {
 	time: Date;
 	value: number;
+};
+
+export type SensorDataResult = {
+	data: Array<SensorDataResponseDto> | undefined;
+	isLoading: boolean;
+	isError: boolean;
+};
+
+export type AllSensors = Record<Sensor, SensorDataResult>;
+
+export type AllSensorData = {
+	everySensorData: AllSensors;
+	isLoadingAny: boolean;
+	isErrorAny: boolean;
 };

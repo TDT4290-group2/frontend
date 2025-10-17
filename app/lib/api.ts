@@ -1,6 +1,6 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import type { SensorDataRequestDto, SensorDataResponseDto } from "./dto";
+import type { AllSensorData, AllSensors, SensorDataRequestDto, SensorDataResponseDto, SensorDataResult } from "./dto";
 import { buildSensorQuery } from "./queries";
 import { type Sensor, sensors, type View } from "./utils";
 
@@ -30,7 +30,7 @@ const fetchSensorData = async (
 export const useSensorData = (
 	sensor: Sensor,
 	sensorDataRequest: SensorDataRequestDto,
-) => {
+): SensorDataResult => {
 	const { data, isLoading, isError } = useQuery<Array<SensorDataResponseDto>>({
 		queryKey: ["sensorData", sensor, sensorDataRequest],
 		queryFn: () => fetchSensorData(sensor, sensorDataRequest),
@@ -38,19 +38,6 @@ export const useSensorData = (
 	});
 
 	return { data, isLoading, isError };
-};
-
-export type SensorDataResult = {
-	sensor: Sensor;
-	data: Array<SensorDataResponseDto> | undefined;
-	isLoading: boolean;
-	isError: boolean;
-};
-
-type AllSensorData = {
-	everySensorData: Array<SensorDataResult>;
-	isLoadingAny: boolean;
-	isErrorAny: boolean;
 };
 
 export const useAllSensorData = (
@@ -74,17 +61,23 @@ export const useAllSensorData = (
 		})),
 	});
 
-	const everySensorData: Array<SensorDataResult> = results.map(
-		(res, index) => ({
-			sensor: sensors[index],
-			data: res.data,
-			isLoading: res.isLoading,
-			isError: res.isError,
-		}),
-	);
+	const everySensorData: AllSensors = Object.fromEntries(
+		sensors.map((sensor, index) => [
+			sensor,
+			{
+				data: results[index].data,
+				isLoading: results[index].isLoading,
+				isError: results[index].isError,
+			},
+		]),
+	) as AllSensors;
 
-	const isLoadingAny = everySensorData.some((res) => res.isLoading);
-	const isErrorAny = everySensorData.some((res) => res.isError);
+	const isLoadingAny = Object.values(everySensorData).some(
+		(res) => res.isLoading,
+	);
+	const isErrorAny = Object.values(everySensorData).some(
+		(res) => res.isError,
+	);
 
 	return {
 		everySensorData,
