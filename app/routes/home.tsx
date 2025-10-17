@@ -2,6 +2,8 @@
 import {
 	getNextDay,
 	getPrevDay,
+	mapAllSensorDataToMonthLists,
+	mapAllWeekDataToEvents,
 	mapWeekDataToEvents,
 	parseAsView,
 	thresholds,
@@ -42,8 +44,6 @@ export default function Home() {
 		view,
 		selectedDay,
 	);
-
-	const rawData = everySensorData.flatMap((res) => res.data ?? []);
 
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
@@ -104,17 +104,17 @@ export default function Home() {
 									<p>{"Something went wrong while fetching sensor data."}</p>
 								</Card>
 							) : view === "month" ? (
-								<MonthlyView selectedDay={selectedDay} data={rawData ?? []} />
+								<MonthlyView selectedDay={selectedDay} data={mapAllSensorDataToMonthLists(everySensorData ?? [])} />
 							) : view === "week" ? (
 								<WeekView
 									dayStartHour={8}
 									dayEndHour={16}
 									weekStartsOn={1}
 									minuteStep={60}
-									events={mapWeekDataToEvents(rawData ?? [], "dust")}
+									events={mapAllWeekDataToEvents(everySensorData ?? [])}
 									onEventClick={(event) => alert(event.dangerLevel)}
 								/>
-							) : !everySensorData || everySensorData.length === 0 ? (
+							) : !everySensorData || Object.values(everySensorData).every((sensor) => !sensor.data || sensor.data.length === 0,) ? (
 								<Card className="flex h-24 w-full items-center">
 									<CardTitle>
 										{selectedDay.toLocaleDateString("en-GB", {
@@ -127,7 +127,7 @@ export default function Home() {
 								</Card>
 							) : (
 								<ChartLineDefault
-									chartData={rawData ?? []}
+									chartData={[]}
 									chartTitle={selectedDay.toLocaleDateString("en-GB", {
 										day: "numeric",
 										month: "long",
