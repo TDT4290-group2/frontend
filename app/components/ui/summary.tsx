@@ -1,12 +1,11 @@
 import { cn, dangerLevels, DangerTypes, thresholds, type Sensor, type View } from "~/app/lib/utils";
 import { Card } from "./card";
 import { useIsMobile } from "~/app/hooks/use-mobile";
-import type { SensorDataResponseDto } from "~/app/lib/dto";
-import type { SensorDataResult } from "~/app/lib/api";
+import type { AllSensors, SensorDataResponseDto } from "~/app/lib/dto";
 
 type SummaryProps = {
     exposureType: Sensor | "all",
-    data: Array<SensorDataResponseDto> | Array<SensorDataResult> | undefined,
+    data: Array<SensorDataResponseDto> | AllSensors | undefined,
     view: View,
 }
 
@@ -101,7 +100,7 @@ export function Summary({
 
 function getSummaryData({view, exposureType, data} : SummaryProps ): SummaryType {
     let summaryData;
-    if (exposureType === "all") summaryData = getSummaryForAll(view, data as Array<SensorDataResult> ?? []);
+    if (exposureType === "all") summaryData = getSummaryForAll(view, data as AllSensors ?? []);
     else {
         summaryData = getSingleSummary(view, exposureType, data as Array<SensorDataResponseDto> ?? []);
     }
@@ -163,9 +162,9 @@ const getSingleSummary = (view: View, sensor: Sensor, data: Array<SensorDataResp
 
 }
 
-const getSummaryForAll = (view: View, data: Array<SensorDataResult>): SummaryType => {
-    let allData = data
-        .map(({sensor, data}) => (data && getSingleSummary(view, sensor, data)))
+const getSummaryForAll = (view: View, data: AllSensors): SummaryType => {
+    let allData = Object.entries(data)
+	.map(([sensor, sensorData]) => (data && getSingleSummary(view, sensor as Sensor, sensorData.data ?? [])))
         .reduce((acc: SummaryType, curr) => {
             if (!curr) return acc;
             acc.safeCount += curr.safeCount;

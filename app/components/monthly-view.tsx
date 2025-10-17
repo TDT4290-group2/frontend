@@ -14,18 +14,16 @@ import { Card } from "./ui/card";
 type MonthlyProps = {
 	selectedDay: Date;
 	exposureType?: Sensor;
-	data: Array<SensorDataResponseDto> | undefined;
+	data: Record<DangerKeywords, Array<Date>>;
 };
 
-export function MonthlyView({ selectedDay, exposureType, data }: MonthlyProps) {
+export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 	// UTILS
 
-	const monthData = mapSensorDataToMonthLists(data ?? [], exposureType);
-
 	function getDayType(day: Date): DangerKeywords | "none" {
-		if (hasData(monthData.safe, day)) return "safe";
-		if (hasData(monthData.warning, day)) return "warning";
-		if (hasData(monthData.danger, day)) return "danger";
+		if (hasData(data.safe, day)) return "safe";
+		if (hasData(data.warning, day)) return "warning";
+		if (hasData(data.danger, day)) return "danger";
 		return "none";
 	}
 
@@ -63,7 +61,7 @@ export function MonthlyView({ selectedDay, exposureType, data }: MonthlyProps) {
 						/>
 					),
 				}}
-				modifiers={{ ...monthData }}
+				modifiers={{ ...data }}
 				className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
 				captionLayout="label"
 				buttonVariant="default"
