@@ -89,6 +89,9 @@ export function DailyBarChart({
 							tickLine={false}
 							axisLine={false}
 							width={80}
+							tickFormatter={(value) =>
+								value.charAt(0).toUpperCase() + value.slice(1)
+							}
 						/>
 						{hourKeys.map((key) => (
 							<Bar key={key} dataKey={key} stackId="a">
