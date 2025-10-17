@@ -2,6 +2,7 @@
 import {
 	getNextDay,
 	getPrevDay,
+	mapSensorDataToMonthLists,
 	mapWeekDataToEvents,
 	parseAsView,
 	thresholds,
@@ -118,7 +119,10 @@ export default function Dust() {
 							<p>{"Something went wrong while fetching sensor data."}</p>
 						</Card>
 					) : view === "month" ? (
-						<MonthlyView selectedDay={selectedDay} data={data ?? []} />
+						<MonthlyView
+							selectedDay={selectedDay}
+							data={mapSensorDataToMonthLists(data ?? [], "dust") ?? []}
+						/>
 					) : view === "week" ? (
 						<WeekView
 							dayStartHour={8}
