@@ -5,7 +5,6 @@ import {
 	mapAllSensorDataToMonthLists,
 	mapAllWeekDataToEvents,
 	parseAsView,
-	thresholds,
 	type View,
 } from "@/lib/utils";
 import {
@@ -16,8 +15,8 @@ import {
 	SelectValue,
 } from "@/ui/select";
 import { useQueryState } from "nuqs";
+import { DailyBarChart } from "../components/daily-bar-chart";
 import { DailyNotes } from "../components/daily-notes";
-import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { MonthlyView } from "../components/monthly-view";
 import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
@@ -131,34 +130,14 @@ export default function Home() {
 									<p>{"No exposure data found for this day"}</p>
 								</Card>
 							) : (
-								<ChartLineDefault
-									chartData={[]}
+								<DailyBarChart
+									data={everySensorData}
 									chartTitle={selectedDay.toLocaleDateString("en-GB", {
 										day: "numeric",
 										month: "long",
 										year: "numeric",
 									})}
-									unit="points"
-									startHour={8}
-									endHour={16}
-									maxY={110}
-								>
-									<ThresholdLine
-										y={thresholds.dust.danger}
-										label="Dust"
-										dangerLevel="DANGER"
-									/>
-									<ThresholdLine
-										y={thresholds.noise.danger}
-										label="Noise"
-										dangerLevel="DANGER"
-									/>
-									<ThresholdLine
-										y={thresholds.vibration.danger}
-										label="Vibration"
-										dangerLevel="DANGER"
-									/>
-								</ChartLineDefault>
+								/>
 							)}
 							<DailyNotes />
 						</section>
