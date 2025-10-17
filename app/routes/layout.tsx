@@ -111,10 +111,10 @@ export default function Layout() {
 							</SelectTrigger>
 							<SelectContent className="w-32">
 								<SelectItem key={"en"} value={"en"}>
-									{"English"}
+									{t("layout.english")}
 								</SelectItem>
 								<SelectItem key={"no"} value={"no"}>
-									{"Norwegian"}
+									{t("layout.norwegian")}
 								</SelectItem>
 							</SelectContent>
 						</Select>

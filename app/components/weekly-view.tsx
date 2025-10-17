@@ -22,6 +22,7 @@ import { useDayContext } from "../lib/day-context";
 import { cn, type DangerLevel, dangerLevels } from "../lib/utils";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
+import { useTranslation } from "react-i18next";
 
 export function DaysHeader({ days }: { days: Days }) {
 	return (
@@ -224,6 +225,8 @@ export function Header({
 	nextButton?: ({ onNext }: { onNext?: () => void }) => ReactNode;
 	onNext?: () => void;
 }) {
+	const { t } = useTranslation();
+	
 	return (
 		<div className="flex h-16 items-center justify-between border-card-highlight border-b-2 px-6 py-4">
 			<h1 className="flex items-center gap-3 font-semibold text-base text-foreground">
@@ -233,7 +236,7 @@ export function Header({
 						todayButton({ onToday })
 					) : (
 						<Button variant={"default"} onClick={onToday}>
-							{"Today"}
+							{t("weekly_view.today")}
 						</Button>
 					))}
 			</h1>

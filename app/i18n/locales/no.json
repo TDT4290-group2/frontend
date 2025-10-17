@@ -1,27 +1,81 @@
 {
-  "exposure_summary": {
-    "title": "Eksponeringer",
-    "greenText": "Sikre dager",
-    "orangeText": "Dager med advarsler",
-    "redText": "Dager hvor grensen ble overskredet"
-  },
   "layout": {
     "overview": "Oversikt",
     "dust": "Støv",
     "vibration": "Vibrasjon",
-    "noise": "Støy"
+    "noise": "Støy",
+    "english": "Engelsk",
+    "norwegian": "Norsk",
+    "light": "Lys",
+    "dark": "Mørk",
+    "system": "System"
   },
   "overview" : {
     "title": "Oversikt over {{view}}",
     "day": "dag",
     "week": "uke",
-    "month": "måned"
+    "month": "måned",
+    "dust": "Støv",
+    "vibration": "Vibrasjon",
+    "noise": "Støy"
   },
-    "notifications": {
+  "dustExposure": {
+    "title": "Støveksponering"
+  },
+  "vibrationExposure": {
+    "title": "Vibrasjonseksponering"
+  },
+  "noiseExposure": {
+    "title": "Støyeksponering"
+  },
+  "exposure_summary": {
+    "title": "Eksponeringer",
+    "greenHourText" : "Timer med trygg mengde eksponering",
+    "greenDayText" : "Dager med trygg mengde eksponering",
+    "orangeHourText" : "Timer nær eksponeringsgrensen",
+    "orangeDayText" : "Dager nær eksponeringsgrensen",
+    "redHourText" : "Timer over eksponeringsgrensen",
+    "redDayText" : "Dager over eksponeringsgrensen",
+    "dust": "Støv",
+    "vibration": "Vibrasjon",
+    "noise": "Støy",
+    "allSensors": "Alle sensorer"
+  },
+  "notifications": {
     "dust": "Støv",
     "vibration": "Vibrasjon",
     "noise": "Støy",
     "warning": "Advarsel",
     "danger": "Fare"
-  }
+  },
+  "line_chart": {
+    "time": "Tid",
+    "DANGER": "Grense overskredet!",
+    "WARNING": "Nær eksponeringsgrensen",
+    "SAFE": "Trygt innenfor eksponeringsgrensen"
+  },
+  "weekly_view": {
+    "today": "I dag"
+  },
+  "monthly_view": {
+    "safe": "Trygg dag den",
+    "warning": "Advarsler utstedt den",
+    "danger": "Fare: Eksponeringsgrenser overskredet den"
+  },
+  "daily_notes": {
+    "dayTitle": "Dagens notater",
+    "writeHere": "Skriv her...",
+    "edit": "Rediger",
+    "save": "Lagre",
+    "notesFromThis": "Notater fra denne ",
+    "week": "uken",
+    "month": "måneden"
+  },
+  "day": "Dag",
+  "week": "Uke",
+  "month": "Måned",
+  "loadingData": "Laster inn data...",
+  "errorLoadingData": "Noe gikk galt under henting av sensordata.",
+  "noData": "Ingen eksponeringsdata funnet for denne dagen",
+  "points": "Poeng"
 }

@@ -25,6 +25,7 @@ import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
 import { useSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
+import { useTranslation } from "react-i18next";
 import {
 	AggregationFunction,
 	type SensorDataRequestDto,
@@ -34,6 +35,7 @@ import {
 // biome-ignore lint: page components can be default exports
 export default function Vibration() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
+	const { t } = useTranslation();
 
 	const { selectedDay, setSelectedDay } = useDayContext();
 
@@ -66,7 +68,7 @@ export default function Vibration() {
 	return (
 		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
-				<h1 className="p-2 text-3xl">{"Vibration exposure"}</h1>
+				<h1 className="p-2 text-3xl">{t("vibrationExposure.title")}</h1>
 				<div className="ml-auto flex flex-row gap-4">
 					<Button
 						onClick={() => setSelectedDay(getPrevDay(selectedDay, view))}
@@ -83,13 +85,13 @@ export default function Vibration() {
 						</SelectTrigger>
 						<SelectContent className="w-32">
 							<SelectItem key={"day"} value={"day"}>
-								{"Day"}
+								{t("day")}
 							</SelectItem>
 							<SelectItem key={"week"} value={"week"}>
-								{"Week"}
+								{t("week")}
 							</SelectItem>
 							<SelectItem key={"month"} value={"month"}>
-								{"Month"}
+								{t("month")}
 							</SelectItem>
 						</SelectContent>
 					</Select>
@@ -109,11 +111,11 @@ export default function Vibration() {
 				<div className="flex flex-1 flex-col items-end gap-4">
 					{isLoading ? (
 						<Card className="flex h-24 w-full items-center">
-							<p>{"Loading data..."}</p>
+							<p>{t("loadingData")}</p>
 						</Card>
 					) : isError ? (
 						<Card className="flex h-24 w-full items-center">
-							<p>{"Something went wrong while fetching sensor data."}</p>
+							<p>{t("errorLoadingData")}</p>
 						</Card>
 					) : view === "month" ? (
 						<MonthlyView selectedDay={selectedDay} data={data ?? []} />
@@ -135,7 +137,7 @@ export default function Vibration() {
 									year: "numeric",
 								})}
 							</CardTitle>
-							<p>{"No exposure data found for this day"}</p>
+							<p>{t("noData")}</p>
 						</Card>
 					) : (
 						<ChartLineDefault
@@ -145,7 +147,7 @@ export default function Vibration() {
 								month: "long",
 								year: "numeric",
 							})}
-							unit="points"
+							unit={t("points")}
 							startHour={8}
 							endHour={16}
 							maxY={110}

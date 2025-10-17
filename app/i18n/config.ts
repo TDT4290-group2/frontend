@@ -48,4 +48,4 @@ i18n
     // you want here.
   });
 
-export default i18n;
+export const i18nInstance = i18n;;

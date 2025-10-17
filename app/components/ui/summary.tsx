@@ -76,7 +76,7 @@ export function Summary({
     const warningColor = "text-warning";
     const dangerColor = "text-destructive";
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const defaultLabels: SummaryLabel = {
         safe: DangerTypes.low,
@@ -86,19 +86,19 @@ export function Summary({
 
     const viewLabelConfig: Record<View, SummaryLabel> = {
         day: {
-            safe: "Hours with safe amount of exposure",
-            warning: "Hours where a warning was issued due to exposure",
-            danger: "Hours of exposure above limit"
+            safe: t("exposure_summary.greenHourText"),
+            warning: t("exposure_summary.orangeHourText"),
+            danger: t("exposure_summary.redHourText")
         },
         week: {
-            safe: "Hours with safe amount of exposure",
-            warning: "Hours where a warning was issued due to exposure",
-            danger: "Hours of exposure above limit"
+            safe: t("exposure_summary.greenHourText"),
+            warning: t("exposure_summary.orangeHourText"),
+            danger: t("exposure_summary.redHourText")
         },
         month: {
-            safe: "Days where no limit was close to exceeding",
-            warning: "Days where a warning was issued due to exposure",
-            danger: "Days where exposure exceeded limit"
+            safe: t("exposure_summary.greenDayText"),
+            warning: t("exposure_summary.orangeDayText"),
+            danger: t("exposure_summary.redDayText")
         }
     }
 
@@ -119,7 +119,11 @@ export function Summary({
             </div>
             <div className="exposure-subheader">
                 <h4 className="text-sm text-center md:text-right text-slate-400">
-                    <span> {summaryLabels.exposureType} </span>
+                    <span>
+                        {exposureType
+                            ? t(`exposure_summary.${exposureType}`)
+                            : t("exposure_summary.allSensors")}
+                    </span>
                 </h4>
             </div>
             <div className="exposures-wrapper flex flex-row md:flex-col gap-4 md:gap-0 justify-center ">

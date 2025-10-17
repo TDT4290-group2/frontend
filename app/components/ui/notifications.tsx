@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 
 
 export function Notifications() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   
   const notifications = [
     {

@@ -42,7 +42,7 @@ export function meta() {
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
-	const { t, i18n } = useTranslation();
+	const { t } = useTranslation();
 	
 	//! Currently set up for dust - but need to implement all types.
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
@@ -99,13 +99,13 @@ export default function Home() {
 						</SelectTrigger>
 						<SelectContent className="w-32">
 							<SelectItem key={"day"} value={"day"}>
-								{"Day"}
+								{t("day")}
 							</SelectItem>
 							<SelectItem key={"week"} value={"week"}>
-								{"Week"}
+								{t("week")}
 							</SelectItem>
 							<SelectItem key={"month"} value={"month"}>
-								{"Month"}
+								{t("month")}
 							</SelectItem>
 						</SelectContent>
 					</Select>
@@ -127,11 +127,11 @@ export default function Home() {
 						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
 							{isLoading ? (
 								<Card className="flex h-24 w-full items-center">
-									<p>{"Loading data..."}</p>
+									<p>{t("loadingData")}</p>
 								</Card>
 							) : isError ? (
 								<Card className="flex h-24 w-full items-center">
-									<p>{"Something went wrong while fetching sensor data."}</p>
+									<p>{t("errorLoadingData")}</p>
 								</Card>
 							) : view === "month" ? (
 								<MonthlyView selectedDay={selectedDay} data={data ?? []} />
@@ -153,7 +153,7 @@ export default function Home() {
 											year: "numeric",
 										})}
 									</CardTitle>
-									<p>{"No exposure data found for this day"}</p>
+									<p>{t("noData")}</p>
 								</Card>
 							) : (
 								<ChartLineDefault
@@ -163,24 +163,24 @@ export default function Home() {
 										month: "long",
 										year: "numeric",
 									})}
-									unit="points"
+									unit={t("points")}
 									startHour={8}
 									endHour={16}
 									maxY={110}
 								>
 									<ThresholdLine
 										y={thresholds.dust.danger}
-										label="Dust"
+										label={t("overview.dust")}
 										dangerLevel="DANGER"
 									/>
 									<ThresholdLine
 										y={thresholds.noise.danger}
-										label="Noise"
+										label={t("overview.noise")}
 										dangerLevel="DANGER"
 									/>
 									<ThresholdLine
 										y={thresholds.vibration.danger}
-										label="Vibration"
+										label={t("overview.vibration")}
 										dangerLevel="DANGER"
 									/>
 								</ChartLineDefault>

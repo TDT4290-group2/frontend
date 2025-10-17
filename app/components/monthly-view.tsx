@@ -10,6 +10,7 @@ import {
 } from "../lib/utils";
 import { Calendar } from "./ui/calendar";
 import { Card } from "./ui/card";
+import { useTranslation } from "react-i18next";
 
 type MonthlyProps = {
 	selectedDay: Date;
@@ -22,6 +23,8 @@ export function MonthlyView({ selectedDay, exposureType, data }: MonthlyProps) {
 
 	const monthData = mapSensorDataToMonthLists(data ?? [], exposureType);
 
+	const { t } = useTranslation();
+
 	function getDayType(day: Date): DangerKeywords | "none" {
 		if (hasData(monthData.safe, day)) return "safe";
 		if (hasData(monthData.warning, day)) return "warning";
@@ -30,9 +33,9 @@ export function MonthlyView({ selectedDay, exposureType, data }: MonthlyProps) {
 	}
 
 	const alertLabels = {
-		safe: "Safe day on",
-		warning: "Warnings issued on",
-		danger: "Danger: Exposure limits exceeded on",
+		safe: t("monthly-view.safe"),
+		warning: t("monthly-view.warning"),
+		danger: t("monthly-view.danger"),
 	};
 
 	const hasData = (dateList: Array<Date>, clickedDay: Date) =>
