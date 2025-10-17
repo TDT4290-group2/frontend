@@ -26,6 +26,7 @@ import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
 import { useSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
+import { useTranslation } from "react-i18next";
 import {
 	AggregationFunction,
 	type SensorDataRequestDto,
@@ -41,8 +42,11 @@ export function meta() {
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
+	const { t } = useTranslation();
+	
 	//! Currently set up for dust - but need to implement all types.
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
+	const translatedView = t(`overview.${view}`);
 	const { selectedDay, setSelectedDay } = useDayContext();
 
 	// TEMP queries - need to be adjusted so data for all sensors are fetched
@@ -78,7 +82,7 @@ export default function Home() {
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
 			<div className="mb-4 flex w-full flex-col items-start gap-2 md:mb-0 md:flex-row md:justify-between">
-				<h1 className="p-2 text-3xl">{`Overview of the ${view}`}</h1>
+				<h1 className="p-2 text-3xl">{t("overview.title", { view: translatedView })}</h1>
 				<div className="flex flex-row gap-4">
 					<Button
 						onClick={() => setSelectedDay(getPrevDay(selectedDay, view))}
@@ -95,13 +99,13 @@ export default function Home() {
 						</SelectTrigger>
 						<SelectContent className="w-32">
 							<SelectItem key={"day"} value={"day"}>
-								{"Day"}
+								{t("day")}
 							</SelectItem>
 							<SelectItem key={"week"} value={"week"}>
-								{"Week"}
+								{t("week")}
 							</SelectItem>
 							<SelectItem key={"month"} value={"month"}>
-								{"Month"}
+								{t("month")}
 							</SelectItem>
 						</SelectContent>
 					</Select>
@@ -123,11 +127,11 @@ export default function Home() {
 						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
 							{isLoading ? (
 								<Card className="flex h-24 w-full items-center">
-									<p>{"Loading data..."}</p>
+									<p>{t("loadingData")}</p>
 								</Card>
 							) : isError ? (
 								<Card className="flex h-24 w-full items-center">
-									<p>{"Something went wrong while fetching sensor data."}</p>
+									<p>{t("errorLoadingData")}</p>
 								</Card>
 							) : view === "month" ? (
 								<MonthlyView selectedDay={selectedDay} data={data ?? []} />
@@ -149,7 +153,7 @@ export default function Home() {
 											year: "numeric",
 										})}
 									</CardTitle>
-									<p>{"No exposure data found for this day"}</p>
+									<p>{t("noData")}</p>
 								</Card>
 							) : (
 								<ChartLineDefault
@@ -159,24 +163,24 @@ export default function Home() {
 										month: "long",
 										year: "numeric",
 									})}
-									unit="points"
+									unit={t("points")}
 									startHour={8}
 									endHour={16}
 									maxY={110}
 								>
 									<ThresholdLine
 										y={thresholds.dust.danger}
-										label="Dust"
+										label={t("overview.dust")}
 										dangerLevel="DANGER"
 									/>
 									<ThresholdLine
 										y={thresholds.noise.danger}
-										label="Noise"
+										label={t("overview.noise")}
 										dangerLevel="DANGER"
 									/>
 									<ThresholdLine
 										y={thresholds.vibration.danger}
-										label="Vibration"
+										label={t("overview.vibration")}
 										dangerLevel="DANGER"
 									/>
 								</ChartLineDefault>
