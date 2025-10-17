@@ -69,6 +69,7 @@ export function EventGrid({
 	rowHeight,
 	onEventClick,
 	dayStartHour,
+	dayEndHour,
 }: {
 	days: Days;
 	events?: Array<Event>;
@@ -77,6 +78,7 @@ export function EventGrid({
 	rowHeight: number;
 	onEventClick?: (event: Event) => void;
 	dayStartHour: number;
+	dayEndHour: number;
 }) {
 	return (
 		<div
@@ -87,7 +89,12 @@ export function EventGrid({
 			}}
 		>
 			{(events || [])
-				.filter((event) => isSameWeek(days[0].date, event.startDate))
+				.filter(
+					(event) =>
+						isSameWeek(days[0].date, event.startDate) &&
+						event.endDate.getUTCHours() <= dayEndHour &&
+						event.startDate.getUTCHours() >= dayStartHour,
+				)
 				.map((event) => {
 					const start = event.startDate.getUTCHours() - dayStartHour + 1;
 					const end = event.endDate.getUTCHours() - dayStartHour + 1;
@@ -118,7 +125,7 @@ export function EventGrid({
 									"absolute inset-1 flex cursor-pointer flex-col overflow-y-auto rounded-md text-xs leading-5 transition",
 									`bg-[${dangerLevels[event.dangerLevel].color}]`,
 									"border-t-2 border-t-muted-foreground border-dotted",
-									`${event.startDate.getHours() === dayStartHour && "border-t-0"} `,
+									`${event.startDate.getUTCHours() === dayStartHour && "border-t-0"} `,
 									"hover:brightness-85",
 								)}
 								style={{
@@ -475,6 +482,7 @@ export function WeekView({
 										rowHeight={rowHeight}
 										onEventClick={onEventClick}
 										dayStartHour={dayStartHour}
+										dayEndHour={dayEndHour}
 									/>
 								</div>
 							</div>
