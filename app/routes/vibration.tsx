@@ -117,7 +117,10 @@ export default function Vibration() {
 							<p>{"Something went wrong while fetching sensor data."}</p>
 						</Card>
 					) : view === "month" ? (
-						<MonthlyView selectedDay={selectedDay} data={mapSensorDataToMonthLists(data ?? [], "vibration") ?? []}  />
+						<MonthlyView
+							selectedDay={selectedDay}
+							data={mapSensorDataToMonthLists(data ?? [], "vibration") ?? []}
+						/>
 					) : view === "week" ? (
 						<WeekView
 							dayStartHour={8}

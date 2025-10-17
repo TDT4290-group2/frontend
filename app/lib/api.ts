@@ -1,6 +1,12 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import type { AllSensorData, AllSensors, SensorDataRequestDto, SensorDataResponseDto, SensorDataResult } from "./dto";
+import type {
+	AllSensorData,
+	AllSensors,
+	SensorDataRequestDto,
+	SensorDataResponseDto,
+	SensorDataResult,
+} from "./dto";
 import { buildSensorQuery } from "./queries";
 import { type Sensor, sensors, type View } from "./utils";
 
@@ -75,9 +81,7 @@ export const useAllSensorData = (
 	const isLoadingAny = Object.values(everySensorData).some(
 		(res) => res.isLoading,
 	);
-	const isErrorAny = Object.values(everySensorData).some(
-		(res) => res.isError,
-	);
+	const isErrorAny = Object.values(everySensorData).some((res) => res.isError);
 
 	return {
 		everySensorData,

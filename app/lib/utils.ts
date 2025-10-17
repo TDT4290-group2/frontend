@@ -117,7 +117,10 @@ const toKeyword: Record<DangerLevel, DangerKeywords> = {
 export const mapAllWeekDataToEvents = (
 	everySensorData: AllSensors,
 ): Array<Event> => {
-	const dustEvents = mapWeekDataToEvents(everySensorData.dust.data ?? [], "dust");
+	const dustEvents = mapWeekDataToEvents(
+		everySensorData.dust.data ?? [],
+		"dust",
+	);
 	const noiseEvents = mapWeekDataToEvents(
 		everySensorData.noise.data ?? [],
 		"noise",
@@ -130,9 +133,9 @@ export const mapAllWeekDataToEvents = (
 
 	// Avoid duplicate events - map them by start time and choose one with highest danger
 	const bySlot = new Map<number, Event>();
-	
+
 	for (const ev of allEvents) {
-		const slotKey = ev.startDate.getTime(); 
+		const slotKey = ev.startDate.getTime();
 
 		const existing = bySlot.get(slotKey);
 		if (!existing) {
@@ -147,9 +150,9 @@ export const mapAllWeekDataToEvents = (
 	}
 
 	const mergedEvents = Array.from(bySlot.values()).sort(
-    	(a, b) => a.startDate.getTime() - b.startDate.getTime());
+		(a, b) => a.startDate.getTime() - b.startDate.getTime(),
+	);
 	return mergedEvents;
-	
 };
 
 export const mapMonthDataToDangerLists = (
@@ -179,7 +182,6 @@ export const mapSensorDataToMonthLists = (
 	data: Array<SensorDataResponseDto>,
 	relevantSensor: Sensor,
 ): Record<DangerKeywords, Array<Date>> => {
-	
 	const safe: Array<Date> = [];
 	const warning: Array<Date> = [];
 	const danger: Array<Date> = [];
@@ -227,12 +229,12 @@ export const mapAllSensorDataToMonthLists = (
 		const dangerLevel = toKeyword[level];
 		for (const date of mergedData[dangerLevel]) {
 			const key = date.toDateString();
-			
+
 			const existing = mergedDays[key];
 			if (
 				!existing ||
 				dangerPriority[level] >
-				dangerPriority[existing.toUpperCase() as DangerLevel]
+					dangerPriority[existing.toUpperCase() as DangerLevel]
 			) {
 				mergedDays[key] = dangerLevel;
 			}

@@ -4,7 +4,6 @@ import {
 	getPrevDay,
 	mapAllSensorDataToMonthLists,
 	mapAllWeekDataToEvents,
-	mapWeekDataToEvents,
 	parseAsView,
 	thresholds,
 	type View,
@@ -104,7 +103,10 @@ export default function Home() {
 									<p>{"Something went wrong while fetching sensor data."}</p>
 								</Card>
 							) : view === "month" ? (
-								<MonthlyView selectedDay={selectedDay} data={mapAllSensorDataToMonthLists(everySensorData ?? [])} />
+								<MonthlyView
+									selectedDay={selectedDay}
+									data={mapAllSensorDataToMonthLists(everySensorData ?? [])}
+								/>
 							) : view === "week" ? (
 								<WeekView
 									dayStartHour={8}
@@ -114,7 +116,10 @@ export default function Home() {
 									events={mapAllWeekDataToEvents(everySensorData ?? [])}
 									onEventClick={(event) => alert(event.dangerLevel)}
 								/>
-							) : !everySensorData || Object.values(everySensorData).every((sensor) => !sensor.data || sensor.data.length === 0,) ? (
+							) : !everySensorData ||
+								Object.values(everySensorData).every(
+									(sensor) => !sensor.data || sensor.data.length === 0,
+								) ? (
 								<Card className="flex h-24 w-full items-center">
 									<CardTitle>
 										{selectedDay.toLocaleDateString("en-GB", {
