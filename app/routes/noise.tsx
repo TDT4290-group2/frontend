@@ -2,6 +2,7 @@
 import {
 	getNextDay,
 	getPrevDay,
+	mapSensorDataToMonthLists,
 	mapWeekDataToEvents,
 	parseAsView,
 	thresholds,
@@ -115,7 +116,7 @@ export default function Noise() {
 							<p>{"Something went wrong while fetching sensor data."}</p>
 						</Card>
 					) : view === "month" ? (
-						<MonthlyView selectedDay={selectedDay} data={data ?? []} />
+						<MonthlyView selectedDay={selectedDay} data={mapSensorDataToMonthLists(data ?? [], "noise") ?? []} />
 					) : view === "week" ? (
 						<WeekView
 							dayStartHour={8}
