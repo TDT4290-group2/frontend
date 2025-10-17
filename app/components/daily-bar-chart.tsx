@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts";
-import type { SensorDataResponseDto } from "../lib/dto";
+import type { AllSensors } from "../lib/dto";
 import { type Sensor, sensors, thresholds } from "../lib/utils";
 
 // the chart data is always the same, we only change the colors based on exposure data
@@ -15,15 +15,14 @@ const generateChartData = () =>
 		),
 	}));
 
-function aggregateHourlyMax(
-	data: Record<Sensor, Array<SensorDataResponseDto>>,
-): Record<Sensor, Array<number>> {
+function aggregateHourlyMax(data: AllSensors): Record<Sensor, Array<number>> {
 	const result = {} as Record<Sensor, Array<number>>;
 
 	(Object.keys(data) as Array<Sensor>).forEach((sensor) => {
+		const sensorData = data[sensor].data ?? [];
 		const hourlyMax = Array(24).fill(-1);
 
-		for (const { time, value } of data[sensor]) {
+		for (const { time, value } of sensorData) {
 			const hour = new Date(time).getHours();
 			if (value > hourlyMax[hour]) {
 				hourlyMax[hour] = value;
@@ -42,7 +41,7 @@ export function DailyBarChart({
 	startHour = 8,
 	endHour = 16,
 }: {
-	data: Record<Sensor, Array<SensorDataResponseDto>>;
+	data: AllSensors;
 	chartTitle: string;
 	startHour?: number;
 	endHour?: number;
