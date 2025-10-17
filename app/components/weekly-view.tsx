@@ -5,7 +5,6 @@ import {
 	eachMinuteOfInterval,
 	format,
 	getDay,
-	getHours,
 	getMinutes,
 	getUnixTime,
 	isSameMonth,
@@ -90,13 +89,8 @@ export function EventGrid({
 			{(events || [])
 				.filter((event) => isSameWeek(days[0].date, event.startDate))
 				.map((event) => {
-					const start =
-						getHours(event.startDate) -
-						dayStartHour +
-						1 +
-						Math.floor(getMinutes(event.startDate) / minuteStep);
-					const end = getHours(event.endDate) - dayStartHour + 1;
-					Math.ceil(getMinutes(event.endDate) / minuteStep);
+					const start = event.startDate.getUTCHours() - dayStartHour + 1;
+					const end = event.endDate.getUTCHours() - dayStartHour + 1;
 					const paddingTop =
 						((getMinutes(event.startDate) % minuteStep) / minuteStep) *
 						rowHeight;

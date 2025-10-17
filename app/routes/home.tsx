@@ -47,8 +47,8 @@ export default function Home() {
 
 	// TEMP queries - need to be adjusted so data for all sensors are fetched
 	const dayQuery: SensorDataRequestDto = {
-		startTime: new Date(selectedDay.setHours(8)),
-		endTime: new Date(selectedDay.setHours(16)),
+		startTime: new Date(selectedDay.setUTCHours(8)),
+		endTime: new Date(selectedDay.setUTCHours(16)),
 		granularity: TimeGranularity.Minute,
 		function: AggregationFunction.Avg,
 		field: "pm1_stel",

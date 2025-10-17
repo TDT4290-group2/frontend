@@ -37,8 +37,8 @@ export default function Dust() {
 	const { selectedDay, setSelectedDay } = useDayContext();
 
 	const dayQuery: SensorDataRequestDto = {
-		startTime: new Date(selectedDay.setHours(8)),
-		endTime: new Date(selectedDay.setHours(16)),
+		startTime: new Date(selectedDay.setUTCHours(8)),
+		endTime: new Date(selectedDay.setUTCHours(16)),
 		granularity: TimeGranularity.Minute,
 		function: AggregationFunction.Avg,
 		field: "pm1_stel",

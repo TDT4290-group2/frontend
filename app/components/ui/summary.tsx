@@ -14,7 +14,6 @@ const getSummaryData = (view: View, sensor: Sensor, data: Array<SensorDataRespon
     const summaryData = {safeCount: 0, dangerCount: 0, warningCount: 0}
 
     const threshold =  thresholds[sensor];
-    console.log(thresholds)
 
     if (view === "month") {
         for (const item of data) {
