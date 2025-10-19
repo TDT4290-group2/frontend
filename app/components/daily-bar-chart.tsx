@@ -23,7 +23,7 @@ function aggregateHourlyMax(data: AllSensors): Record<Sensor, Array<number>> {
 		const hourlyMax = Array(24).fill(-1);
 
 		for (const { time, value } of sensorData) {
-			const hour = new Date(time).getHours();
+			const hour = new Date(time).getUTCHours();
 			if (value > hourlyMax[hour]) {
 				hourlyMax[hour] = value;
 			}
