@@ -47,8 +47,8 @@ function getStartEnd(view: View, selectedDay: Date) {
 	}
 	if (view === "week") {
 		return {
-			startTime: startOfWeek(selectedDay),
-			endTime: endOfWeek(selectedDay),
+			startTime: startOfWeek(selectedDay, { weekStartsOn: 1 }),
+			endTime: endOfWeek(selectedDay, { weekStartsOn: 1 }),
 		};
 	}
 	if (view === "month") {

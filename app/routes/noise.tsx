@@ -46,8 +46,8 @@ export default function Noise() {
 	};
 
 	const weekQuery: SensorDataRequestDto = {
-		startTime: startOfWeek(selectedDay),
-		endTime: endOfWeek(selectedDay),
+		startTime: startOfWeek(selectedDay, { weekStartsOn: 1 }),
+		endTime: endOfWeek(selectedDay, { weekStartsOn: 1 }),
 		granularity: TimeGranularity.Hour,
 		function: AggregationFunction.Max,
 	};

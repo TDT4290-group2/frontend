@@ -3,8 +3,6 @@ import {
 	addDays,
 	addMonths,
 	addWeeks,
-	startOfMonth,
-	startOfWeek,
 	subDays,
 	subMonths,
 	subWeeks,
@@ -255,21 +253,40 @@ export const mapAllSensorDataToMonthLists = (
 };
 
 export const getPrevDay = (selectedDay: Date, view: View): Date => {
+	let prevDay: Date;
 	if (view === "day") {
-		return subDays(selectedDay, 1);
+		prevDay = subDays(selectedDay, 1);
+	} else if (view === "week") {
+		prevDay = subWeeks(selectedDay, 1);
+	} else {
+		prevDay = subMonths(selectedDay, 1);
 	}
-	if (view === "week") {
-		return startOfWeek(subWeeks(selectedDay, 1), { weekStartsOn: 1 });
-	}
-	return startOfMonth(subMonths(selectedDay, 1));
+	const utcPrevDay = new Date(
+		Date.UTC(
+			prevDay.getUTCFullYear(),
+			prevDay.getUTCMonth(),
+			prevDay.getUTCDate(),
+		),
+	);
+	return utcPrevDay;
 };
 
 export const getNextDay = (selectedDay: Date, view: View): Date => {
+	let nextDay: Date;
 	if (view === "day") {
-		return addDays(selectedDay, 1);
+		nextDay = addDays(selectedDay, 1);
+	} else if (view === "week") {
+		nextDay = addWeeks(selectedDay, 1);
+	} else {
+		nextDay = addMonths(selectedDay, 1);
 	}
-	if (view === "week") {
-		return startOfWeek(addWeeks(selectedDay, 1), { weekStartsOn: 1 });
-	}
-	return startOfMonth(addMonths(selectedDay, 1));
+
+	const utcNextDay = new Date(
+		Date.UTC(
+			nextDay.getUTCFullYear(),
+			nextDay.getUTCMonth(),
+			nextDay.getUTCDate(),
+		),
+	);
+	return utcNextDay;
 };
