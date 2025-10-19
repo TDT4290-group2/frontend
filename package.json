@@ -6,7 +6,7 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "preview": "vite preview",
-    "start": "npx serve ./build/client",
+    "start": "npx serve -s ./build/client",
     "typecheck": "react-router typegen && tsc",
     "check": "biome check",
     "check:fix": "biome check --write",
