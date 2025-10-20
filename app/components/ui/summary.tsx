@@ -2,6 +2,7 @@ import { cn, dangerLevels, DangerTypes, thresholds, type Sensor, type View } fro
 import { Card } from "./card";
 import { useIsMobile } from "~/app/hooks/use-mobile";
 import type { AllSensors, SensorDataResponseDto } from "~/app/lib/dto";
+import { useTranslation } from "react-i18next";
 
 type SummaryProps = {
     exposureType: Sensor | "all",
@@ -17,6 +18,8 @@ export function Summary({
         view
     } : SummaryProps){
 
+    const { t } = useTranslation()
+
     const safeColor = "text-safe"; 
     const warningColor = "text-warning";
     const dangerColor = "text-destructive";
@@ -29,19 +32,19 @@ export function Summary({
 
     const viewLabelConfig: Record<View, SummaryLabel> = {
         day: {
-            safe: "Hours with safe amount of exposure",
-            warning: "Hours where a warning was issued due to exposure",
-            danger: "Hours of exposure above limit"
+            safe: t("exposure_summary.greenHourText"),
+            warning: t("exposure_summary.orangeHourText"),
+            danger: t("exposure_summary.redHourText")
         },
         week: {
-            safe: "Hours with safe amount of exposure",
-            warning: "Hours where a warning was issued due to exposure",
-            danger: "Hours of exposure above limit"
+            safe: t("exposure_summary.greenHourText"),
+            warning: t("exposure_summary.orangeHourText"),
+            danger: t("exposure_summary.redHourText")
         },
         month: {
-            safe: "Days where no limit was close to exceeding",
-            warning: "Days where a warning was issued due to exposure",
-            danger: "Days where exposure exceeded limit"
+            safe: t("exposure_summary.greenDayText"),
+            warning: t("exposure_summary.orangeDayText"),
+            danger: t("exposure_summary.redDayText")
         }
     }
     let summaryData: SummaryType = getSummaryData({view, exposureType, data});
@@ -57,11 +60,15 @@ export function Summary({
     return (
         <Card className="flex flex-col w-full p-5 gap-0 shadow ">
             <div className="md:pl-2 md:pb-2 border-b-2 border-b-slate-300">
-                <h2 className="text-xl text-center md:text-left md:text-2xl">Exposure Summary</h2>
+                <h2 className="text-xl text-center md:text-left md:text-2xl">{t("exposure_summary.title")}</h2>
             </div>
             <div className="exposure-subheader">
                 <h4 className="text-sm text-center md:text-right text-slate-400">
-                    <span> {summaryLabels.exposureType} </span>
+                    <span>
+                        {exposureType
+                            ? t(`exposure_summary.${exposureType}`)
+                            : t("exposure_summary.allSensors")}
+                    </span>
                 </h4>
             </div>
             <div className="exposures-wrapper flex flex-row md:flex-col gap-4 md:gap-0 justify-center ">

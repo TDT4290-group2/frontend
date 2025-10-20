@@ -1,7 +1,13 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 /** biome-ignore-all lint/correctness/noNestedComponentDefinitions: CustomDay is intentionally defined inside MonthlyView for prop access. */
 import type { CalendarDay, Modifiers } from "react-day-picker";
-import { cn, type DangerKeywords, type Sensor } from "../lib/utils";
+import { useTranslation } from "react-i18next";
+import {
+	cn,
+	type DangerKeywords,
+	languageToLocale,
+	type Sensor,
+} from "../lib/utils";
 import { Calendar } from "./ui/calendar";
 import { Card } from "./ui/card";
 
@@ -14,6 +20,8 @@ type MonthlyProps = {
 export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 	// UTILS
 
+	const { t, i18n } = useTranslation();
+
 	function getDayType(day: Date): DangerKeywords | "none" {
 		if (hasData(data.safe, day)) return "safe";
 		if (hasData(data.warning, day)) return "warning";
@@ -22,9 +30,9 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 	}
 
 	const alertLabels = {
-		safe: "Safe day on",
-		warning: "Warnings issued on",
-		danger: "Danger: Exposure limits exceeded on",
+		safe: t("monthly-view.safe"),
+		warning: t("monthly-view.warning"),
+		danger: t("monthly-view.danger"),
 	};
 
 	const hasData = (dateList: Array<Date>, clickedDay: Date) =>
@@ -41,6 +49,7 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 	return (
 		<Card className="w-full">
 			<Calendar
+				locale={languageToLocale[i18n.language]}
 				month={selectedDay}
 				hideNavigation
 				showWeekNumber

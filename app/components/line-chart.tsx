@@ -6,6 +6,7 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useTranslation } from "react-i18next";
 import {
 	CartesianGrid,
 	Line,
@@ -49,6 +50,8 @@ export function ChartLineDefault({
 }) {
 	const { selectedDay } = useDayContext();
 
+	const { t } = useTranslation();
+
 	const transformedData = chartData.map((item) => ({
 		time: new Date(item.time).getTime(),
 		value: item.value,
@@ -87,7 +90,11 @@ export function ChartLineDefault({
 							tickLine={false}
 							axisLine={false}
 							tickMargin={2}
-							label={{ value: "Time", position: "insideBottom", offset: 0 }}
+							label={{
+								value: t("line_chart.time"),
+								position: "insideBottom",
+								offset: 0,
+							}}
 						/>
 						<YAxis
 							dataKey="value"
@@ -130,8 +137,9 @@ export function ThresholdLine({
 	dangerLevel: DangerLevel;
 	label?: string;
 }) {
+	const { t } = useTranslation();
 	const color = dangerLevels[dangerLevel].color;
-	const lineLabel = label ?? dangerLevels[dangerLevel].label;
+	const lineLabel = label ?? t(`line_chart.${dangerLevel}`);
 	return (
 		<ReferenceLine
 			y={y}

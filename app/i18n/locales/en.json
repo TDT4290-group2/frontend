@@ -1,0 +1,82 @@
+{
+  "layout": {
+    "overview": "Overview",
+    "dust": "Dust",
+    "vibration": "Vibration",
+    "noise": "Noise",
+    "english": "English",
+    "norwegian": "Norwegian",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "overview" : {
+    "title": "Overview of {{view}}",
+    "day": "day",
+    "week": "week",
+    "month": "month",
+    "dust": "Dust",
+    "vibration": "Vibration",
+    "noise": "Noise"
+  },
+  "dustExposure": {
+    "title": "Dust Exposure"
+  },
+  "vibrationExposure": {
+    "title": "Vibration Exposure"
+  },
+  "noiseExposure": {
+    "title": "Noise Exposure"
+  },
+  "exposure_summary": {
+    "title": "Exposure Summary",
+    "greenHourText" : "Hours with safe amount of exposure",
+    "greenDayText" : "Days with safe amount of exposure",
+    "orangeHourText" : "Hours close to exposure limit",
+    "orangeDayText" : "Days close to exposure limit",
+    "redHourText" : "Hours above exposure limit",
+    "redDayText" : "Days above exposure limit",
+    "dust": "Dust",
+    "vibration": "Vibration",
+    "noise": "Noise",
+    "allSensors": "All sensors",
+    "all": "Every sensor"
+  },
+  "notifications": {
+    "dust": "Dust",
+    "vibration": "Vibration",
+    "noise": "Noise",
+    "warning": "Warning",
+    "danger": "Danger"
+  },
+  "line_chart": {
+    "time": "Time",
+    "DANGER": "Threshold Exceeded!",
+    "WARNING": "Close to exposure limit",
+    "SAFE": "Safely within exposure limit"
+  },
+  "weekly_view" : {
+    "today": "Today"
+  },
+  "monthly_view": {
+    "safe": "Safe day on",
+    "warning": "Warnings issued on",
+    "danger": "Danger: Exposure limits exceeded on"
+  },
+  "daily_notes": {
+    "dayTitle": "Daily Notes",
+    "writeHere": "Write here...",
+    "edit": "Edit",
+    "save": "Save",
+    "notesFromThis": "Notes from this ",
+    "week": "week",
+    "month": "month"
+  },
+  "day": "Day",
+  "week": "Week",
+  "month": "Month",
+  "loadingData": "Loading data...",
+  "errorLoadingData": "Something went wrong while fetching sensor data.",
+  "noData": "No exposure data found for this day",
+  "points": "Points"
+}

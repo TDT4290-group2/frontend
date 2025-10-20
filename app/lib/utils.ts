@@ -4,10 +4,12 @@ import {
 	addMonths,
 	addWeeks,
 	isSameDay,
+	type Locale,
 	subDays,
 	subMonths,
 	subWeeks,
 } from "date-fns";
+import { enGB, nb } from "date-fns/locale";
 import { parseAsStringLiteral } from "nuqs";
 import { twMerge } from "tailwind-merge";
 import type { Event } from "../components/weekly-view";
@@ -291,6 +293,8 @@ export const getNextDay = (selectedDay: Date, view: View): Date => {
 	);
 	return utcNextDay;
 };
+
+export const languageToLocale: Record<string, Locale> = { no: nb, en: enGB };
 
 export const makeCumulative = (
 	data: Array<SensorDataResponseDto> | undefined,

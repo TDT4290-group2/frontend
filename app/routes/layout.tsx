@@ -12,8 +12,16 @@ import {
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn, parseAsView } from "@/lib/utils";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/ui/select";
 import { useQueryState } from "nuqs";
 import { type ReactNode, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	href,
 	Link,
@@ -60,11 +68,13 @@ function HomeLink() {
 export default function Layout() {
 	const isMobile = useIsMobile();
 
+	const { t, i18n } = useTranslation();
+
 	const links: Array<{ to: To; label: string }> = [
-		{ to: href("/"), label: "Overview" },
-		{ to: href("/dust"), label: "Dust" },
-		{ to: href("/vibration"), label: "Vibration" },
-		{ to: href("/noise"), label: "Noise" },
+		{ to: href("/"), label: t("layout.overview") },
+		{ to: href("/dust"), label: t("layout.dust") },
+		{ to: href("/vibration"), label: t("layout.vibration") },
+		{ to: href("/noise"), label: t("layout.noise") },
 	];
 
 	return (
@@ -94,8 +104,22 @@ export default function Layout() {
 							</nav>
 						</>
 					)}
-
-					<ModeToggle />
+					<div className="flex flex-row gap-4">
+						<Select onValueChange={(value) => i18n.changeLanguage(value)}>
+							<SelectTrigger className="w-32">
+								<SelectValue placeholder="Language" />
+							</SelectTrigger>
+							<SelectContent className="w-32">
+								<SelectItem key={"en"} value={"en"}>
+									{t("layout.english")}
+								</SelectItem>
+								<SelectItem key={"no"} value={"no"}>
+									{t("layout.norwegian")}
+								</SelectItem>
+							</SelectContent>
+						</Select>
+						<ModeToggle />
+					</div>
 				</header>
 				<main className="m-2 flex items-center justify-center">
 					<Outlet />

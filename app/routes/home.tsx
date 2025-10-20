@@ -2,6 +2,7 @@
 import {
 	getNextDay,
 	getPrevDay,
+	languageToLocale,
 	mapAllSensorDataToMonthLists,
 	mapAllWeekDataToEvents,
 	parseAsView,
@@ -15,6 +16,7 @@ import {
 	SelectValue,
 } from "@/ui/select";
 import { useQueryState } from "nuqs";
+import { useTranslation } from "react-i18next";
 import { DailyBarChart } from "../components/daily-bar-chart";
 import { DailyNotes } from "../components/daily-notes";
 import { MonthlyView } from "../components/monthly-view";
@@ -35,7 +37,10 @@ export function meta() {
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
+	const { t, i18n } = useTranslation();
+
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
+	const translatedView = t(`overview.${view}`);
 	const { selectedDay, setSelectedDay } = useDayContext();
 
 	const { everySensorData, isLoadingAny, isErrorAny } = useAllSensorData(
@@ -46,7 +51,9 @@ export default function Home() {
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
 			<div className="mb-4 flex w-full flex-col items-start gap-2 md:mb-0 md:flex-row md:justify-between">
-				<h1 className="p-2 text-3xl">{`Overview of the ${view}`}</h1>
+				<h1 className="p-2 text-3xl">
+					{t("overview.title", { view: translatedView })}
+				</h1>
 				<div className="flex flex-row gap-4">
 					<Button
 						onClick={() => setSelectedDay(getPrevDay(selectedDay, view))}
@@ -63,13 +70,13 @@ export default function Home() {
 						</SelectTrigger>
 						<SelectContent className="w-32">
 							<SelectItem key={"day"} value={"day"}>
-								{"Day"}
+								{t("day")}
 							</SelectItem>
 							<SelectItem key={"week"} value={"week"}>
-								{"Week"}
+								{t("week")}
 							</SelectItem>
 							<SelectItem key={"month"} value={"month"}>
-								{"Month"}
+								{t("month")}
 							</SelectItem>
 						</SelectContent>
 					</Select>
@@ -95,11 +102,11 @@ export default function Home() {
 						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
 							{isLoadingAny ? (
 								<Card className="flex h-24 w-full items-center">
-									<p>{"Loading data..."}</p>
+									<p>{t("loadingData")}</p>
 								</Card>
 							) : isErrorAny ? (
 								<Card className="flex h-24 w-full items-center">
-									<p>{"Something went wrong while fetching sensor data."}</p>
+									<p>{t("errorLoadingData")}</p>
 								</Card>
 							) : view === "month" ? (
 								<MonthlyView
@@ -108,6 +115,7 @@ export default function Home() {
 								/>
 							) : view === "week" ? (
 								<WeekView
+									locale={languageToLocale[i18n.language]}
 									dayStartHour={8}
 									dayEndHour={16}
 									weekStartsOn={1}
@@ -121,18 +129,18 @@ export default function Home() {
 								) ? (
 								<Card className="flex h-24 w-full items-center">
 									<CardTitle>
-										{selectedDay.toLocaleDateString("en-GB", {
+										{selectedDay.toLocaleDateString(i18n.language, {
 											day: "numeric",
 											month: "long",
 											year: "numeric",
 										})}
 									</CardTitle>
-									<p>{"No exposure data found for this day"}</p>
+									<p>{t("noData")}</p>
 								</Card>
 							) : (
 								<DailyBarChart
 									data={everySensorData}
-									chartTitle={selectedDay.toLocaleDateString("en-GB", {
+									chartTitle={selectedDay.toLocaleDateString(i18n.language, {
 										day: "numeric",
 										month: "long",
 										year: "numeric",
