@@ -2,6 +2,7 @@
 import {
 	getNextDay,
 	getPrevDay,
+	languageToLocale,
 	mapSensorDataToMonthLists,
 	mapWeekDataToEvents,
 	parseAsView,
@@ -17,6 +18,7 @@ import {
 } from "@/ui/select";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
+import { useTranslation } from "react-i18next";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { MonthlyView } from "../components/monthly-view";
 import { Button } from "../components/ui/button";
@@ -35,6 +37,7 @@ import {
 // biome-ignore lint: page components can be default exports
 export default function Vibration() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
+	const { t, i18n } = useTranslation();
 
 	const { selectedDay, setSelectedDay } = useDayContext();
 
@@ -67,7 +70,7 @@ export default function Vibration() {
 	return (
 		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
-				<h1 className="p-2 text-3xl">{"Vibration exposure"}</h1>
+				<h1 className="p-2 text-3xl">{t("vibrationExposure.title")}</h1>
 				<div className="ml-auto flex flex-row gap-4">
 					<Button
 						onClick={() => setSelectedDay(getPrevDay(selectedDay, view))}
@@ -84,13 +87,13 @@ export default function Vibration() {
 						</SelectTrigger>
 						<SelectContent className="w-32">
 							<SelectItem key={"day"} value={"day"}>
-								{"Day"}
+								{t("day")}
 							</SelectItem>
 							<SelectItem key={"week"} value={"week"}>
-								{"Week"}
+								{t("week")}
 							</SelectItem>
 							<SelectItem key={"month"} value={"month"}>
-								{"Month"}
+								{t("month")}
 							</SelectItem>
 						</SelectContent>
 					</Select>
@@ -110,11 +113,11 @@ export default function Vibration() {
 				<div className="flex flex-1 flex-col items-end gap-4">
 					{isLoading ? (
 						<Card className="flex h-24 w-full items-center">
-							<p>{"Loading data..."}</p>
+							<p>{t("loadingData")}</p>
 						</Card>
 					) : isError ? (
 						<Card className="flex h-24 w-full items-center">
-							<p>{"Something went wrong while fetching sensor data."}</p>
+							<p>{t("errorLoadingData")}</p>
 						</Card>
 					) : view === "month" ? (
 						<MonthlyView
@@ -123,6 +126,7 @@ export default function Vibration() {
 						/>
 					) : view === "week" ? (
 						<WeekView
+							locale={languageToLocale[i18n.language]}
 							dayStartHour={8}
 							dayEndHour={16}
 							weekStartsOn={1}
@@ -133,23 +137,23 @@ export default function Vibration() {
 					) : !data || data.length === 0 ? (
 						<Card className="flex h-24 w-full items-center">
 							<CardTitle>
-								{selectedDay.toLocaleDateString("en-GB", {
+								{selectedDay.toLocaleDateString(i18n.language, {
 									day: "numeric",
 									month: "long",
 									year: "numeric",
 								})}
 							</CardTitle>
-							<p>{"No exposure data found for this day"}</p>
+							<p>{t("noData")}</p>
 						</Card>
 					) : (
 						<ChartLineDefault
 							chartData={data ?? []}
-							chartTitle={selectedDay.toLocaleDateString("en-GB", {
+							chartTitle={selectedDay.toLocaleDateString(i18n.language, {
 								day: "numeric",
 								month: "long",
 								year: "numeric",
 							})}
-							unit="points"
+							unit={t("points")}
 							startHour={8}
 							endHour={16}
 							maxY={110}

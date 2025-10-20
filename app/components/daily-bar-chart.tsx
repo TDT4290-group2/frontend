@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { useTranslation } from "react-i18next";
 import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts";
 import type { AllSensors } from "../lib/dto";
 import { type Sensor, sensors, thresholds } from "../lib/utils";
@@ -46,6 +47,7 @@ export function DailyBarChart({
 	startHour?: number;
 	endHour?: number;
 }) {
+	const { t } = useTranslation();
 	const totalHours = endHour - startHour + 1;
 	const hours = Array.from({ length: totalHours }, (_, i) => startHour + i);
 
@@ -89,9 +91,7 @@ export function DailyBarChart({
 							tickLine={false}
 							axisLine={false}
 							width={80}
-							tickFormatter={(value) =>
-								value.charAt(0).toUpperCase() + value.slice(1)
-							}
+							tickFormatter={(value) => t(`overview.${value}`)}
 						/>
 						{hourKeys.map((key) => (
 							<Bar key={key} dataKey={key} stackId="a">

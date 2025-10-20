@@ -1,6 +1,7 @@
 import { isSameMonth, isSameWeek, isToday } from "date-fns";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { parseAsView } from "../lib/utils";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
@@ -23,25 +24,27 @@ const d9 = new Date(2025, 9, 1);
 const d10 = new Date(2025, 9, 1);
 const today = new Date();
 
-const locale = "en-GB"; //nb-NO: bokmål, nn-NO: nynorsk
-
 export const DailyNotes = () => {
 	//assumes that the notes are sorted with current day first
+
+	const { t, i18n } = useTranslation();
+	const locale = i18n.language;
+
 	const [notes, setNotes] = useState<Array<Note>>([
 		{
 			date: today,
-			note: "Sanding at 10. This is a long note. A very very very long note. Hopefully it does not make the page look bad or anything.",
+			note: "Sandblåsing kl 10. Dette er et langt notat. Et veldig veldig veldig langt notat. Forhåpentligvis gjør det ikke at siden ser dårlig ut eller noe.",
 		},
-		{ date: d1, note: "Welding at 11." },
-		{ date: d2, note: "Nothing to report." },
-		{ date: d3, note: "Grinding at 12." },
-		{ date: d4, note: "Grinding at 12." },
-		{ date: d5, note: "Grinding at 12." },
-		{ date: d6, note: "Grinding at 12." },
-		{ date: d7, note: "Grinding at 12." },
-		{ date: d8, note: "Grinding at 12." },
-		{ date: d9, note: "Grinding at 12." },
-		{ date: d10, note: "Grinding at 12." },
+		{ date: d1, note: "Sveising kl 11." },
+		{ date: d2, note: "Ingenting å rapportere." },
+		{ date: d3, note: "Slipemaskin kl 12." },
+		{ date: d4, note: "Slipemaskin kl 12." },
+		{ date: d5, note: "Slipemaskin kl 12." },
+		{ date: d6, note: "Slipemaskin kl 12." },
+		{ date: d7, note: "Slipemaskin kl 12." },
+		{ date: d8, note: "Slipemaskin kl 12." },
+		{ date: d9, note: "Slipemaskin kl 12." },
+		{ date: d10, note: "Slipemaskin kl 12." },
 	]);
 	const [view] = useQueryState("view", parseAsView.withDefault("day"));
 	const [showTextArea, setShowTextArea] = useState<boolean>(
@@ -67,12 +70,12 @@ export const DailyNotes = () => {
 		return (
 			<Card className="max-h-64 w-full overflow-y-auto">
 				<CardHeader>
-					<h2 className="text-xl">{"Daily Note:"}</h2>
+					<h2 className="text-xl">{t("daily_notes.dayTitle")}</h2>
 				</CardHeader>
 				<CardContent>
 					{showTextArea ? (
 						<Textarea
-							placeholder="Write here."
+							placeholder={t("daily_notes.writeHere")}
 							value={noteText}
 							onChange={(e) => setNoteText(e.target.value)}
 						/>
@@ -82,10 +85,10 @@ export const DailyNotes = () => {
 				</CardContent>
 				<CardFooter className="justify-end gap-2">
 					<Button variant={"secondary"} onClick={handleEdit}>
-						{"Edit"}
+						{t("daily_notes.edit")}
 					</Button>
 					<Button disabled={!showTextArea} onClick={handleSubmit}>
-						{"Submit"}
+						{t("daily_notes.save")}
 					</Button>
 				</CardFooter>
 			</Card>
@@ -97,8 +100,8 @@ export const DailyNotes = () => {
 			<Card className="max-h-64 w-full overflow-y-auto">
 				<CardHeader>
 					<h2 className="text-xl">
-						{"Notes from this "}
-						<strong>{"week"}</strong>
+						{t("daily_notes.notesFromThis")}
+						<strong>{t("daily_notes.week")}</strong>
 						{":"}
 					</h2>
 				</CardHeader>
@@ -131,8 +134,8 @@ export const DailyNotes = () => {
 		<Card className="max-h-64 w-full overflow-y-auto">
 			<CardHeader>
 				<h2 className="text-xl">
-					{"Notes from this "}
-					<strong>{"month"}</strong>
+					{t("daily_notes.notesFromThis")}
+					<strong>{t("daily_notes.month")}</strong>
 					{":"}
 				</h2>
 			</CardHeader>
