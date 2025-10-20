@@ -2,6 +2,7 @@
 import {
 	getNextDay,
 	getPrevDay,
+	mapSensorDataToMonthLists,
 	mapWeekDataToEvents,
 	parseAsView,
 	thresholds,
@@ -37,16 +38,16 @@ export default function Dust() {
 	const { selectedDay, setSelectedDay } = useDayContext();
 
 	const dayQuery: SensorDataRequestDto = {
-		startTime: new Date(selectedDay.setHours(8)),
-		endTime: new Date(selectedDay.setHours(16)),
+		startTime: new Date(selectedDay.setUTCHours(8)),
+		endTime: new Date(selectedDay.setUTCHours(16)),
 		granularity: TimeGranularity.Minute,
 		function: AggregationFunction.Avg,
 		field: "pm1_stel",
 	};
 
 	const weekQuery: SensorDataRequestDto = {
-		startTime: startOfWeek(selectedDay),
-		endTime: endOfWeek(selectedDay),
+		startTime: startOfWeek(selectedDay, { weekStartsOn: 1 }),
+		endTime: endOfWeek(selectedDay, { weekStartsOn: 1 }),
 		granularity: TimeGranularity.Hour,
 		function: AggregationFunction.Avg,
 		field: "pm1_stel",
@@ -118,7 +119,10 @@ export default function Dust() {
 							<p>{"Something went wrong while fetching sensor data."}</p>
 						</Card>
 					) : view === "month" ? (
-						<MonthlyView selectedDay={selectedDay} data={data ?? []} />
+						<MonthlyView
+							selectedDay={selectedDay}
+							data={mapSensorDataToMonthLists(data ?? [], "dust") ?? []}
+						/>
 					) : view === "week" ? (
 						<WeekView
 							dayStartHour={8}

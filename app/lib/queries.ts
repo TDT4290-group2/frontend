@@ -41,14 +41,14 @@ const fieldMap: Record<Sensor, string | undefined> = {
 function getStartEnd(view: View, selectedDay: Date) {
 	if (view === "day") {
 		return {
-			startTime: new Date(selectedDay.setHours(8)),
-			endTime: new Date(selectedDay.setHours(16)),
+			startTime: new Date(selectedDay.setUTCHours(8)),
+			endTime: new Date(selectedDay.setUTCHours(16)),
 		};
 	}
 	if (view === "week") {
 		return {
-			startTime: startOfWeek(selectedDay),
-			endTime: endOfWeek(selectedDay),
+			startTime: startOfWeek(selectedDay, { weekStartsOn: 1 }),
+			endTime: endOfWeek(selectedDay, { weekStartsOn: 1 }),
 		};
 	}
 	if (view === "month") {

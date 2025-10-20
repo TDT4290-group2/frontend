@@ -6,7 +6,6 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/ui/chart";
-import { formatDate } from "date-fns";
 import {
 	CartesianGrid,
 	Line,
@@ -57,14 +56,12 @@ export function ChartLineDefault({
 
 	const ticks = Array.from({ length: endHour - startHour + 1 }, (_, i) => {
 		const date = new Date(selectedDay);
-		date.setHours(startHour + i);
+		date.setUTCHours(startHour + i);
 		return date.getTime();
 	});
 
-	const formatTime = (time: number) => {
-		const date = new Date(time);
-		return formatDate(date, "HH");
-	};
+	const formatTime = (time: number) =>
+		new Date(time).getUTCHours().toString().padStart(2, "0");
 
 	return (
 		<Card className="w-full">

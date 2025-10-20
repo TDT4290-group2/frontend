@@ -1,66 +1,12 @@
 import { cn, dangerLevels, DangerTypes, thresholds, type Sensor, type View } from "~/app/lib/utils";
 import { Card } from "./card";
 import { useIsMobile } from "~/app/hooks/use-mobile";
-import type { SensorDataResponseDto } from "~/app/lib/dto";
+import type { AllSensors, SensorDataResponseDto } from "~/app/lib/dto";
 
 type SummaryProps = {
-    exposureType: Sensor,
-    data: SensorDataResponseDto[] | undefined,
+    exposureType: Sensor | "all",
+    data: Array<SensorDataResponseDto> | AllSensors | undefined,
     view: View,
-}
-
-
-const getSummaryData = (view: View, sensor: Sensor, data: Array<SensorDataResponseDto>) => {
-    const summaryData = {safeCount: 0, dangerCount: 0, warningCount: 0}
-
-    const threshold =  thresholds[sensor];
-    console.log(thresholds)
-
-    if (view === "month") {
-        for (const item of data) {
-            if (item.value < threshold.warning) {
-                summaryData.safeCount++;
-            }
-            else if (item.value < threshold.danger) {
-                summaryData.warningCount++;
-            }
-            else {
-                summaryData.dangerCount++;
-            }
-        }
-    }
-    else if (view === "week") {
-        for (const item of data) {
-            if (item.value < threshold.warning) {
-                summaryData.safeCount++;
-            }
-            else if (item.value < threshold.danger) {
-                summaryData.warningCount++;
-            }
-            else {
-                summaryData.dangerCount++;
-            }
-        }
-    }
-    else {
-        for (const item of data) {
-            if (item.value < threshold.warning) {
-                summaryData.safeCount++;
-            }
-            else if (item.value < threshold.danger) {
-                summaryData.warningCount++;
-            }
-            else {
-                summaryData.dangerCount++;
-            }
-        }
-        summaryData.dangerCount = Math.ceil(summaryData.dangerCount / 60)
-        summaryData.warningCount = Math.round(summaryData.warningCount / 60)
-        summaryData.safeCount = Math.floor(summaryData.safeCount / 60)
-    }
-
-    return summaryData;
-
 }
 
 type SummaryLabel = Record<"safe" | "warning" | "danger", string>
@@ -98,11 +44,10 @@ export function Summary({
             danger: "Days where exposure exceeded limit"
         }
     }
+    let summaryData: SummaryType = getSummaryData({view, exposureType, data});
 
-    const summaryData = getSummaryData(view, exposureType, data ?? []);
-    
     const summaryLabels = {
-        exposureType : exposureType || "Every sensor",
+        exposureType : exposureType === "all" ? "Every sensor" : exposureType,
         safeLabel: viewLabelConfig[view].safe || defaultLabels.safe, 
         warningLabel: viewLabelConfig[view].warning || defaultLabels.warning, 
         dangerLabel: viewLabelConfig[view].danger || defaultLabels.danger
@@ -151,6 +96,84 @@ export function Summary({
             </div>
         </Card>
     );
+}
+
+function getSummaryData({view, exposureType, data} : SummaryProps ): SummaryType {
+    let summaryData;
+    if (exposureType === "all") summaryData = getSummaryForAll(view, data as AllSensors ?? []);
+    else {
+        summaryData = getSingleSummary(view, exposureType, data as Array<SensorDataResponseDto> ?? []);
+    }
+    return summaryData;
+}
+
+type SummaryType = {safeCount: number, dangerCount: number, warningCount: number}
+
+const getSingleSummary = (view: View, sensor: Sensor, data: Array<SensorDataResponseDto>): SummaryType => {
+    const summaryData = {safeCount: 0, dangerCount: 0, warningCount: 0}
+
+    const threshold =  thresholds[sensor];
+
+    if (view === "month") {
+        for (const item of data) {
+            if (item.value < threshold.warning) {
+                summaryData.safeCount++;
+            }
+            else if (item.value < threshold.danger) {
+                summaryData.warningCount++;
+            }
+            else {
+                summaryData.dangerCount++;
+            }
+        }
+    }
+    else if (view === "week") {
+        for (const item of data) {
+            if (item.value < threshold.warning) {
+                summaryData.safeCount++;
+            }
+            else if (item.value < threshold.danger) {
+                summaryData.warningCount++;
+            }
+            else {
+                summaryData.dangerCount++;
+            }
+        }
+    }
+    else {
+        for (const item of data) {
+            if (item.value < threshold.warning) {
+                summaryData.safeCount++;
+            }
+            else if (item.value < threshold.danger) {
+                summaryData.warningCount++;
+            }
+            else {
+                summaryData.dangerCount++;
+            }
+        }
+        summaryData.dangerCount = Math.ceil(summaryData.dangerCount / 60)
+        summaryData.warningCount = Math.round(summaryData.warningCount / 60)
+        summaryData.safeCount = Math.floor(summaryData.safeCount / 60)
+    }
+
+    return summaryData;
+
+}
+
+const getSummaryForAll = (view: View, data: AllSensors): SummaryType => {
+    let allData = Object.entries(data)
+	.map(([sensor, sensorData]) => (data && getSingleSummary(view, sensor as Sensor, sensorData.data ?? [])))
+        .reduce((acc: SummaryType, curr) => {
+            if (!curr) return acc;
+            acc.safeCount += curr.safeCount;
+            acc.dangerCount += curr.dangerCount;
+            acc.warningCount += curr.warningCount;
+            return acc;
+        }, { safeCount: 0, dangerCount: 0, warningCount: 0 })
+    if (!allData) allData = { safeCount: 0, dangerCount: 0, warningCount: 0 }
+    return allData;
+
 }
 
 export default Summary;
