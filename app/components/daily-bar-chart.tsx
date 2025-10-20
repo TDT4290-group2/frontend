@@ -5,7 +5,7 @@ import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts";
 import type { AllSensors } from "../lib/dto";
-import { type Sensor, sensors, thresholds } from "../lib/utils";
+import { makeCumulative, type Sensor, sensors, thresholds } from "../lib/utils";
 
 // the chart data is always the same, we only change the colors based on exposure data
 const generateChartData = () =>
@@ -17,10 +17,19 @@ const generateChartData = () =>
 	}));
 
 function aggregateHourlyMax(data: AllSensors): Record<Sensor, Array<number>> {
+	const _data = {
+		dust: data.dust,
+		vibration: {
+			data: makeCumulative(data.vibration.data ?? []),
+			isLoading: data.vibration.isLoading,
+			isError: data.vibration.isError,
+		},
+		noise: data.noise,
+	};
 	const result = {} as Record<Sensor, Array<number>>;
 
-	(Object.keys(data) as Array<Sensor>).forEach((sensor) => {
-		const sensorData = data[sensor].data ?? [];
+	(Object.keys(_data) as Array<Sensor>).forEach((sensor) => {
+		const sensorData = _data[sensor].data ?? [];
 		const hourlyMax = Array(24).fill(-1);
 
 		for (const { time, value } of sensorData) {

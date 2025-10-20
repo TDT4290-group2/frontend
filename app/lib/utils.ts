@@ -3,6 +3,7 @@ import {
 	addDays,
 	addMonths,
 	addWeeks,
+	isSameDay,
 	type Locale,
 	subDays,
 	subMonths,
@@ -70,8 +71,8 @@ export const thresholds: Record<Sensor, Threshold> = {
 		danger: 130,
 	},
 	vibration: {
-		warning: 80,
-		danger: 100,
+		warning: 100,
+		danger: 400,
 	},
 };
 
@@ -294,3 +295,21 @@ export const getNextDay = (selectedDay: Date, view: View): Date => {
 };
 
 export const languageToLocale: Record<string, Locale> = { no: nb, en: enGB };
+
+export const makeCumulative = (
+	data: Array<SensorDataResponseDto> | undefined,
+) => {
+	if (!data || data.length === 0) {
+		return [];
+	}
+	let sum = 0;
+	let currentDate = data[0].time;
+	return data.map((point) => {
+		if (!isSameDay(point.time, currentDate)) {
+			sum = 0;
+			currentDate = point.time;
+		}
+		sum += point.value;
+		return { time: point.time, value: sum };
+	});
+};

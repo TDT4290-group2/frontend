@@ -3,6 +3,7 @@ import {
 	getNextDay,
 	getPrevDay,
 	languageToLocale,
+	makeCumulative,
 	mapSensorDataToMonthLists,
 	mapWeekDataToEvents,
 	parseAsView,
@@ -59,7 +60,7 @@ export default function Vibration() {
 		startTime: startOfMonth(selectedDay),
 		endTime: endOfMonth(selectedDay),
 		granularity: TimeGranularity.Day,
-		function: AggregationFunction.Max,
+		function: AggregationFunction.Sum,
 	};
 
 	const query =
@@ -107,7 +108,11 @@ export default function Vibration() {
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary exposureType={"vibration"} view={view} data={data} />
+					<Summary
+						exposureType={"vibration"}
+						view={view}
+						data={makeCumulative(data)}
+					/>
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
@@ -122,7 +127,7 @@ export default function Vibration() {
 					) : view === "month" ? (
 						<MonthlyView
 							selectedDay={selectedDay}
-							data={mapSensorDataToMonthLists(data ?? [], "vibration") ?? []}
+							data={mapSensorDataToMonthLists(data ?? [], "vibration")}
 						/>
 					) : view === "week" ? (
 						<WeekView
@@ -131,7 +136,7 @@ export default function Vibration() {
 							dayEndHour={16}
 							weekStartsOn={1}
 							minuteStep={60}
-							events={mapWeekDataToEvents(data ?? [], "vibration")}
+							events={mapWeekDataToEvents(makeCumulative(data), "vibration")}
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
 					) : !data || data.length === 0 ? (
@@ -147,7 +152,7 @@ export default function Vibration() {
 						</Card>
 					) : (
 						<ChartLineDefault
-							chartData={data ?? []}
+							chartData={makeCumulative(data)}
 							chartTitle={selectedDay.toLocaleDateString(i18n.language, {
 								day: "numeric",
 								month: "long",
@@ -156,7 +161,8 @@ export default function Vibration() {
 							unit={t("points")}
 							startHour={8}
 							endHour={16}
-							maxY={110}
+							maxY={450}
+							lineType="monotone"
 						>
 							<ThresholdLine
 								y={thresholds.vibration.danger}

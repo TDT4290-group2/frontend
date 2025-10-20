@@ -15,6 +15,7 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
+import type { CurveType } from "recharts/types/shape/Curve";
 import { useDayContext } from "../lib/day-context";
 import type { SensorDataResponseDto } from "../lib/dto";
 import { type DangerLevel, dangerLevels } from "../lib/utils";
@@ -35,6 +36,7 @@ export function ChartLineDefault({
 	endHour,
 	maxY,
 	unit,
+	lineType = "natural",
 	children,
 }: {
 	chartData: Array<SensorDataResponseDto>;
@@ -43,6 +45,7 @@ export function ChartLineDefault({
 	endHour: number;
 	maxY: number;
 	unit: string;
+	lineType?: string;
 	children: React.ReactNode;
 }) {
 	const { selectedDay } = useDayContext();
@@ -112,7 +115,7 @@ export function ChartLineDefault({
 						/>
 						<Line
 							dataKey="value"
-							type="natural"
+							type={lineType as CurveType}
 							stroke="var(--color-desktop)"
 							strokeWidth={2}
 							dot={false}
