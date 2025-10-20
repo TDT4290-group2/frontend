@@ -2,6 +2,7 @@
 import {
 	getNextDay,
 	getPrevDay,
+	makeCumulative,
 	mapSensorDataToMonthLists,
 	mapWeekDataToEvents,
 	parseAsView,
@@ -29,20 +30,8 @@ import { useDayContext } from "../lib/day-context";
 import {
 	AggregationFunction,
 	type SensorDataRequestDto,
-	type SensorDataResponseDto,
 	TimeGranularity,
 } from "../lib/dto";
-
-const makeCumulative = (data: Array<SensorDataResponseDto>) => {
-	if (!data) {
-		return [];
-	}
-	let sum = 0;
-	return data.map((point) => {
-		sum += point.value;
-		return { time: point.time, value: sum };
-	});
-};
 
 // biome-ignore lint: page components can be default exports
 export default function Vibration() {
@@ -68,7 +57,7 @@ export default function Vibration() {
 		startTime: startOfMonth(selectedDay),
 		endTime: endOfMonth(selectedDay),
 		granularity: TimeGranularity.Day,
-		function: AggregationFunction.Max,
+		function: AggregationFunction.Sum,
 	};
 
 	const query =
@@ -116,7 +105,11 @@ export default function Vibration() {
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary exposureType={"vibration"} view={view} data={data} />
+					<Summary
+						exposureType={"vibration"}
+						view={view}
+						data={makeCumulative(data)}
+					/>
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">
@@ -131,7 +124,7 @@ export default function Vibration() {
 					) : view === "month" ? (
 						<MonthlyView
 							selectedDay={selectedDay}
-							data={mapSensorDataToMonthLists(data ?? [], "vibration") ?? []}
+							data={mapSensorDataToMonthLists(data ?? [], "vibration")}
 						/>
 					) : view === "week" ? (
 						<WeekView
@@ -139,7 +132,7 @@ export default function Vibration() {
 							dayEndHour={16}
 							weekStartsOn={1}
 							minuteStep={60}
-							events={mapWeekDataToEvents(data ?? [], "vibration")}
+							events={mapWeekDataToEvents(makeCumulative(data), "vibration")}
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
 					) : !data || data.length === 0 ? (
