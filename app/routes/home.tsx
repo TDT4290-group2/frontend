@@ -2,6 +2,7 @@
 import {
 	getNextDay,
 	getPrevDay,
+	languageToLocale,
 	mapAllSensorDataToMonthLists,
 	mapAllWeekDataToEvents,
 	parseAsView,
@@ -36,7 +37,7 @@ export function meta() {
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 	const translatedView = t(`overview.${view}`);
@@ -114,6 +115,7 @@ export default function Home() {
 								/>
 							) : view === "week" ? (
 								<WeekView
+									locale={languageToLocale[i18n.language]}
 									dayStartHour={8}
 									dayEndHour={16}
 									weekStartsOn={1}
@@ -127,7 +129,7 @@ export default function Home() {
 								) ? (
 								<Card className="flex h-24 w-full items-center">
 									<CardTitle>
-										{selectedDay.toLocaleDateString("en-GB", {
+										{selectedDay.toLocaleDateString(i18n.language, {
 											day: "numeric",
 											month: "long",
 											year: "numeric",
@@ -138,7 +140,7 @@ export default function Home() {
 							) : (
 								<DailyBarChart
 									data={everySensorData}
-									chartTitle={selectedDay.toLocaleDateString("en-GB", {
+									chartTitle={selectedDay.toLocaleDateString(i18n.language, {
 										day: "numeric",
 										month: "long",
 										year: "numeric",

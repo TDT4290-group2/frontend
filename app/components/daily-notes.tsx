@@ -24,12 +24,11 @@ const d9 = new Date(2025, 9, 1);
 const d10 = new Date(2025, 9, 1);
 const today = new Date();
 
-const locale = "en-GB"; //nb-NO: bokmål, nn-NO: nynorsk
-
 export const DailyNotes = () => {
 	//assumes that the notes are sorted with current day first
 
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
+	const locale = i18n.language;
 
 	const [notes, setNotes] = useState<Array<Note>>([
 		{

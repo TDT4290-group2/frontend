@@ -2,6 +2,7 @@
 import {
 	getNextDay,
 	getPrevDay,
+	languageToLocale,
 	mapSensorDataToMonthLists,
 	mapWeekDataToEvents,
 	parseAsView,
@@ -37,7 +38,7 @@ import {
 export default function Dust() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 	const { selectedDay, setSelectedDay } = useDayContext();
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const dayQuery: SensorDataRequestDto = {
 		startTime: new Date(selectedDay.setUTCHours(8)),
@@ -127,6 +128,7 @@ export default function Dust() {
 						/>
 					) : view === "week" ? (
 						<WeekView
+							locale={languageToLocale[i18n.language]}
 							dayStartHour={8}
 							dayEndHour={16}
 							weekStartsOn={1}
@@ -137,7 +139,7 @@ export default function Dust() {
 					) : !data || data.length === 0 ? (
 						<Card className="flex h-24 w-full items-center">
 							<CardTitle>
-								{selectedDay.toLocaleDateString("en-GB", {
+								{selectedDay.toLocaleDateString(i18n.language, {
 									day: "numeric",
 									month: "long",
 									year: "numeric",
@@ -148,7 +150,7 @@ export default function Dust() {
 					) : (
 						<ChartLineDefault
 							chartData={data ?? []}
-							chartTitle={selectedDay.toLocaleDateString("en-GB", {
+							chartTitle={selectedDay.toLocaleDateString(i18n.language, {
 								day: "numeric",
 								month: "long",
 								year: "numeric",

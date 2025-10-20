@@ -2,7 +2,12 @@
 /** biome-ignore-all lint/correctness/noNestedComponentDefinitions: CustomDay is intentionally defined inside MonthlyView for prop access. */
 import type { CalendarDay, Modifiers } from "react-day-picker";
 import { useTranslation } from "react-i18next";
-import { cn, type DangerKeywords, type Sensor } from "../lib/utils";
+import {
+	cn,
+	type DangerKeywords,
+	languageToLocale,
+	type Sensor,
+} from "../lib/utils";
 import { Calendar } from "./ui/calendar";
 import { Card } from "./ui/card";
 
@@ -15,7 +20,7 @@ type MonthlyProps = {
 export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 	// UTILS
 
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	function getDayType(day: Date): DangerKeywords | "none" {
 		if (hasData(data.safe, day)) return "safe";
@@ -44,6 +49,7 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 	return (
 		<Card className="w-full">
 			<Calendar
+				locale={languageToLocale[i18n.language]}
 				month={selectedDay}
 				hideNavigation
 				showWeekNumber

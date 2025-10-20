@@ -2,6 +2,7 @@
 import {
 	getNextDay,
 	getPrevDay,
+	languageToLocale,
 	mapSensorDataToMonthLists,
 	mapWeekDataToEvents,
 	parseAsView,
@@ -36,7 +37,7 @@ import {
 // biome-ignore lint: page components can be default exports
 export default function Noise() {
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const { selectedDay, setSelectedDay } = useDayContext();
 
@@ -124,6 +125,7 @@ export default function Noise() {
 						/>
 					) : view === "week" ? (
 						<WeekView
+							locale={languageToLocale[i18n.language]}
 							dayStartHour={8}
 							dayEndHour={16}
 							weekStartsOn={1}
@@ -134,7 +136,7 @@ export default function Noise() {
 					) : !data || data.length === 0 ? (
 						<Card className="flex h-24 w-full items-center">
 							<CardTitle>
-								{selectedDay.toLocaleDateString("en-GB", {
+								{selectedDay.toLocaleDateString(i18n.language, {
 									day: "numeric",
 									month: "long",
 									year: "numeric",
@@ -145,7 +147,7 @@ export default function Noise() {
 					) : (
 						<ChartLineDefault
 							chartData={data ?? []}
-							chartTitle={selectedDay.toLocaleDateString("en-GB", {
+							chartTitle={selectedDay.toLocaleDateString(i18n.language, {
 								day: "numeric",
 								month: "long",
 								year: "numeric",
