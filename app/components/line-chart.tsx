@@ -6,7 +6,7 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/ui/chart";
-import { formatDate } from "date-fns";
+import { useTranslation } from "react-i18next";
 import {
 	CartesianGrid,
 	Line,
@@ -18,7 +18,6 @@ import {
 import { useDayContext } from "../lib/day-context";
 import type { SensorDataResponseDto } from "../lib/dto";
 import { type DangerLevel, dangerLevels } from "../lib/utils";
-import { useTranslation } from "react-i18next";
 
 export const description = "A line chart";
 
@@ -57,14 +56,12 @@ export function ChartLineDefault({
 
 	const ticks = Array.from({ length: endHour - startHour + 1 }, (_, i) => {
 		const date = new Date(selectedDay);
-		date.setHours(startHour + i);
+		date.setUTCHours(startHour + i);
 		return date.getTime();
 	});
 
-	const formatTime = (time: number) => {
-		const date = new Date(time);
-		return formatDate(date, "HH");
-	};
+	const formatTime = (time: number) =>
+		new Date(time).getUTCHours().toString().padStart(2, "0");
 
 	return (
 		<Card className="w-full">
@@ -90,7 +87,11 @@ export function ChartLineDefault({
 							tickLine={false}
 							axisLine={false}
 							tickMargin={2}
-							label={{ value: t("line_chart.time"), position: "insideBottom", offset: 0 }}
+							label={{
+								value: t("line_chart.time"),
+								position: "insideBottom",
+								offset: 0,
+							}}
 						/>
 						<YAxis
 							dataKey="value"

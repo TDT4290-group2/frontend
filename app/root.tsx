@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
-import "./i18n/config"
+import "./i18n/config";
 import {
 	isRouteErrorResponse,
 	Links,

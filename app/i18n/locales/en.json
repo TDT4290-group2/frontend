@@ -39,7 +39,8 @@
     "dust": "Dust",
     "vibration": "Vibration",
     "noise": "Noise",
-    "allSensors": "All sensors"
+    "allSensors": "All sensors",
+    "all": "Every sensor"
   },
   "notifications": {
     "dust": "Dust",

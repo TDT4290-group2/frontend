@@ -5,7 +5,6 @@ import {
 	eachMinuteOfInterval,
 	format,
 	getDay,
-	getHours,
 	getMinutes,
 	getUnixTime,
 	isSameMonth,
@@ -18,11 +17,11 @@ import {
 	startOfWeek,
 } from "date-fns";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { useDayContext } from "../lib/day-context";
 import { cn, type DangerLevel, dangerLevels } from "../lib/utils";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import { useTranslation } from "react-i18next";
 
 export function DaysHeader({ days }: { days: Days }) {
 	return (
@@ -71,6 +70,7 @@ export function EventGrid({
 	rowHeight,
 	onEventClick,
 	dayStartHour,
+	dayEndHour,
 }: {
 	days: Days;
 	events?: Array<Event>;
@@ -79,6 +79,7 @@ export function EventGrid({
 	rowHeight: number;
 	onEventClick?: (event: Event) => void;
 	dayStartHour: number;
+	dayEndHour: number;
 }) {
 	return (
 		<div
@@ -89,15 +90,15 @@ export function EventGrid({
 			}}
 		>
 			{(events || [])
-				.filter((event) => isSameWeek(days[0].date, event.startDate))
+				.filter(
+					(event) =>
+						isSameWeek(days[0].date, event.startDate) &&
+						event.endDate.getUTCHours() <= dayEndHour &&
+						event.startDate.getUTCHours() >= dayStartHour,
+				)
 				.map((event) => {
-					const start =
-						getHours(event.startDate) -
-						dayStartHour +
-						1 +
-						Math.floor(getMinutes(event.startDate) / minuteStep);
-					const end = getHours(event.endDate) - dayStartHour + 1;
-					Math.ceil(getMinutes(event.endDate) / minuteStep);
+					const start = event.startDate.getUTCHours() - dayStartHour + 1;
+					const end = event.endDate.getUTCHours() - dayStartHour + 1;
 					const paddingTop =
 						((getMinutes(event.startDate) % minuteStep) / minuteStep) *
 						rowHeight;
@@ -125,7 +126,7 @@ export function EventGrid({
 									"absolute inset-1 flex cursor-pointer flex-col overflow-y-auto rounded-md text-xs leading-5 transition",
 									`bg-[${dangerLevels[event.dangerLevel].color}]`,
 									"border-t-2 border-t-muted-foreground border-dotted",
-									`${event.startDate.getHours() === dayStartHour && "border-t-0"} `,
+									`${event.startDate.getUTCHours() === dayStartHour && "border-t-0"} `,
 									"hover:brightness-85",
 								)}
 								style={{
@@ -226,7 +227,7 @@ export function Header({
 	onNext?: () => void;
 }) {
 	const { t } = useTranslation();
-	
+
 	return (
 		<div className="flex h-16 items-center justify-between border-card-highlight border-b-2 px-6 py-4">
 			<h1 className="flex items-center gap-3 font-semibold text-base text-foreground">
@@ -484,6 +485,7 @@ export function WeekView({
 										rowHeight={rowHeight}
 										onEventClick={onEventClick}
 										dayStartHour={dayStartHour}
+										dayEndHour={dayEndHour}
 									/>
 								</div>
 							</div>

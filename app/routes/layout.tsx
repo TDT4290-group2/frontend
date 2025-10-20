@@ -1,13 +1,5 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "react-i18next";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/ui/select";
 import {
 	Drawer,
 	DrawerClose,
@@ -20,8 +12,16 @@ import {
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn, parseAsView } from "@/lib/utils";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/ui/select";
 import { useQueryState } from "nuqs";
 import { type ReactNode, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	href,
 	Link,
@@ -104,7 +104,7 @@ export default function Layout() {
 							</nav>
 						</>
 					)}
-					<div className="flex flex-row">
+					<div className="flex flex-row gap-4">
 						<Select onValueChange={(value) => i18n.changeLanguage(value)}>
 							<SelectTrigger className="w-32">
 								<SelectValue placeholder="Language" />

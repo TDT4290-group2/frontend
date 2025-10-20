@@ -40,7 +40,7 @@ export function Notifications() {
       translatedTitle: t("notifications.dust"),
       type: "Warning",
       typeTranslated: t("notifications.warning"),
-      date: "04.03 8.53",
+      date: "04.03 8.54",
     },
   ];
   
@@ -48,7 +48,7 @@ export function Notifications() {
     <Card className="w-full px-4 gap-0 h-64 overflow-y-auto ">
       <ItemGroup className="gap-1">
         {notifications.map((notification) => (
-          <Item key={notification.title} variant="outline" asChild role="listitem" className="bg-background rounded-3xl border-3 border-border">
+          <Item key={notification.date} variant="outline" asChild role="listitem" className="bg-background rounded-3xl border-3 border-border">
             <li>
               <ItemMedia variant="image">
                 <img 
