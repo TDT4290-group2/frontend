@@ -27,7 +27,7 @@ const notifications = [
   {
     title: "Dust",
     type: "Warning",
-    date: "Mon 4th Mar 8.53 AM",
+    date: "Mon 4th Mar 8.54 AM",
   },
 ]
 
@@ -36,7 +36,7 @@ export function Notifications() {
     <Card className="w-full px-4 gap-0 h-64 overflow-y-auto ">
       <ItemGroup className="gap-1">
         {notifications.map((notification) => (
-          <Item key={notification.title} variant="outline" asChild role="listitem" className="bg-background rounded-3xl border-3 border-border">
+          <Item key={notification.date} variant="outline" asChild role="listitem" className="bg-background rounded-3xl border-3 border-border">
             <li>
               <ItemMedia variant="image">
                 <img 
