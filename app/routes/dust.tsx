@@ -44,7 +44,7 @@ export default function Dust() {
 		startTime: new Date(selectedDay.setUTCHours(8)),
 		endTime: new Date(selectedDay.setUTCHours(16)),
 		granularity: TimeGranularity.Minute,
-		function: AggregationFunction.Avg,
+		function: AggregationFunction.Max,
 		field: "pm1_stel",
 	};
 
@@ -52,7 +52,7 @@ export default function Dust() {
 		startTime: startOfWeek(selectedDay, { weekStartsOn: 1 }),
 		endTime: endOfWeek(selectedDay, { weekStartsOn: 1 }),
 		granularity: TimeGranularity.Hour,
-		function: AggregationFunction.Avg,
+		function: AggregationFunction.Max,
 		field: "pm1_stel",
 	};
 
@@ -60,7 +60,7 @@ export default function Dust() {
 		startTime: startOfMonth(selectedDay),
 		endTime: endOfMonth(selectedDay),
 		granularity: TimeGranularity.Day,
-		function: AggregationFunction.Avg,
+		function: AggregationFunction.Max,
 		field: "pm1_stel",
 	};
 

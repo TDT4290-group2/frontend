@@ -15,32 +15,32 @@ export function Notifications() {
   
   const notifications = [
     {
-      title: "Noise",
-      translatedTitle: t("notifications.noise"),
-      type: "Warning",
-      typeTranslated: t("notifications.warning"),
-      date: "01.04 9.41",
-    },
-    {
       title: "Vibration",
       translatedTitle: t("notifications.vibration"),
       type: "Danger",
       typeTranslated: t("notifications.danger"),
-      date: "24.05 14.04",
+      date: "21.10.2025 15:26",
+    },
+    {
+      title: "Noise",
+      translatedTitle: t("notifications.noise"),
+      type: "Warning",
+      typeTranslated: t("notifications.warning"),
+      date: "01.09.2025 09:41",
     },
     {
       title: "Dust",
       translatedTitle: t("notifications.dust"),
       type: "Warning",
       typeTranslated: t("notifications.warning"),
-      date: "04.03 8.53",
+      date: "04.03.2025 08:53",
     },
     {
       title: "Dust",
       translatedTitle: t("notifications.dust"),
       type: "Warning",
       typeTranslated: t("notifications.warning"),
-      date: "04.03 8.54",
+      date: "19.02.2025 08:54",
     },
   ];
   

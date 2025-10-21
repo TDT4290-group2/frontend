@@ -63,11 +63,11 @@ type Threshold = {
 
 export const thresholds: Record<Sensor, Threshold> = {
 	dust: {
-		warning: 80,
+		warning: 69.24,
 		danger: 100,
 	},
 	noise: {
-		warning: 80,
+		warning: 104.3,
 		danger: 130,
 	},
 	vibration: {
@@ -80,9 +80,13 @@ export const mapWeekDataToEvents = (
 	data: Array<SensorDataResponseDto>,
 	sensor: Sensor,
 ): Array<Event> => {
+	let _data = data;
+	if (sensor === "vibration") {
+		_data = makeCumulative(data);
+	}
 	const _thresholds = thresholds[sensor];
 
-	return data.map((item) => {
+	return _data.map((item) => {
 		let dangerLevel: DangerLevel = "SAFE";
 		if (item.value > _thresholds.warning) {
 			dangerLevel = "WARNING";

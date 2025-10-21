@@ -33,7 +33,7 @@ export const DailyNotes = () => {
 	const [notes, setNotes] = useState<Array<Note>>([
 		{
 			date: today,
-			note: "Sandblåsing kl 10. Dette er et langt notat. Et veldig veldig veldig langt notat. Forhåpentligvis gjør det ikke at siden ser dårlig ut eller noe.",
+			note: "",
 		},
 		{ date: d1, note: "Sveising kl 11." },
 		{ date: d2, note: "Ingenting å rapportere." },

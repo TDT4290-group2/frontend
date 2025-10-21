@@ -16,19 +16,19 @@ const granularityMap: Record<View, TimeGranularity> = {
 
 const functionMap: Record<Sensor, Record<View, AggregationFunction>> = {
 	dust: {
-		day: AggregationFunction.Avg,
-		week: AggregationFunction.Avg,
-		month: AggregationFunction.Avg,
+		day: AggregationFunction.Max,
+		week: AggregationFunction.Max,
+		month: AggregationFunction.Max,
 	},
 	noise: {
-		day: AggregationFunction.Avg,
+		day: AggregationFunction.Max,
 		week: AggregationFunction.Max,
 		month: AggregationFunction.Max,
 	},
 	vibration: {
 		day: AggregationFunction.Avg,
-		week: AggregationFunction.Max,
-		month: AggregationFunction.Max,
+		week: AggregationFunction.Sum,
+		month: AggregationFunction.Sum,
 	},
 };
 

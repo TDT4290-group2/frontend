@@ -10,7 +10,7 @@ import type {
 import { buildSensorQuery } from "./queries";
 import { type Sensor, sensors, type View } from "./utils";
 
-const baseURL = import.meta.env.VITE_BASE_URL;
+const baseURL = "http://localhost:5063/api/";
 
 const uid = "8f1c2d3e-4b5a-6c7d-8e9f-0a1b2c3d4e5f"; //temporary
 

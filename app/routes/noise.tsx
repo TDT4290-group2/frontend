@@ -45,7 +45,7 @@ export default function Noise() {
 		startTime: new Date(selectedDay.setUTCHours(8)),
 		endTime: new Date(selectedDay.setUTCHours(16)),
 		granularity: TimeGranularity.Minute,
-		function: AggregationFunction.Avg,
+		function: AggregationFunction.Max,
 	};
 
 	const weekQuery: SensorDataRequestDto = {

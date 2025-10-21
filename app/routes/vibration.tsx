@@ -46,14 +46,14 @@ export default function Vibration() {
 		startTime: new Date(selectedDay.setUTCHours(8)),
 		endTime: new Date(selectedDay.setUTCHours(16)),
 		granularity: TimeGranularity.Minute,
-		function: AggregationFunction.Avg,
+		function: AggregationFunction.Sum,
 	};
 
 	const weekQuery: SensorDataRequestDto = {
 		startTime: startOfWeek(selectedDay, { weekStartsOn: 1 }),
 		endTime: endOfWeek(selectedDay, { weekStartsOn: 1 }),
 		granularity: TimeGranularity.Hour,
-		function: AggregationFunction.Max,
+		function: AggregationFunction.Sum,
 	};
 
 	const monthQuery: SensorDataRequestDto = {
@@ -136,7 +136,7 @@ export default function Vibration() {
 							dayEndHour={16}
 							weekStartsOn={1}
 							minuteStep={60}
-							events={mapWeekDataToEvents(makeCumulative(data), "vibration")}
+							events={mapWeekDataToEvents(data ?? [], "vibration")}
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
 					) : !data || data.length === 0 ? (
