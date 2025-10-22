@@ -16,9 +16,9 @@ import {
 	YAxis,
 } from "recharts";
 import type { CurveType } from "recharts/types/shape/Curve";
+import { type DangerKey, dangerLevels } from "../lib/danger-levels";
 import { useDayContext } from "../lib/day-context";
 import type { SensorDataResponseDto } from "../lib/dto";
-import { type DangerLevel, dangerLevels } from "../lib/utils";
 
 export const description = "A line chart";
 
@@ -134,7 +134,7 @@ export function ThresholdLine({
 	label,
 }: {
 	y: number;
-	dangerLevel: DangerLevel;
+	dangerLevel: DangerKey;
 	label?: string;
 }) {
 	const { t } = useTranslation();

@@ -51,9 +51,9 @@
   },
   "line_chart": {
     "time": "Time",
-    "DANGER": "Threshold Exceeded!",
-    "WARNING": "Close to exposure limit",
-    "SAFE": "Safely within exposure limit"
+    "danger": "Threshold Exceeded!",
+    "warning": "Close to exposure limit",
+    "safe": "Safely within exposure limit"
   },
   "weekly_view" : {
     "today": "Today"

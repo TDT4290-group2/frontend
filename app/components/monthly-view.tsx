@@ -2,19 +2,17 @@
 /** biome-ignore-all lint/correctness/noNestedComponentDefinitions: CustomDay is intentionally defined inside MonthlyView for prop access. */
 import type { CalendarDay, Modifiers } from "react-day-picker";
 import { useTranslation } from "react-i18next";
-import {
-	cn,
-	type DangerKeywords,
-	languageToLocale,
-	type Sensor,
-} from "../lib/utils";
+import { languageToLocale } from "../i18n/locale";
+import type { DangerKey } from "../lib/danger-levels";
+import type { Sensor } from "../lib/sensors";
+import { cn } from "../lib/utils";
 import { Calendar } from "./ui/calendar";
 import { Card } from "./ui/card";
 
 type MonthlyProps = {
 	selectedDay: Date;
 	exposureType?: Sensor;
-	data: Record<DangerKeywords, Array<Date>>;
+	data: Record<DangerKey, Array<Date>>;
 };
 
 export function MonthlyView({ selectedDay, data }: MonthlyProps) {
@@ -22,7 +20,7 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 
 	const { t, i18n } = useTranslation();
 
-	function getDayType(day: Date): DangerKeywords | "none" {
+	function getDayType(day: Date): Lowercase<DangerKey> | "none" {
 		if (hasData(data.safe, day)) return "safe";
 		if (hasData(data.warning, day)) return "warning";
 		if (hasData(data.danger, day)) return "danger";
@@ -78,7 +76,7 @@ type CustomDayProps = {
 	day: CalendarDay;
 	modifiers: Modifiers;
 	className?: string;
-	getDayType: (day: Date) => DangerKeywords | "none";
+	getDayType: (day: Date) => Lowercase<DangerKey> | "none";
 	handleDayClick: (day: Date) => void;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 

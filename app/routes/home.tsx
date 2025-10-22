@@ -1,13 +1,11 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
+
 import {
-	getNextDay,
-	getPrevDay,
-	languageToLocale,
 	mapAllSensorDataToMonthLists,
 	mapAllWeekDataToEvents,
-	parseAsView,
-	type View,
-} from "@/lib/utils";
+} from "@/lib/events";
+import { getNextDay, getPrevDay } from "@/lib/utils";
+import { parseAsView, type View } from "@/lib/views";
 import {
 	Select,
 	SelectContent,
@@ -20,11 +18,12 @@ import { useTranslation } from "react-i18next";
 import { DailyBarChart } from "../components/daily-bar-chart";
 import { DailyNotes } from "../components/daily-notes";
 import { MonthlyView } from "../components/monthly-view";
+import { Summary } from "../components/summary";
 import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
-import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
+import { languageToLocale } from "../i18n/locale";
 import { useAllSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
 
@@ -61,10 +60,7 @@ export default function Home() {
 					>
 						{"<"}
 					</Button>
-					<Select
-						value={view}
-						onValueChange={(value) => setView(value as View | null)}
-					>
+					<Select value={view} onValueChange={(value: View) => setView(value)}>
 						<SelectTrigger className="w-32">
 							<SelectValue placeholder="View" />
 						</SelectTrigger>

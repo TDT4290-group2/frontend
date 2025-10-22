@@ -1,14 +1,5 @@
 /** biome-ignore-all lint/suspicious/noAlert: We use alert for testing, but will be changed later */
-import {
-	getNextDay,
-	getPrevDay,
-	languageToLocale,
-	mapSensorDataToMonthLists,
-	mapWeekDataToEvents,
-	parseAsView,
-	thresholds,
-	type View,
-} from "@/lib/utils";
+import { getNextDay, getPrevDay } from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -21,14 +12,19 @@ import { useQueryState } from "nuqs";
 import { useTranslation } from "react-i18next";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { MonthlyView } from "../components/monthly-view";
+import { Summary } from "../components/summary";
 import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
-import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
+import { languageToLocale } from "../i18n/locale";
 import { useSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
 import type { SensorDataRequestDto } from "../lib/dto";
+import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "../lib/events";
+import type { View } from "../lib/queries";
+import { thresholds } from "../lib/thresholds";
+import { parseAsView } from "../lib/views";
 
 // biome-ignore lint: page components can be default exports
 export default function Dust() {
@@ -156,10 +152,10 @@ export default function Dust() {
 							endHour={16}
 							maxY={110}
 						>
-							<ThresholdLine y={thresholds.dust.danger} dangerLevel="DANGER" />
+							<ThresholdLine y={thresholds.dust.danger} dangerLevel="danger" />
 							<ThresholdLine
 								y={thresholds.dust.warning}
-								dangerLevel="WARNING"
+								dangerLevel="warning"
 							/>
 						</ChartLineDefault>
 					)}
