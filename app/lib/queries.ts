@@ -37,26 +37,33 @@ const sensorToField: Record<Sensor, string | undefined> = {
 	vibration: undefined,
 };
 
-function getStartEnd(view: View, selectedDay: Date) {
-	if (view === "day") {
-		return {
-			startTime: new Date(selectedDay.setUTCHours(8)),
-			endTime: new Date(selectedDay.setUTCHours(16)),
-		};
+function getStartEnd(view: View, selectedDay: Date): {
+	startTime: Date; endTime: Date
+} {
+	switch (view) {
+		case "day":
+			return {
+				startTime: new Date(selectedDay.setUTCHours(8)),
+				endTime: new Date(selectedDay.setUTCHours(16)),
+			};
+		case "week":
+			return {
+				startTime: startOfWeek(selectedDay, { weekStartsOn: 1 }),
+				endTime: endOfWeek(selectedDay, { weekStartsOn: 1 }),
+			};
+		case "month":
+			return {
+				startTime: startOfMonth(selectedDay),
+				endTime: endOfMonth(selectedDay),
+			};
+		default:
+			{
+				// Exhaustive switch statement, should never reach here
+				console.error("Invalid view type");
+				const unreachable: never = view;
+				return unreachable;
+			}
 	}
-	if (view === "week") {
-		return {
-			startTime: startOfWeek(selectedDay, { weekStartsOn: 1 }),
-			endTime: endOfWeek(selectedDay, { weekStartsOn: 1 }),
-		};
-	}
-	if (view === "month") {
-		return {
-			startTime: startOfMonth(selectedDay),
-			endTime: endOfMonth(selectedDay),
-		};
-	}
-	throw new Error("Invalid view");
 }
 
 export function buildSensorQuery(
