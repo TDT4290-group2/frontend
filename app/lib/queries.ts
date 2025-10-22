@@ -5,8 +5,7 @@ import type {
 	SensorDataRequestDto,
 } from "./dto";
 import type { Sensor } from "./sensors";
-
-export type View = "day" | "week" | "month";
+import type { View } from "./views";
 
 const viewToGranularity: Record<View, GranularityKey> = {
 	day: "minute",

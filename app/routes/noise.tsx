@@ -22,8 +22,8 @@ import { useSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
 import type { SensorDataRequestDto } from "../lib/dto";
 import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "../lib/events";
-import type { View } from "../lib/queries";
 import { thresholds } from "../lib/thresholds";
+import type { View } from "../lib/views";
 import { parseAsView } from "../lib/views";
 
 // biome-ignore lint: page components can be default exports

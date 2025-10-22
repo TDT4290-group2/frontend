@@ -10,7 +10,7 @@ import {
 } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import type { SensorDataResponseDto } from "./dto";
-import type { View } from "./queries";
+import type { View } from "./views";
 
 export function cn(...inputs: Array<ClassValue>) {
 	return twMerge(clsx(inputs));

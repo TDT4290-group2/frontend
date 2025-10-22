@@ -5,7 +5,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/ui/card";
-import { type Day, DayColumn } from "@/ui/day-column";
+import { type Day, DayColumn } from "~/app/components/day-column";
 import dummyWeekData from "../dummy/weekly.json";
 
 export const WeeklyOverview = () => {
