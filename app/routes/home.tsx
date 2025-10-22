@@ -1,11 +1,11 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 
+import { parseAsView, type View } from "@/features/views/utils";
 import {
 	mapAllSensorDataToMonthLists,
 	mapAllWeekDataToEvents,
 } from "@/lib/events";
 import { getNextDay, getPrevDay } from "@/lib/utils";
-import { parseAsView, type View } from "@/lib/views";
 import {
 	Select,
 	SelectContent,
@@ -117,11 +117,7 @@ export default function Home() {
 			</div>
 			<div className="flex w-full flex-col gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary
-						exposureType="all"
-						view={view}
-						data={everySensorData ?? []}
-					/>
+					<Summary exposureType="all" data={everySensorData ?? []} />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">
