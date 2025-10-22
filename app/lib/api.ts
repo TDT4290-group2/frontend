@@ -5,10 +5,11 @@ import type {
 	AllSensors,
 	SensorDataRequestDto,
 	SensorDataResponseDto,
-	SensorDataResult,
+	SensorDataResult
 } from "./dto";
 import { buildSensorQuery } from "./queries";
-import { type Sensor, sensors, type View } from "./utils";
+import type { Sensor, View } from "./utils";
+import { sensors } from "./utils";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -39,7 +40,8 @@ export const useSensorData = (
 ): SensorDataResult => {
 	const { data, isLoading, isError } = useQuery<Array<SensorDataResponseDto>>({
 		queryKey: ["sensorData", sensor, sensorDataRequest],
-		queryFn: () => fetchSensorData(sensor, sensorDataRequest),
+		queryFn: () => fetchSensorData(sensor, sensorDataRequest
+		),
 		staleTime: 10 * 60 * 1000, //10 min
 	});
 

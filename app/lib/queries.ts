@@ -1,38 +1,34 @@
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
-import {
-	AggregationFunction,
-	type SensorDataRequestDto,
-	TimeGranularity,
-} from "./dto";
+import type { AggregateFnKey, GranularityKey, SensorDataRequestDto } from "./dto";
+import type { Sensor } from "./utils";
 
-type View = "day" | "week" | "month";
-type Sensor = "dust" | "noise" | "vibration";
+export type View = "day" | "week" | "month";
 
-const granularityMap: Record<View, TimeGranularity> = {
-	day: TimeGranularity.Minute,
-	week: TimeGranularity.Hour,
-	month: TimeGranularity.Day,
+const viewToGranularity: Record<View, GranularityKey> = {
+	day: "minute",
+	week: "hour",
+	month: "day",
 };
 
-const functionMap: Record<Sensor, Record<View, AggregationFunction>> = {
+const sensorViewToAggregateFn: Record<Sensor, Record<View, AggregateFnKey>> = {
 	dust: {
-		day: AggregationFunction.Avg,
-		week: AggregationFunction.Avg,
-		month: AggregationFunction.Avg,
+		day: "avg",
+		week: "avg",
+		month: "avg",
 	},
 	noise: {
-		day: AggregationFunction.Avg,
-		week: AggregationFunction.Max,
-		month: AggregationFunction.Max,
+		day: "avg",
+		week: "max",
+		month: "max",
 	},
 	vibration: {
-		day: AggregationFunction.Avg,
-		week: AggregationFunction.Max,
-		month: AggregationFunction.Max,
+		day: "avg",
+		week: "max",
+		month: "max",
 	},
 };
 
-const fieldMap: Record<Sensor, string | undefined> = {
+const sensorToField: Record<Sensor, string | undefined> = {
 	dust: "pm1_stel",
 	noise: undefined,
 	vibration: undefined,
@@ -66,16 +62,17 @@ export function buildSensorQuery(
 	selectedDay: Date,
 ): SensorDataRequestDto {
 	const { startTime, endTime } = getStartEnd(view, selectedDay);
-	const granularity = granularityMap[view];
-	const func = functionMap[sensor][view];
-	const field = fieldMap[sensor];
+	const granularity = viewToGranularity[view];
+	const func = sensorViewToAggregateFn[sensor][view];
+	const field = sensorToField[sensor];
 
 	const query: SensorDataRequestDto = {
 		startTime,
 		endTime,
 		granularity,
 		function: func,
+		field: field,
 	};
-	if (field) query.field = field;
+
 	return query;
 }
