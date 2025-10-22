@@ -1,10 +1,10 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { type DangerKey, dangerLevels } from "@/lib/danger-levels";
 import type { AllSensors, SensorDataResponseDto } from "@/lib/dto";
-import type { View } from "@/lib/queries";
 import type { Sensor } from "@/lib/sensors";
 import { thresholds } from "@/lib/thresholds";
 import { cn } from "@/lib/utils";
+import type { View } from "@/lib/views";
 import { Card } from "@/ui/card";
 import { useTranslation } from "react-i18next";
 
