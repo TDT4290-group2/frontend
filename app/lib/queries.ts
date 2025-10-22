@@ -37,8 +37,12 @@ const sensorToField: Record<Sensor, string | undefined> = {
 	vibration: undefined,
 };
 
-function getStartEnd(view: View, selectedDay: Date): {
-	startTime: Date; endTime: Date
+function getStartEnd(
+	view: View,
+	selectedDay: Date,
+): {
+	startTime: Date;
+	endTime: Date;
 } {
 	switch (view) {
 		case "day":
@@ -56,13 +60,12 @@ function getStartEnd(view: View, selectedDay: Date): {
 				startTime: startOfMonth(selectedDay),
 				endTime: endOfMonth(selectedDay),
 			};
-		default:
-			{
-				// Exhaustive switch statement, should never reach here
-				console.error("Invalid view type");
-				const unreachable: never = view;
-				return unreachable;
-			}
+		default: {
+			// Exhaustive switch statement, should never reach here
+			console.error("Invalid view type");
+			const unreachable: never = view;
+			return unreachable;
+		}
 	}
 }
 
