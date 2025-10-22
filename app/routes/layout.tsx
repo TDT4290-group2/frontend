@@ -10,6 +10,7 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { parseAsView } from "@/features/views/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import {
@@ -30,7 +31,6 @@ import {
 	type To,
 	useLocation,
 } from "react-router";
-import { parseAsView } from "../lib/views";
 
 const Logo = () => (
 	<svg

@@ -1,8 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import type {
-	SensorDataRequestDto,
-	SensorDataResponseDto
-} from "./dto";
+import type { SensorDataRequestDto, SensorDataResponseDto } from "./dto";
 import type { Sensor } from "./sensors";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
@@ -28,13 +25,16 @@ const fetchSensorData = async (
 	return response.json();
 };
 
-export function sensorQueryOptions({ sensor, query }: {
-	sensor: Sensor,
-	query: SensorDataRequestDto
+export function sensorQueryOptions({
+	sensor,
+	query,
+}: {
+	sensor: Sensor;
+	query: SensorDataRequestDto;
 }) {
 	return queryOptions({
 		queryKey: [sensor, query],
 		queryFn: () => fetchSensorData(sensor, query),
 		staleTime: 10 * 60 * 1000, // 10 min
-	})
+	});
 }

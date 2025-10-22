@@ -1,8 +1,8 @@
+import { parseAsView } from "@/features/views/utils";
 import { isSameMonth, isSameWeek, isToday } from "date-fns";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { parseAsView } from "../lib/views";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Textarea } from "./ui/textarea";
