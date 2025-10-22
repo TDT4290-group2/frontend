@@ -3,10 +3,10 @@ import type { Sensor } from "./utils";
 export const granularityEnum = {
 	minute: 0,
 	hour: 1,
-	day: 2
+	day: 2,
 } as const;
 export type GranularityKey = keyof typeof granularityEnum;
-export type GranularityValue = typeof granularityEnum[GranularityKey]
+export type GranularityValue = (typeof granularityEnum)[GranularityKey];
 
 export const aggregateFnEnum = {
 	avg: 0,
@@ -16,7 +16,7 @@ export const aggregateFnEnum = {
 	count: 4,
 } as const;
 export type AggregateFnKey = keyof typeof aggregateFnEnum;
-export type AggregateFnValue = keyof typeof aggregateFnEnum[AggregateFnKey];
+export type AggregateFnValue = keyof (typeof aggregateFnEnum)[AggregateFnKey];
 
 export type SensorDataRequestDto = {
 	startTime: Date;
