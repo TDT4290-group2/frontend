@@ -59,11 +59,7 @@ export const useAllSensorData = (
 	);
 
 	const results = useQueries({
-		queries: sensorQueries.map(({ sensor, query }) => ({
-			queryKey: [`${sensor}Data`, sensor, query],
-			queryFn: () => fetchSensorData(sensor, query),
-			staleTime: 10 * 60 * 1000,
-		})),
+		queries: sensorQueries.map(({ sensor, query }) => sensorQueryOptions({ sensor, query })),
 	});
 
 	const everySensorData: AllSensors = Object.fromEntries(
