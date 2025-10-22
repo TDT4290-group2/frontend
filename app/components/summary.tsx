@@ -46,7 +46,7 @@ export function Summary({ exposureType, data, view }: SummaryProps) {
 			danger: t("exposure_summary.redDayText"),
 		},
 	};
-	let summaryData: SummaryType = getSummaryData({ view, exposureType, data });
+	const summaryData: SummaryType = getSummaryData({ view, exposureType, data });
 
 	const summaryLabels = {
 		exposureType: exposureType === "all" ? "Every sensor" : exposureType,

@@ -6,7 +6,7 @@ import {
 	isSameDay,
 	subDays,
 	subMonths,
-	subWeeks
+	subWeeks,
 } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import type { SensorDataResponseDto } from "./dto";

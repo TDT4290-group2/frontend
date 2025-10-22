@@ -61,9 +61,7 @@ export const mapAllWeekDataToEvents = (
 		}
 
 		// choose the event with highest danger level
-		if (
-			DangerTypes[ev.dangerLevel]
-			> DangerTypes[existing.dangerLevel]) {
+		if (DangerTypes[ev.dangerLevel] > DangerTypes[existing.dangerLevel]) {
 			existing.dangerLevel = ev.dangerLevel;
 		}
 	}
@@ -149,11 +147,7 @@ export const mapAllSensorDataToMonthLists = (
 			const key = date.toDateString();
 
 			const existing = mergedDays[key];
-			if (
-				!existing ||
-				DangerTypes[level] >
-				DangerTypes[existing]
-			) {
+			if (!existing || DangerTypes[level] > DangerTypes[existing]) {
 				mergedDays[key] = level;
 			}
 		}

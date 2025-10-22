@@ -5,7 +5,7 @@ import type {
 	AllSensors,
 	SensorDataRequestDto,
 	SensorDataResponseDto,
-	SensorDataResult
+	SensorDataResult,
 } from "./dto";
 import { buildSensorQuery } from "./queries";
 import type { Sensor } from "./sensors";
@@ -41,8 +41,7 @@ export const useSensorData = (
 ): SensorDataResult => {
 	const { data, isLoading, isError } = useQuery<Array<SensorDataResponseDto>>({
 		queryKey: ["sensorData", sensor, sensorDataRequest],
-		queryFn: () => fetchSensorData(sensor, sensorDataRequest
-		),
+		queryFn: () => fetchSensorData(sensor, sensorDataRequest),
 		staleTime: 10 * 60 * 1000, //10 min
 	});
 

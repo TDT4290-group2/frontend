@@ -1,5 +1,9 @@
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
-import type { AggregateFnKey, GranularityKey, SensorDataRequestDto } from "./dto";
+import type {
+	AggregateFnKey,
+	GranularityKey,
+	SensorDataRequestDto,
+} from "./dto";
 import type { Sensor } from "./sensors";
 
 export type View = "day" | "week" | "month";
