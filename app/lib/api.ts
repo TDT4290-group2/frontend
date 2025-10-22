@@ -1,11 +1,10 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { queryOptions, useQueries } from "@tanstack/react-query";
 import { useMemo } from "react";
 import type {
 	AllSensorData,
 	AllSensors,
 	SensorDataRequestDto,
-	SensorDataResponseDto,
-	SensorDataResult,
+	SensorDataResponseDto
 } from "./dto";
 import { buildSensorQuery } from "./queries";
 import type { Sensor } from "./sensors";
@@ -35,18 +34,16 @@ const fetchSensorData = async (
 	return response.json();
 };
 
-export const useSensorData = (
+export function sensorQueryOptions({ sensor, query }: {
 	sensor: Sensor,
-	sensorDataRequest: SensorDataRequestDto,
-): SensorDataResult => {
-	const { data, isLoading, isError } = useQuery<Array<SensorDataResponseDto>>({
-		queryKey: ["sensorData", sensor, sensorDataRequest],
-		queryFn: () => fetchSensorData(sensor, sensorDataRequest),
-		staleTime: 10 * 60 * 1000, //10 min
-	});
-
-	return { data, isLoading, isError };
-};
+	query: SensorDataRequestDto
+}) {
+	return queryOptions({
+		queryKey: [sensor, query],
+		queryFn: () => fetchSensorData(sensor, query),
+		staleTime: 10 * 60 * 1000, // 10 min
+	})
+}
 
 export const useAllSensorData = (
 	view: View,

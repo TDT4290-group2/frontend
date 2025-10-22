@@ -7,6 +7,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
+import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { useTranslation } from "react-i18next";
@@ -18,7 +19,7 @@ import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import { WeekView } from "../components/weekly-view";
 import { languageToLocale } from "../i18n/locale";
-import { useSensorData } from "../lib/api";
+import { sensorQueryOptions } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
 import type { SensorDataRequestDto } from "../lib/dto";
 import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "../lib/events";
@@ -56,7 +57,13 @@ export default function Noise() {
 
 	const query =
 		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
-	const { data, isLoading, isError } = useSensorData("noise", query);
+
+	const { data, isLoading, isError } = useQuery(
+		sensorQueryOptions({
+			sensor: "noise",
+			query,
+		}),
+	);
 
 	return (
 		<section className="flex w-full flex-col">
