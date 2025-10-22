@@ -1,15 +1,9 @@
-import { queryOptions, useQueries } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { queryOptions } from "@tanstack/react-query";
 import type {
-	AllSensorData,
-	AllSensors,
 	SensorDataRequestDto,
 	SensorDataResponseDto
 } from "./dto";
-import { buildSensorQuery } from "./queries";
 import type { Sensor } from "./sensors";
-import { sensors } from "./sensors";
-import type { View } from "./views";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -44,43 +38,3 @@ export function sensorQueryOptions({ sensor, query }: {
 		staleTime: 10 * 60 * 1000, // 10 min
 	})
 }
-
-export const useAllSensorData = (
-	view: View,
-	selectedDay: Date,
-): AllSensorData => {
-	const sensorQueries = useMemo(
-		() =>
-			sensors.map((sensor) => ({
-				sensor,
-				query: buildSensorQuery(sensor, view, selectedDay),
-			})),
-		[view, selectedDay],
-	);
-
-	const results = useQueries({
-		queries: sensorQueries.map(({ sensor, query }) => sensorQueryOptions({ sensor, query })),
-	});
-
-	const everySensorData: AllSensors = Object.fromEntries(
-		sensors.map((sensor, index) => [
-			sensor,
-			{
-				data: results[index].data,
-				isLoading: results[index].isLoading,
-				isError: results[index].isError,
-			},
-		]),
-	) as AllSensors;
-
-	const isLoadingAny = Object.values(everySensorData).some(
-		(res) => res.isLoading,
-	);
-	const isErrorAny = Object.values(everySensorData).some((res) => res.isError);
-
-	return {
-		everySensorData,
-		isLoadingAny,
-		isErrorAny,
-	};
-};

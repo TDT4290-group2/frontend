@@ -13,7 +13,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
+import { useQueries } from "@tanstack/react-query";
 import { useQueryState } from "nuqs";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { DailyBarChart } from "../components/daily-bar-chart";
 import { DailyNotes } from "../components/daily-notes";
@@ -24,8 +26,11 @@ import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import { WeekView } from "../components/weekly-view";
 import { languageToLocale } from "../i18n/locale";
-import { useAllSensorData } from "../lib/api";
+import { sensorQueryOptions } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
+import type { AllSensors } from "../lib/dto";
+import { buildSensorQuery } from "../lib/queries";
+import { sensors } from "../lib/sensors";
 
 export function meta() {
 	return [
@@ -42,10 +47,36 @@ export default function Home() {
 	const translatedView = t(`overview.${view}`);
 	const { selectedDay, setSelectedDay } = useDayContext();
 
-	const { everySensorData, isLoadingAny, isErrorAny } = useAllSensorData(
-		view,
-		selectedDay,
+	const sensorQueries = useMemo(
+		() =>
+			sensors.map((sensor) => ({
+				sensor,
+				query: buildSensorQuery(sensor, view, selectedDay),
+			})),
+		[view, selectedDay],
 	);
+
+	const results = useQueries({
+		queries: sensorQueries.map(({ sensor, query }) =>
+			sensorQueryOptions({ sensor, query }),
+		),
+	});
+
+	const everySensorData: AllSensors = Object.fromEntries(
+		sensors.map((sensor, index) => [
+			sensor,
+			{
+				data: results[index].data,
+				isLoading: results[index].isLoading,
+				isError: results[index].isError,
+			},
+		]),
+	) as AllSensors;
+
+	const isLoadingAny = Object.values(everySensorData).some(
+		(res) => res.isLoading,
+	);
+	const isErrorAny = Object.values(everySensorData).some((res) => res.isError);
 
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
