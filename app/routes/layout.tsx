@@ -31,6 +31,8 @@ import {
 	type To,
 	useLocation,
 } from "react-router";
+import { sensors } from "../features/sensor-picker/sensors";
+import { useSensor } from "../features/sensor-picker/use-sensor";
 
 const Logo = () => (
 	<svg
@@ -133,6 +135,7 @@ export default function Layout() {
 function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 	const [view] = useQueryState("view", parseAsView.withDefault("day"));
 	const location = useLocation();
+	const { setSensor } = useSensor();
 	const navLinkRefs = useRef<Array<HTMLElement>>([]); // Refs to the nav links
 	const [pillWidth, setPillWidth] = useState<number>();
 	const [pillLeft, setPillLeft] = useState<number>();
@@ -156,6 +159,11 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 							pathname: route.to.toString(),
 							search: `?view=${view}`,
 						}}
+						onClick={() =>
+							sensors.find(
+								(s) => route.to.toString().includes(s) && setSensor(s),
+							)
+						}
 						key={route.to.toString()}
 						ref={(el) => {
 							if (!el) return;
