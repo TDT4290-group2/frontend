@@ -13,6 +13,7 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import { DateProvider } from "./features/date-picker/date-provider";
+import { ViewProvider } from "./features/views/view-provider";
 import "./i18n/config";
 
 export const links: Route.LinksFunction = () => [
@@ -55,10 +56,12 @@ export default function App() {
 			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
 				<DateProvider>
 					<NuqsAdapter>
-						{import.meta.env.DEV && (
-							<ReactQueryDevtools initialIsOpen={false} />
-						)}
-						<Outlet />
+						<ViewProvider>
+							{import.meta.env.DEV && (
+								<ReactQueryDevtools initialIsOpen={false} />
+							)}
+							<Outlet />
+						</ViewProvider>
 					</NuqsAdapter>
 				</DateProvider>
 			</ThemeProvider>
