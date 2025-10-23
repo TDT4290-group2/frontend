@@ -5,10 +5,7 @@ type ContextValue = {
 	setDate: (date: Date) => void;
 };
 
-export const DateContext = createContext<ContextValue>({
-	date: new Date(),
-	setDate: () => {},
-});
+export const DateContext = createContext<ContextValue | null>(null);
 
 export const useDate = (): ContextValue => {
 	const context = useContext(DateContext);
