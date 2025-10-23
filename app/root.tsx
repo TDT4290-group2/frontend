@@ -12,7 +12,7 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { DateProvider } from "./features/date-picker/use-date";
+import { DateProvider } from "./features/date-picker/date-provider";
 import "./i18n/config";
 
 export const links: Route.LinksFunction = () => [

@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 
 type ContextValue = {
 	date: Date;
@@ -16,13 +16,3 @@ export const useDate = (): ContextValue => {
 
 	return context;
 };
-
-export function DateProvider({ children }: { children: ReactNode }) {
-	const [date, setDate] = useState<Date>(new Date());
-
-	return (
-		<DateContext value={{ date, setDate: (d: Date) => setDate(d) }}>
-			{children}
-		</DateContext>
-	);
-}
