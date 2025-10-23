@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts";
+import type { Sensor } from "../features/sensor-picker/sensors";
+import { sensors } from "../features/sensor-picker/sensors";
 import type { AllSensors } from "../lib/dto";
-import type { Sensor } from "../lib/sensors";
-import { sensors } from "../lib/sensors";
 import { thresholds } from "../lib/thresholds";
 import { makeCumulative } from "../lib/utils";
 

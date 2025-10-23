@@ -2,9 +2,9 @@
 /** biome-ignore-all lint/correctness/noNestedComponentDefinitions: CustomDay is intentionally defined inside MonthlyView for prop access. */
 import type { CalendarDay, Modifiers } from "react-day-picker";
 import { useTranslation } from "react-i18next";
+import type { Sensor } from "../features/sensor-picker/sensors";
 import { languageToLocale } from "../i18n/locale";
 import type { DangerKey } from "../lib/danger-levels";
-import type { Sensor } from "../lib/sensors";
 import { cn } from "../lib/utils";
 import { Calendar } from "./ui/calendar";
 import { Card } from "./ui/card";
