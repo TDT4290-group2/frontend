@@ -6,10 +6,7 @@ type ContextValue = {
 	setView: (day: View) => void;
 };
 
-export const ViewContext = createContext<ContextValue>({
-	view: "day",
-	setView: () => {},
-});
+export const ViewContext = createContext<ContextValue | null>(null);
 
 export function useView() {
 	const context = useContext(ViewContext);
