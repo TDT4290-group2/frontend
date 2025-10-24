@@ -8,7 +8,8 @@ import type {
 	SensorDataResult,
 } from "./dto";
 import { buildSensorQuery } from "./queries";
-import { type Sensor, sensors, type View } from "./utils";
+import type { Sensor, View } from "./utils";
+import { sensors } from "./utils";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 

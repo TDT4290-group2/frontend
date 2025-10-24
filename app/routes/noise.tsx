@@ -28,11 +28,7 @@ import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
 import { useSensorData } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
-import {
-	AggregationFunction,
-	type SensorDataRequestDto,
-	TimeGranularity,
-} from "../lib/dto";
+import type { SensorDataRequestDto } from "../lib/dto";
 
 // biome-ignore lint: page components can be default exports
 export default function Noise() {
@@ -44,22 +40,22 @@ export default function Noise() {
 	const dayQuery: SensorDataRequestDto = {
 		startTime: new Date(selectedDay.setUTCHours(8)),
 		endTime: new Date(selectedDay.setUTCHours(16)),
-		granularity: TimeGranularity.Minute,
-		function: AggregationFunction.Avg,
+		granularity: "minute",
+		function: "avg",
 	};
 
 	const weekQuery: SensorDataRequestDto = {
 		startTime: startOfWeek(selectedDay, { weekStartsOn: 1 }),
 		endTime: endOfWeek(selectedDay, { weekStartsOn: 1 }),
-		granularity: TimeGranularity.Hour,
-		function: AggregationFunction.Max,
+		granularity: "hour",
+		function: "max",
 	};
 
 	const monthQuery: SensorDataRequestDto = {
 		startTime: startOfMonth(selectedDay),
 		endTime: endOfMonth(selectedDay),
-		granularity: TimeGranularity.Day,
-		function: AggregationFunction.Max,
+		granularity: "day",
+		function: "max",
 	};
 
 	const query =

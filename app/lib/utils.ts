@@ -23,17 +23,16 @@ export type View = "day" | "week" | "month";
 const views: Array<View> = ["day", "week", "month"];
 export const parseAsView = parseAsStringLiteral(views);
 
-export type Sensor = "dust" | "noise" | "vibration";
-export const sensors: Array<Sensor> = ["dust", "noise", "vibration"];
+export type Sensor = (typeof sensors)[number];
+export const sensors = ["dust", "noise", "vibration"] as const;
 export const parseAsSensor = parseAsStringLiteral(sensors);
-export type DangerKeywords = "safe" | "warning" | "danger";
 
+export type DangerKeywords = "safe" | "warning" | "danger";
 export const DangerTypes = {
 	high: "DANGER",
 	medium: "WARNING",
 	low: "SAFE",
 } as const;
-
 export type DangerLevel = (typeof DangerTypes)[keyof typeof DangerTypes];
 
 type DangerLevelInfo = {
