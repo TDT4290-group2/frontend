@@ -31,7 +31,6 @@ import {
 	type To,
 	useLocation,
 } from "react-router";
-import { parseAsView } from "../lib/views";
 
 const Logo = () => (
 	<svg
