@@ -34,7 +34,7 @@ i18n
 
 		// Enables useful output in the browser’s
 		// dev console.
-		debug: true,
+		debug: import.meta.env.DEV,
 
 		// Normally, we want `escapeValue: true` as it
 		// ensures that i18next escapes any code in
