@@ -53,14 +53,14 @@ export default function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-				<DateProvider>
-					<NuqsAdapter>
+				<NuqsAdapter>
+					<DateProvider>
 						{import.meta.env.DEV && (
 							<ReactQueryDevtools initialIsOpen={false} />
 						)}
 						<Outlet />
-					</NuqsAdapter>
-				</DateProvider>
+					</DateProvider>
+				</NuqsAdapter>
 			</ThemeProvider>
 		</QueryClientProvider>
 	);
