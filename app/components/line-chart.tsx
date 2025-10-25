@@ -91,7 +91,7 @@ export function ChartLineDefault({
 							axisLine={false}
 							tickMargin={2}
 							label={{
-								value: t("line_chart.time"),
+								value: t("time"),
 								position: "insideBottom",
 								offset: 0,
 							}}

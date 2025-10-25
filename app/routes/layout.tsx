@@ -73,9 +73,9 @@ export default function Layout() {
 
 	const links: Array<{ to: To; label: string }> = [
 		{ to: href("/"), label: t("layout.overview") },
-		{ to: href("/dust"), label: t("layout.dust") },
-		{ to: href("/vibration"), label: t("layout.vibration") },
-		{ to: href("/noise"), label: t("layout.noise") },
+		{ to: href("/dust"), label: t("dust") },
+		{ to: href("/vibration"), label: t("vibration") },
+		{ to: href("/noise"), label: t("noise") },
 	];
 
 	return (
@@ -112,10 +112,10 @@ export default function Layout() {
 							</SelectTrigger>
 							<SelectContent className="w-32">
 								<SelectItem key={"en"} value={"en"}>
-									{t("layout.english")}
+									{t("english")}
 								</SelectItem>
 								<SelectItem key={"no"} value={"no"}>
-									{t("layout.norwegian")}
+									{t("norwegian")}
 								</SelectItem>
 							</SelectContent>
 						</Select>
