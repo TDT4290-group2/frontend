@@ -12,7 +12,7 @@ import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import { WeekView } from "../components/weekly-view";
 import { useView } from "../features/views/use-view";
-import { ViewPicker } from "../features/views/view-picker";
+import { ViewSelect } from "../features/views/view-select";
 import { languageToLocale } from "../i18n/locale";
 import { sensorQueryOptions } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
@@ -71,7 +71,7 @@ export default function Dust() {
 					>
 						{"<"}
 					</Button>
-					<ViewPicker />
+					<ViewSelect />
 					<Button
 						onClick={() => setSelectedDay(getNextDay(selectedDay, view))}
 						size={"icon"}

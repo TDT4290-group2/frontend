@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 
-import { ViewPicker } from "@/features/views/view-picker";
 import { getNextDay, getPrevDay } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useTranslation } from "react-i18next";
+import { ViewSelect } from "~/app/features/views/view-select";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { MonthlyView } from "../components/monthly-view";
 import { Summary } from "../components/summary";
@@ -69,7 +69,7 @@ export default function Noise() {
 					>
 						{"<"}
 					</Button>
-					<ViewPicker />
+					<ViewSelect />
 					<Button
 						onClick={() => setSelectedDay(getNextDay(selectedDay, view))}
 						size={"icon"}
