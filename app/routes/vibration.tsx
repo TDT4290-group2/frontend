@@ -1,15 +1,5 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
-import {
-	getNextDay,
-	getPrevDay,
-	languageToLocale,
-	makeCumulative,
-	mapSensorDataToMonthLists,
-	mapWeekDataToEvents,
-	parseAsView,
-	thresholds,
-	type View,
-} from "@/lib/utils";
+import { getNextDay, getPrevDay, makeCumulative } from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -17,19 +7,25 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
+import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { useTranslation } from "react-i18next";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { MonthlyView } from "../components/monthly-view";
+import { Summary } from "../components/summary";
 import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
-import Summary from "../components/ui/summary";
 import { WeekView } from "../components/weekly-view";
-import { useSensorData } from "../lib/api";
+import { languageToLocale } from "../i18n/locale";
+import { sensorQueryOptions } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
 import type { SensorDataRequestDto } from "../lib/dto";
+import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "../lib/events";
+import { thresholds } from "../lib/thresholds";
+import type { View } from "../lib/views";
+import { parseAsView } from "../lib/views";
 
 // biome-ignore lint: page components can be default exports
 export default function Vibration() {
@@ -62,7 +58,12 @@ export default function Vibration() {
 	const query =
 		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
 
-	const { data, isLoading, isError } = useSensorData("vibration", query);
+	const { data, isLoading, isError } = useQuery(
+		sensorQueryOptions({
+			sensor: "vibration",
+			query,
+		}),
+	);
 
 	return (
 		<section className="flex w-full flex-col">
@@ -162,11 +163,11 @@ export default function Vibration() {
 						>
 							<ThresholdLine
 								y={thresholds.vibration.danger}
-								dangerLevel="DANGER"
+								dangerLevel="danger"
 							/>
 							<ThresholdLine
 								y={thresholds.vibration.warning}
-								dangerLevel="WARNING"
+								dangerLevel="warning"
 							/>
 						</ChartLineDefault>
 					)}

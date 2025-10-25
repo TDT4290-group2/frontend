@@ -50,9 +50,9 @@
   },
   "line_chart": {
     "time": "Tid",
-    "DANGER": "Grense overskredet!",
-    "WARNING": "Nær eksponeringsgrensen",
-    "SAFE": "Trygt innenfor eksponeringsgrensen"
+    "danger": "Grense overskredet!",
+    "warning": "Nær eksponeringsgrensen",
+    "safe": "Trygt innenfor eksponeringsgrensen"
   },
   "weekly_view": {
     "today": "I dag"

@@ -5,7 +5,10 @@ import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts";
 import type { AllSensors } from "../lib/dto";
-import { makeCumulative, type Sensor, sensors, thresholds } from "../lib/utils";
+import type { Sensor } from "../lib/sensors";
+import { sensors } from "../lib/sensors";
+import { thresholds } from "../lib/thresholds";
+import { makeCumulative } from "../lib/utils";
 
 // the chart data is always the same, we only change the colors based on exposure data
 const generateChartData = () =>

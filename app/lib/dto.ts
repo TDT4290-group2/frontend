@@ -1,4 +1,4 @@
-import type { Sensor } from "./utils";
+import type { Sensor } from "./sensors";
 
 export const granularityEnum = {
 	minute: 0,

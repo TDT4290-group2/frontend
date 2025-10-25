@@ -19,7 +19,9 @@
       "@/components/*": ["./app/components/*"],
       "@/hooks/*": ["./app/hooks/*"],
       "@/lib/*": ["./app/lib/*"],
-      "@/ui/*": ["./app/components/ui/*"]
+      "@/ui/*": ["./app/components/ui/*"],
+      "@/features/*": ["./app/features/*"],
+      "@/i18n/*": ["./app/i18n/*"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,

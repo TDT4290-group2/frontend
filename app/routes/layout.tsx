@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn, parseAsView } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
 	Select,
 	SelectContent,
@@ -30,6 +30,7 @@ import {
 	type To,
 	useLocation,
 } from "react-router";
+import { parseAsView } from "../lib/views";
 
 const Logo = () => (
 	<svg
