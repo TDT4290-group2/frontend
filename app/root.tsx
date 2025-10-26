@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
-import "./i18n/config";
 import {
 	isRouteErrorResponse,
 	Links,
@@ -11,9 +12,9 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { DayContextProvider } from "./lib/day-context";
+import { DateProvider } from "./features/date-picker/date-provider";
+import { ViewProvider } from "./features/views/view-provider";
+import "./i18n/config";
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -53,14 +54,16 @@ export default function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-				<DayContextProvider>
-					<NuqsAdapter>
-						{import.meta.env.DEV && (
-							<ReactQueryDevtools initialIsOpen={false} />
-						)}
-						<Outlet />
-					</NuqsAdapter>
-				</DayContextProvider>
+				<NuqsAdapter>
+					<DateProvider>
+						<ViewProvider>
+							{import.meta.env.DEV && (
+								<ReactQueryDevtools initialIsOpen={false} />
+							)}
+							<Outlet />
+						</ViewProvider>
+					</DateProvider>
+				</NuqsAdapter>
 			</ThemeProvider>
 		</QueryClientProvider>
 	);
