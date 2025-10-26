@@ -1,4 +1,6 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
+
+import { Notifications } from "@/components/notifications";
 import { getNextDay, getPrevDay, makeCumulative } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
@@ -8,7 +10,6 @@ import { MonthlyView } from "../components/monthly-view";
 import { Summary } from "../components/summary";
 import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
-import { Notifications } from "../components/ui/notifications";
 import { WeekView } from "../components/weekly-view";
 import { useDate } from "../features/date-picker/use-date";
 import { useView } from "../features/views/use-view";
