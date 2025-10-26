@@ -1,4 +1,4 @@
-import { SelectMenu } from "~/app/components/select-menu";
+import { SelectMenu } from "@/components/select-menu";
 import { useView } from "./use-view";
 import { views } from "./utils";
 

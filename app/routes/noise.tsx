@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 
+import { ViewSelect } from "@/features/views/view-select";
 import { getNextDay, getPrevDay } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useTranslation } from "react-i18next";
-import { ViewSelect } from "~/app/features/views/view-select";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { MonthlyView } from "../components/monthly-view";
 import { Summary } from "../components/summary";
