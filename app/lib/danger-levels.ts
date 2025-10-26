@@ -1,4 +1,4 @@
-export const DangerTypes: Record<DangerKey, number> = {
+export const dangerTypes: Record<DangerKey, number> = {
 	danger: 2,
 	warning: 1,
 	safe: 0,
