@@ -1,4 +1,4 @@
-import type { View } from "@/features/views/utils";
+import type { View } from "@/features/views/views";
 import { type ClassValue, clsx } from "clsx";
 import {
 	addDays,

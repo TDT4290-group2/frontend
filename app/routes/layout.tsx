@@ -1,4 +1,3 @@
-import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,
@@ -10,7 +9,8 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { parseAsView } from "@/features/views/utils";
+import { ModeToggle } from "@/features/dark-mode/mode-toggle";
+import { useView } from "@/features/views/use-view";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import {
@@ -20,7 +20,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
-import { useQueryState } from "nuqs";
 import { type ReactNode, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -75,9 +74,9 @@ export default function Layout() {
 
 	const links: Array<{ to: To; label: string }> = [
 		{ to: href("/"), label: t("layout.overview") },
-		{ to: href("/dust"), label: t("layout.dust") },
-		{ to: href("/vibration"), label: t("layout.vibration") },
-		{ to: href("/noise"), label: t("layout.noise") },
+		{ to: href("/dust"), label: t("dust") },
+		{ to: href("/vibration"), label: t("vibration") },
+		{ to: href("/noise"), label: t("noise") },
 	];
 
 	return (
@@ -114,10 +113,10 @@ export default function Layout() {
 							</SelectTrigger>
 							<SelectContent className="w-32">
 								<SelectItem key={"en"} value={"en"}>
-									{t("layout.english")}
+									{t("english")}
 								</SelectItem>
 								<SelectItem key={"no"} value={"no"}>
-									{t("layout.norwegian")}
+									{t("norwegian")}
 								</SelectItem>
 							</SelectContent>
 						</Select>
@@ -133,7 +132,7 @@ export default function Layout() {
 }
 
 function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
-	const [view] = useQueryState("view", parseAsView.withDefault("day"));
+	const { view } = useView();
 	const location = useLocation();
 	const { setSensor } = useSensor();
 	const navLinkRefs = useRef<Array<HTMLElement>>([]); // Refs to the nav links

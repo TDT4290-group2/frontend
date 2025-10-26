@@ -1,12 +1,12 @@
-import { useQueryState } from "nuqs";
+import { parseAsStringLiteral, useQueryState } from "nuqs";
+import type { ReactNode } from "react";
 import { ViewContext } from "./use-view";
-import { parseAsView, type View } from "./utils";
+import { views } from "./views";
 
-export function ViewProvider({ children }: { children: React.ReactNode }) {
-	const [view, setView] = useQueryState<View>(
-		"view",
-		parseAsView.withDefault("day"),
-	);
+const parseAsView = parseAsStringLiteral(views);
+
+export function ViewProvider({ children }: { children: ReactNode }) {
+	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
 
 	return <ViewContext value={{ view, setView }}>{children}</ViewContext>;
 }
