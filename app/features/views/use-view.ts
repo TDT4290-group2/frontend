@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { View } from "./utils";
+import type { View } from "./views";
 
 type ContextValue = {
 	view: View;

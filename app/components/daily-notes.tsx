@@ -1,6 +1,5 @@
-import { parseAsView } from "@/features/views/utils";
+import { useView } from "@/features/views/use-view";
 import { isSameMonth, isSameWeek, isToday } from "date-fns";
-import { useQueryState } from "nuqs";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "./ui/button";
@@ -46,7 +45,7 @@ export const DailyNotes = () => {
 		{ date: d9, note: "Slipemaskin kl 12." },
 		{ date: d10, note: "Slipemaskin kl 12." },
 	]);
-	const [view] = useQueryState("view", parseAsView.withDefault("day"));
+	const { view } = useView();
 	const [showTextArea, setShowTextArea] = useState<boolean>(
 		!notes.some((note) => isToday(note.date)),
 	);

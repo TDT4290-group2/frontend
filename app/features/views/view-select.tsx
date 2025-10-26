@@ -1,6 +1,6 @@
 import { SelectMenu } from "@/components/select-menu";
 import { useView } from "./use-view";
-import { views } from "./utils";
+import { views } from "./views";
 
 export function ViewSelect() {
 	const { view, setView } = useView();
