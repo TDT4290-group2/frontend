@@ -3,11 +3,11 @@
 import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
 import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
-import { Summary } from "@/components/summary";
 import { WeekView } from "@/components/weekly-view";
 import { useDate } from "@/features/date-picker/use-date";
+import { summarizeSingleSensorData } from "@/features/sensor-summary/summarize-sensor-data";
+import { Summary } from "@/features/sensor-summary/summary-widget";
 import { useView } from "@/features/views/use-view";
-import { languageToLocale } from "@/i18n/locale";
 import { sensorQueryOptions } from "@/lib/api";
 import type { SensorDataRequestDto } from "@/lib/dto";
 import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "@/lib/events";
@@ -58,7 +58,10 @@ export default function Noise() {
 	return (
 		<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 			<div className="flex flex-col gap-4">
-				<Summary exposureType={"noise"} data={data} />
+				<Summary
+					exposureType={"noise"}
+					data={summarizeSingleSensorData(view, "noise", data ?? [])}
+				/>
 				<Notifications />
 			</div>
 			<div className="flex flex-1 flex-col items-end gap-4">
@@ -71,7 +74,6 @@ export default function Noise() {
 
 				<Activity mode={view === "week" ? "visible" : "hidden"}>
 					<WeekView
-						locale={languageToLocale[i18n.language]}
 						dayStartHour={8}
 						dayEndHour={16}
 						weekStartsOn={1}
