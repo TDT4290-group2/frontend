@@ -2,10 +2,10 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
+import { useTranslation } from "react-i18next";
 import {
 	isRouteErrorResponse,
 	Links,
-	Meta,
 	Outlet,
 	Scripts,
 	ScrollRestoration,
@@ -30,13 +30,34 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+	const { t, i18n } = useTranslation();
 	return (
-		<html lang="en">
+		<html lang={i18n.language} dir={i18n.dir(i18n.language)}>
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<Meta />
+				<title>{t("title")}</title>
+				<meta name="description" content={t("description")} />
 				<Links />
+
+				<link
+					rel="apple-touch-icon"
+					sizes="180x180"
+					href="/apple-touch-icon.png"
+				/>
+				<link
+					rel="icon"
+					type="image/png"
+					sizes="32x32"
+					href="/favicon-32x32.png"
+				/>
+				<link
+					rel="icon"
+					type="image/png"
+					sizes="16x16"
+					href="/favicon-16x16.png"
+				/>
+				<link rel="manifest" href="/site.webmanifest" />
 			</head>
 			<body>
 				{children}

@@ -25,13 +25,6 @@ import type { AllSensors } from "../lib/dto";
 import { buildSensorQuery } from "../lib/queries";
 import { sensors } from "../lib/sensors";
 
-export function meta() {
-	return [
-		{ title: "New React Router App" },
-		{ name: "description", content: "Welcome to React Router!" },
-	];
-}
-
 // biome-ignore lint: page components can be default exports
 export default function Home() {
 	const { t, i18n } = useTranslation();
