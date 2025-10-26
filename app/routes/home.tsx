@@ -27,7 +27,6 @@ import { Notifications } from "../components/ui/notifications";
 import { WeekView } from "../components/weekly-view";
 import { useDate } from "../features/date-picker/use-date";
 import { sensors } from "../features/sensor-picker/sensors";
-import { languageToLocale } from "../i18n/locale";
 import { sensorQueryOptions } from "../lib/api";
 import type { AllSensors } from "../lib/dto";
 import { buildSensorQuery } from "../lib/queries";

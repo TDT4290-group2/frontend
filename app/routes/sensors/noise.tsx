@@ -11,7 +11,6 @@ import { Card, CardTitle } from "../../components/ui/card";
 import { Notifications } from "../../components/ui/notifications";
 import { WeekView } from "../../components/weekly-view";
 import { useDate } from "../../features/date-picker/use-date";
-import { languageToLocale } from "../../i18n/locale";
 import { sensorQueryOptions } from "../../lib/api";
 import type { SensorDataRequestDto } from "../../lib/dto";
 import {
@@ -80,7 +79,6 @@ export default function Noise() {
 					/>
 				) : view === "week" ? (
 					<WeekView
-						locale={languageToLocale[i18n.language]}
 						dayStartHour={8}
 						dayEndHour={16}
 						weekStartsOn={1}
