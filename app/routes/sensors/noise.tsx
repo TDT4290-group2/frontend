@@ -3,9 +3,10 @@
 import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
 import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
-import { Summary, summarizeSingleSensorData } from "@/components/summary";
 import { WeekView } from "@/components/weekly-view";
 import { useDate } from "@/features/date-picker/use-date";
+import { summarizeSingleSensorData } from "@/features/summary/summarize-sensor-data";
+import { Summary } from "@/features/summary/summary-widget";
 import { useView } from "@/features/views/use-view";
 import { sensorQueryOptions } from "@/lib/api";
 import type { SensorDataRequestDto } from "@/lib/dto";
