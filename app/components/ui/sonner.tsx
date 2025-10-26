@@ -1,4 +1,4 @@
-import { useTheme } from "@/components/theme-provider"
+import { useTheme } from "@/features/dark-mode/use-theme"
 import {
 	CircleCheckIcon,
 	InfoIcon,
