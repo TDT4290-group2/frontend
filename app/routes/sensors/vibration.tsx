@@ -7,7 +7,7 @@ import { useQueryState } from "nuqs";
 import { useTranslation } from "react-i18next";
 import { ChartLineDefault, ThresholdLine } from "../../components/line-chart";
 import { MonthlyView } from "../../components/monthly-view";
-import { Summary } from "../../components/summary";
+import { getSingleSummary, Summary } from "../../components/summary";
 import { Card, CardTitle } from "../../components/ui/card";
 import { Notifications } from "../../components/ui/notifications";
 import { WeekView } from "../../components/weekly-view";
@@ -61,7 +61,10 @@ export default function Vibration() {
 	return (
 		<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 			<div className="flex flex-col gap-4">
-				<Summary exposureType={"vibration"} data={makeCumulative(data)} />
+				<Summary
+					exposureType={"vibration"}
+					data={getSingleSummary(view, "vibration", makeCumulative(data))}
+				/>
 				<Notifications />
 			</div>
 			<div className="flex flex-1 flex-col items-end gap-4">

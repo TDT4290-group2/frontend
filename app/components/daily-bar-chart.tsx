@@ -24,8 +24,6 @@ function aggregateHourlyMax(data: AllSensors): Record<Sensor, Array<number>> {
 		dust: data.dust,
 		vibration: {
 			data: makeCumulative(data.vibration.data ?? []),
-			isLoading: data.vibration.isLoading,
-			isError: data.vibration.isError,
 		},
 		noise: data.noise,
 	};

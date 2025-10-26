@@ -1,3 +1,4 @@
+import type { Sensor } from "@/features/sensor-picker/sensors";
 import type { View } from "@/features/views/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { type DangerKey, dangerLevels } from "@/lib/danger-levels";
@@ -5,49 +6,47 @@ import type { AllSensors, SensorDataResponseDto } from "@/lib/dto";
 import { thresholds } from "@/lib/thresholds";
 import { cn } from "@/lib/utils";
 import { Card } from "@/ui/card";
-import type { Sensor } from "~/app/features/sensor-picker/sensors";
-import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 import { useView } from "../features/views/use-view";
+
+const safeColor = "text-safe";
+const warningColor = "text-warning";
+const dangerColor = "text-destructive";
+
+const defaultLabels: SummaryLabel = {
+	safe: "SAFE",
+	warning: "WARNING",
+	danger: "DANGER",
+};
+
+const viewLabelConfig: Record<View, SummaryLabel> = {
+	day: {
+		safe: t("exposure_summary.greenHourText"),
+		warning: t("exposure_summary.orangeHourText"),
+		danger: t("exposure_summary.redHourText"),
+	},
+	week: {
+		safe: t("exposure_summary.greenHourText"),
+		warning: t("exposure_summary.orangeHourText"),
+		danger: t("exposure_summary.redHourText"),
+	},
+	month: {
+		safe: t("exposure_summary.greenDayText"),
+		warning: t("exposure_summary.orangeDayText"),
+		danger: t("exposure_summary.redDayText"),
+	},
+};
 
 type SummaryProps = {
 	exposureType: Sensor | "all";
-	data: Array<SensorDataResponseDto> | AllSensors | undefined;
+	data: SummaryType;
 };
 
 type SummaryLabel = Record<DangerKey, string>;
 
 export function Summary({ exposureType, data }: SummaryProps) {
-	const { t } = useTranslation();
 	const { view } = useView();
-
-	const safeColor = "text-safe";
-	const warningColor = "text-warning";
-	const dangerColor = "text-destructive";
-
-	const defaultLabels: SummaryLabel = {
-		safe: "SAFE",
-		warning: "WARNING",
-		danger: "DANGER",
-	};
-
-	const viewLabelConfig: Record<View, SummaryLabel> = {
-		day: {
-			safe: t("exposure_summary.greenHourText"),
-			warning: t("exposure_summary.orangeHourText"),
-			danger: t("exposure_summary.redHourText"),
-		},
-		week: {
-			safe: t("exposure_summary.greenHourText"),
-			warning: t("exposure_summary.orangeHourText"),
-			danger: t("exposure_summary.redHourText"),
-		},
-		month: {
-			safe: t("exposure_summary.greenDayText"),
-			warning: t("exposure_summary.orangeDayText"),
-			danger: t("exposure_summary.redDayText"),
-		},
-	};
-	const summaryData: SummaryType = getSummaryData({ view, exposureType, data });
+	const isMobile = useIsMobile();
 
 	const summaryLabels = {
 		exposureType: exposureType === "all" ? "Every sensor" : exposureType,
@@ -55,7 +54,6 @@ export function Summary({ exposureType, data }: SummaryProps) {
 		warningLabel: viewLabelConfig[view].warning || defaultLabels.warning,
 		dangerLabel: viewLabelConfig[view].danger || defaultLabels.danger,
 	};
-	const isMobile = useIsMobile();
 
 	return (
 		<Card className="flex w-full flex-col gap-0 p-5 shadow">
@@ -85,7 +83,7 @@ export function Summary({ exposureType, data }: SummaryProps) {
 							safeColor,
 						)}
 					>
-						{summaryData.safeCount}
+						{data.safeCount}
 					</span>
 					<span className={cn("ml-1 text-xs md:ml-2 md:text-sm", safeColor)}>
 						{isMobile ? defaultLabels.safe : summaryLabels.safeLabel}
@@ -102,7 +100,7 @@ export function Summary({ exposureType, data }: SummaryProps) {
 							warningColor,
 						)}
 					>
-						{summaryData.warningCount}
+						{data.warningCount}
 					</span>
 					<span className={cn("ml-1 text-xs md:ml-2 md:text-sm", warningColor)}>
 						{isMobile ? defaultLabels.warning : summaryLabels.warningLabel}
@@ -119,7 +117,7 @@ export function Summary({ exposureType, data }: SummaryProps) {
 							dangerColor,
 						)}
 					>
-						{summaryData.dangerCount}
+						{data.dangerCount}
 					</span>
 					<span className={cn("ml-1 text-xs md:ml-2 md:text-sm", dangerColor)}>
 						{isMobile ? defaultLabels.danger : summaryLabels.dangerLabel}
@@ -130,31 +128,13 @@ export function Summary({ exposureType, data }: SummaryProps) {
 	);
 }
 
-function getSummaryData({
-	view,
-	exposureType,
-	data,
-}: SummaryProps & { view: View }): SummaryType {
-	let summaryData: SummaryType;
-	if (exposureType === "all")
-		summaryData = getSummaryForAll(view, (data as AllSensors) ?? []);
-	else {
-		summaryData = getSingleSummary(
-			view,
-			exposureType,
-			(data as Array<SensorDataResponseDto>) ?? [],
-		);
-	}
-	return summaryData;
-}
-
 type SummaryType = {
 	safeCount: number;
 	dangerCount: number;
 	warningCount: number;
 };
 
-const getSingleSummary = (
+export const getSingleSummary = (
 	view: View,
 	sensor: Sensor,
 	data: Array<SensorDataResponseDto>,
@@ -163,52 +143,61 @@ const getSingleSummary = (
 
 	const threshold = thresholds[sensor];
 
-	if (view === "month") {
-		for (const item of data) {
-			if (item.value < threshold.warning) {
-				summaryData.safeCount++;
-			} else if (item.value < threshold.danger) {
-				summaryData.warningCount++;
-			} else {
-				summaryData.dangerCount++;
+	switch (view) {
+		case "month":
+			for (const item of data) {
+				if (item.value < threshold.warning) {
+					summaryData.safeCount++;
+				} else if (item.value < threshold.danger) {
+					summaryData.warningCount++;
+				} else {
+					summaryData.dangerCount++;
+				}
 			}
-		}
-	} else if (view === "week") {
-		for (const item of data) {
-			if (item.value < threshold.warning) {
-				summaryData.safeCount++;
-			} else if (item.value < threshold.danger) {
-				summaryData.warningCount++;
-			} else {
-				summaryData.dangerCount++;
+			break;
+		case "week":
+			for (const item of data) {
+				if (item.value < threshold.warning) {
+					summaryData.safeCount++;
+				} else if (item.value < threshold.danger) {
+					summaryData.warningCount++;
+				} else {
+					summaryData.dangerCount++;
+				}
 			}
-		}
-	} else {
-		for (const item of data) {
-			if (item.value < threshold.warning) {
-				summaryData.safeCount++;
-			} else if (item.value < threshold.danger) {
-				summaryData.warningCount++;
-			} else {
-				summaryData.dangerCount++;
+			break;
+		case "day":
+			for (const item of data) {
+				if (item.value < threshold.warning) {
+					summaryData.safeCount++;
+				} else if (item.value < threshold.danger) {
+					summaryData.warningCount++;
+				} else {
+					summaryData.dangerCount++;
+				}
 			}
+			summaryData.dangerCount = Math.ceil(summaryData.dangerCount / 60);
+			summaryData.warningCount = Math.round(summaryData.warningCount / 60);
+			summaryData.safeCount = Math.floor(summaryData.safeCount / 60);
+			break;
+
+		default: {
+			const exhaustiveCheck: never = view;
+			throw new Error(`Unhandled view case: ${exhaustiveCheck}`);
 		}
-		summaryData.dangerCount = Math.ceil(summaryData.dangerCount / 60);
-		summaryData.warningCount = Math.round(summaryData.warningCount / 60);
-		summaryData.safeCount = Math.floor(summaryData.safeCount / 60);
 	}
 
 	return summaryData;
 };
 
-const getSummaryForAll = (view: View, data: AllSensors): SummaryType => {
+export const getSummaryForAll = (view: View, data: AllSensors): SummaryType => {
 	let allData = Object.entries(data)
 		.map(
 			([sensor, sensorData]) =>
-				data && getSingleSummary(view, sensor as Sensor, sensorData.data ?? []),
+				data && getSingleSummary(view, sensor as Sensor, sensorData),
 		)
 		.reduce(
-			(acc: SummaryType, curr) => {
+			(acc, curr) => {
 				if (!curr) return acc;
 				acc.safeCount += curr.safeCount;
 				acc.dangerCount += curr.dangerCount;
