@@ -12,8 +12,9 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
+import { DateProvider } from "./features/date-picker/date-provider";
+import { ViewProvider } from "./features/views/view-provider";
 import "./i18n/config";
-import { DayContextProvider } from "./lib/day-context";
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -74,14 +75,16 @@ export default function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-				<DayContextProvider>
-					<NuqsAdapter>
-						{import.meta.env.DEV && (
-							<ReactQueryDevtools initialIsOpen={false} />
-						)}
-						<Outlet />
-					</NuqsAdapter>
-				</DayContextProvider>
+				<NuqsAdapter>
+					<DateProvider>
+						<ViewProvider>
+							{import.meta.env.DEV && (
+								<ReactQueryDevtools initialIsOpen={false} />
+							)}
+							<Outlet />
+						</ViewProvider>
+					</DateProvider>
+				</NuqsAdapter>
 			</ThemeProvider>
 		</QueryClientProvider>
 	);
