@@ -71,6 +71,14 @@
     "week": "uken",
     "month": "måneden"
   },
+  "safe": "Trygg",
+  "warning": "Advarsel",
+  "danger": "Fare",
+
+  "dust": "Støv",
+  "vibration": "Vibrasjon",
+  "noise": "Støy",
+
   "day": "Dag",
   "week": "Uke",
   "month": "Måned",

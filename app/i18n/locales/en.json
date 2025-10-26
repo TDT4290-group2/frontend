@@ -72,6 +72,14 @@
     "week": "week",
     "month": "month"
   },
+  "safe": "Safe",
+  "warning": "Warning",
+  "danger": "Danger",
+
+  "dust": "Dust",
+  "vibration": "Vibration",
+  "noise": "Noise",
+
   "day": "Day",
   "week": "Week",
   "month": "Month",

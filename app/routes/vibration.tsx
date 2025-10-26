@@ -1,4 +1,6 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
+
+import { Notifications } from "@/components/notifications";
 import { getNextDay, getPrevDay, makeCumulative } from "@/lib/utils";
 import {
 	Select,
@@ -16,7 +18,6 @@ import { MonthlyView } from "../components/monthly-view";
 import { Summary } from "../components/summary";
 import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
-import { Notifications } from "../components/ui/notifications";
 import { WeekView } from "../components/weekly-view";
 import { languageToLocale } from "../i18n/locale";
 import { sensorQueryOptions } from "../lib/api";
