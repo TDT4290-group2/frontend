@@ -19,7 +19,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
-import { useQueryState } from "nuqs";
 import { type ReactNode, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -30,7 +29,7 @@ import {
 	type To,
 	useLocation,
 } from "react-router";
-import { parseAsView } from "../lib/views";
+import { useView } from "../features/views/use-view";
 
 const Logo = () => (
 	<svg
@@ -131,7 +130,7 @@ export default function Layout() {
 }
 
 function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
-	const [view] = useQueryState("view", parseAsView.withDefault("day"));
+	const { view } = useView();
 	const location = useLocation();
 	const navLinkRefs = useRef<Array<HTMLElement>>([]); // Refs to the nav links
 	const [pillWidth, setPillWidth] = useState<number>();

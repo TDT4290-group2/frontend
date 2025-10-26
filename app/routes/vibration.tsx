@@ -1,15 +1,7 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 import { getNextDay, getPrevDay, makeCumulative } from "@/lib/utils";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
-import { useQueryState } from "nuqs";
 import { useTranslation } from "react-i18next";
 import { ChartLineDefault, ThresholdLine } from "../components/line-chart";
 import { MonthlyView } from "../components/monthly-view";
@@ -18,18 +10,18 @@ import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import { WeekView } from "../components/weekly-view";
+import { useView } from "../features/views/use-view";
+import { ViewSelect } from "../features/views/view-select";
 import { languageToLocale } from "../i18n/locale";
 import { sensorQueryOptions } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
 import type { SensorDataRequestDto } from "../lib/dto";
 import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "../lib/events";
 import { thresholds } from "../lib/thresholds";
-import type { View } from "../lib/views";
-import { parseAsView } from "../lib/views";
 
 // biome-ignore lint: page components can be default exports
 export default function Vibration() {
-	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
+	const { view } = useView();
 	const { t, i18n } = useTranslation();
 
 	const { selectedDay, setSelectedDay } = useDayContext();
@@ -76,25 +68,7 @@ export default function Vibration() {
 					>
 						{"<"}
 					</Button>
-					<Select
-						value={view}
-						onValueChange={(value) => setView(value as View | null)}
-					>
-						<SelectTrigger className="w-32">
-							<SelectValue placeholder="View" />
-						</SelectTrigger>
-						<SelectContent className="w-32">
-							<SelectItem key={"day"} value={"day"}>
-								{t("day")}
-							</SelectItem>
-							<SelectItem key={"week"} value={"week"}>
-								{t("week")}
-							</SelectItem>
-							<SelectItem key={"month"} value={"month"}>
-								{t("month")}
-							</SelectItem>
-						</SelectContent>
-					</Select>
+					<ViewSelect />
 					<Button
 						onClick={() => setSelectedDay(getNextDay(selectedDay, view))}
 						size={"icon"}
@@ -105,11 +79,7 @@ export default function Vibration() {
 			</div>
 			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary
-						exposureType={"vibration"}
-						view={view}
-						data={makeCumulative(data)}
-					/>
+					<Summary exposureType={"vibration"} data={makeCumulative(data)} />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col items-end gap-4">

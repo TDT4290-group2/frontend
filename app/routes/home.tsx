@@ -5,16 +5,7 @@ import {
 	mapAllWeekDataToEvents,
 } from "@/lib/events";
 import { getNextDay, getPrevDay } from "@/lib/utils";
-import { parseAsView, type View } from "@/lib/views";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/ui/select";
 import { useQueries } from "@tanstack/react-query";
-import { useQueryState } from "nuqs";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { DailyBarChart } from "../components/daily-bar-chart";
@@ -25,6 +16,8 @@ import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import { WeekView } from "../components/weekly-view";
+import { useView } from "../features/views/use-view";
+import { ViewSelect } from "../features/views/view-select";
 import { languageToLocale } from "../i18n/locale";
 import { sensorQueryOptions } from "../lib/api";
 import { useDayContext } from "../lib/day-context";
@@ -43,7 +36,7 @@ export function meta() {
 export default function Home() {
 	const { t, i18n } = useTranslation();
 
-	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
+	const { view } = useView();
 	const translatedView = t(`overview.${view}`);
 	const { selectedDay, setSelectedDay } = useDayContext();
 
@@ -91,22 +84,7 @@ export default function Home() {
 					>
 						{"<"}
 					</Button>
-					<Select value={view} onValueChange={(value: View) => setView(value)}>
-						<SelectTrigger className="w-32">
-							<SelectValue placeholder="View" />
-						</SelectTrigger>
-						<SelectContent className="w-32">
-							<SelectItem key={"day"} value={"day"}>
-								{t("day")}
-							</SelectItem>
-							<SelectItem key={"week"} value={"week"}>
-								{t("week")}
-							</SelectItem>
-							<SelectItem key={"month"} value={"month"}>
-								{t("month")}
-							</SelectItem>
-						</SelectContent>
-					</Select>
+					<ViewSelect />
 					<Button
 						onClick={() => setSelectedDay(getNextDay(selectedDay, view))}
 						size={"icon"}
@@ -117,11 +95,7 @@ export default function Home() {
 			</div>
 			<div className="flex w-full flex-col gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary
-						exposureType="all"
-						view={view}
-						data={everySensorData ?? []}
-					/>
+					<Summary exposureType="all" data={everySensorData ?? []} />
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">
