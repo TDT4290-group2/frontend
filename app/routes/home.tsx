@@ -1,44 +1,30 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 
-import { parseAsView, type View } from "@/features/views/utils";
-import { getNextDay, getPrevDay } from "@/lib/utils";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/ui/select";
-import { useQuery } from "@tanstack/react-query";
-import { useQueryState } from "nuqs";
-import { useTranslation } from "react-i18next";
-import { DailyBarChart } from "../components/daily-bar-chart";
-import { DailyNotes } from "../components/daily-notes";
-import { MonthlyView } from "../components/monthly-view";
-import { getSummaryForAll, Summary } from "../components/summary";
-import { Button } from "../components/ui/button";
-import { Notifications } from "../components/ui/notifications";
-import { WeekView } from "../components/weekly-view";
-import { useDate } from "../features/date-picker/use-date";
-import { sensorQueryOptions } from "../lib/api";
+import { DailyBarChart } from "@/components/daily-bar-chart";
+import { DailyNotes } from "@/components/daily-notes";
+import { MonthlyView } from "@/components/monthly-view";
+import { Notifications } from "@/components/notifications";
+import { getSummaryForAll, Summary } from "@/components/summary";
+import { Button } from "@/components/ui/button";
+import { WeekView } from "@/components/weekly-view";
+import { useDate } from "@/features/date-picker/use-date";
+import { useView } from "@/features/views/use-view";
+import { ViewSelect } from "@/features/views/view-select";
+import { sensorQueryOptions } from "@/lib/api";
 import {
 	mapAllSensorDataToMonthLists,
 	mapAllWeekDataToEvents,
-} from "../lib/events";
-import { buildSensorQuery } from "../lib/queries";
-
-export function meta() {
-	return [
-		{ title: "New React Router App" },
-		{ name: "description", content: "Welcome to React Router!" },
-	];
-}
+} from "@/lib/events";
+import { buildSensorQuery } from "@/lib/queries";
+import { getNextDay, getPrevDay } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 // biome-ignore lint: page components can be default exports
 export default function Home() {
 	const { t, i18n } = useTranslation();
 
-	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
+	const { view } = useView();
 	const translatedView = t(`overview.${view}`);
 	const { date, setDate } = useDate();
 
@@ -79,22 +65,7 @@ export default function Home() {
 					<Button onClick={() => setDate(getPrevDay(date, view))} size={"icon"}>
 						{"<"}
 					</Button>
-					<Select value={view} onValueChange={(value: View) => setView(value)}>
-						<SelectTrigger className="w-32">
-							<SelectValue placeholder="View" />
-						</SelectTrigger>
-						<SelectContent className="w-32">
-							<SelectItem key={"day"} value={"day"}>
-								{t("day")}
-							</SelectItem>
-							<SelectItem key={"week"} value={"week"}>
-								{t("week")}
-							</SelectItem>
-							<SelectItem key={"month"} value={"month"}>
-								{t("month")}
-							</SelectItem>
-						</SelectContent>
-					</Select>
+					<ViewSelect />
 					<Button onClick={() => setDate(getNextDay(date, view))} size={"icon"}>
 						{">"}
 					</Button>

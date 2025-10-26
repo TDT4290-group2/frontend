@@ -1,12 +1,12 @@
+import { useDate } from "@/features/date-picker/use-date";
+import type { Sensor } from "@/features/sensor-picker/sensors";
+import { useSensor } from "@/features/sensor-picker/use-sensor";
+import { useView } from "@/features/views/use-view";
+import { ViewPicker } from "@/features/views/view-picker";
+import { getNextDay, getPrevDay } from "@/lib/utils";
 import { Button } from "@/ui/button";
 import { t } from "i18next";
 import { Outlet } from "react-router";
-import { useDate } from "../../features/date-picker/use-date";
-import type { Sensor } from "../../features/sensor-picker/sensors";
-import { useSensor } from "../../features/sensor-picker/use-sensor";
-import { useView } from "../../features/views/use-view";
-import { ViewPicker } from "../../features/views/view-picker";
-import { getNextDay, getPrevDay } from "../../lib/utils";
 
 function Title({ sensor }: { sensor: Sensor }) {
 	return <h1 className="p-2 text-3xl">{t(`${sensor}Exposure.title`)}</h1>;

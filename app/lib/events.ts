@@ -1,5 +1,5 @@
-import type { Event } from "../components/weekly-view";
-import type { Sensor } from "../features/sensor-picker/sensors";
+import type { Event } from "@/components/weekly-view";
+import type { Sensor } from "@/features/sensor-picker/sensors";
 import { type DangerKey, DangerTypes, dangerKeys } from "./danger-levels";
 import type { AllSensors, SensorDataResponseDto } from "./dto";
 import { thresholds } from "./thresholds";

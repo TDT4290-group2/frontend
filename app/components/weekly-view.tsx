@@ -1,3 +1,7 @@
+import { useDate } from "@/features/date-picker/use-date";
+import type { DangerKey } from "@/lib/danger-levels";
+import { dangerLevels } from "@/lib/danger-levels";
+import { cn } from "@/lib/utils";
 import {
 	addDays,
 	type Day,
@@ -18,10 +22,6 @@ import {
 } from "date-fns";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { useDate } from "../features/date-picker/use-date";
-import type { DangerKey } from "../lib/danger-levels";
-import { dangerLevels } from "../lib/danger-levels";
-import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 
@@ -239,7 +239,7 @@ export function Header({
 						todayButton({ onToday })
 					) : (
 						<Button variant={"default"} onClick={onToday}>
-							{t("weekly_view.today")}
+							{t("today")}
 						</Button>
 					))}
 			</h1>

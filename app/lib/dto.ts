@@ -1,4 +1,4 @@
-import type { Sensor } from "../features/sensor-picker/sensors";
+import type { Sensor } from "@/features/sensor-picker/sensors";
 
 export const granularityEnum = {
 	minute: 0,
