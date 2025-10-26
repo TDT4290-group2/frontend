@@ -15,7 +15,6 @@
     "rootDirs": [".", "./.react-router/types"],
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./*"],
       "@/components/*": ["./app/components/*"],
       "@/hooks/*": ["./app/hooks/*"],
       "@/lib/*": ["./app/lib/*"],
