@@ -1,6 +1,6 @@
+import type { Sensor } from "@/features/sensor-picker/sensors";
 import type { View } from "@/features/views/views";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
-import type { Sensor } from "../features/sensor-picker/sensors";
 import type {
 	AggregateFnKey,
 	GranularityKey,

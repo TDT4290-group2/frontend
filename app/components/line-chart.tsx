@@ -6,6 +6,9 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useDate } from "@/features/date-picker/use-date";
+import { type DangerKey, dangerLevels } from "@/lib/danger-levels";
+import type { SensorDataResponseDto } from "@/lib/dto";
 import { useTranslation } from "react-i18next";
 import {
 	CartesianGrid,
@@ -16,9 +19,6 @@ import {
 	YAxis,
 } from "recharts";
 import type { CurveType } from "recharts/types/shape/Curve";
-import { useDate } from "../features/date-picker/use-date";
-import { type DangerKey, dangerLevels } from "../lib/danger-levels";
-import type { SensorDataResponseDto } from "../lib/dto";
 
 export const description = "A line chart";
 

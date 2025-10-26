@@ -1,29 +1,29 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 
+import { DailyBarChart } from "@/components/daily-bar-chart";
+import { DailyNotes } from "@/components/daily-notes";
+import { MonthlyView } from "@/components/monthly-view";
+import { Notifications } from "@/components/notifications";
+import { Summary } from "@/components/summary";
+import { Button } from "@/components/ui/button";
+import { Card, CardTitle } from "@/components/ui/card";
+import { WeekView } from "@/components/weekly-view";
+import { useDate } from "@/features/date-picker/use-date";
+import { sensors } from "@/features/sensor-picker/sensors";
+import { useView } from "@/features/views/use-view";
+import { ViewSelect } from "@/features/views/view-select";
+import { languageToLocale } from "@/i18n/locale";
+import { sensorQueryOptions } from "@/lib/api";
+import type { AllSensors } from "@/lib/dto";
 import {
 	mapAllSensorDataToMonthLists,
 	mapAllWeekDataToEvents,
 } from "@/lib/events";
+import { buildSensorQuery } from "@/lib/queries";
 import { getNextDay, getPrevDay } from "@/lib/utils";
 import { useQueries } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { DailyBarChart } from "../components/daily-bar-chart";
-import { DailyNotes } from "../components/daily-notes";
-import { MonthlyView } from "../components/monthly-view";
-import { Notifications } from "../components/notifications";
-import { Summary } from "../components/summary";
-import { Button } from "../components/ui/button";
-import { Card, CardTitle } from "../components/ui/card";
-import { WeekView } from "../components/weekly-view";
-import { useDate } from "../features/date-picker/use-date";
-import { sensors } from "../features/sensor-picker/sensors";
-import { useView } from "../features/views/use-view";
-import { ViewSelect } from "../features/views/view-select";
-import { languageToLocale } from "../i18n/locale";
-import { sensorQueryOptions } from "../lib/api";
-import type { AllSensors } from "../lib/dto";
-import { buildSensorQuery } from "../lib/queries";
 
 export function meta() {
 	return [
