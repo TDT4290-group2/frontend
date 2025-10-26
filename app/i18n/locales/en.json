@@ -1,4 +1,14 @@
 {
+  "alert": {
+    "danger": "Danger!",
+    "warning": "Warning!",
+
+    "measuresAtCriticalLevels": "{{sensor}} has reached critical levels.",
+    "measuresExceededRecommendedLimits": "{{sensor}} has exceeded recommended limits.",
+
+    "immediateActionRequired": "Immediate action is required!",
+    "pleaseBeCautious": "Please be cautious."
+  },
   "layout": {
     "overview": "Overview",
     "dust": "Dust",
@@ -72,6 +82,10 @@
     "week": "week",
     "month": "month"
   },
+  "dust": "Dust",
+  "vibration": "Vibration",
+  "noise": "Noise",
+
   "day": "Day",
   "week": "Week",
   "month": "Month",
