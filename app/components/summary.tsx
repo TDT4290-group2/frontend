@@ -1,23 +1,24 @@
+import type { Sensor } from "@/features/sensor-picker/sensors";
+import { useView } from "@/features/views/use-view";
+import type { View } from "@/features/views/views";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { type DangerKey, dangerLevels } from "@/lib/danger-levels";
 import type { AllSensors, SensorDataResponseDto } from "@/lib/dto";
-import type { Sensor } from "@/lib/sensors";
 import { thresholds } from "@/lib/thresholds";
 import { cn } from "@/lib/utils";
-import type { View } from "@/lib/views";
 import { Card } from "@/ui/card";
 import { useTranslation } from "react-i18next";
 
 type SummaryProps = {
 	exposureType: Sensor | "all";
 	data: Array<SensorDataResponseDto> | AllSensors | undefined;
-	view: View;
 };
 
 type SummaryLabel = Record<DangerKey, string>;
 
-export function Summary({ exposureType, data, view }: SummaryProps) {
+export function Summary({ exposureType, data }: SummaryProps) {
 	const { t } = useTranslation();
+	const { view } = useView();
 
 	const safeColor = "text-safe";
 	const warningColor = "text-warning";
@@ -133,7 +134,7 @@ function getSummaryData({
 	view,
 	exposureType,
 	data,
-}: SummaryProps): SummaryType {
+}: SummaryProps & { view: View }): SummaryType {
 	let summaryData: SummaryType;
 	if (exposureType === "all")
 		summaryData = getSummaryForAll(view, (data as AllSensors) ?? []);

@@ -1,4 +1,6 @@
 {
+  "title": "HealthTech | Operator Exposure Dashboard",
+  "description": "Monitor and manage exposure to dust, vibration, and noise.",
   "alert": {
     "danger": "Danger!",
     "warning": "Warning!",
@@ -10,15 +12,7 @@
     "pleaseBeCautious": "Please be cautious."
   },
   "layout": {
-    "overview": "Overview",
-    "dust": "Dust",
-    "vibration": "Vibration",
-    "noise": "Noise",
-    "english": "English",
-    "norwegian": "Norwegian",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System"
+    "overview": "Overview"
   },
   "overview" : {
     "title": "Overview of {{view}}",
@@ -52,21 +46,10 @@
     "allSensors": "All sensors",
     "all": "Every sensor"
   },
-  "notifications": {
-    "dust": "Dust",
-    "vibration": "Vibration",
-    "noise": "Noise",
-    "warning": "Warning",
-    "danger": "Danger"
-  },
   "line_chart": {
-    "time": "Time",
     "danger": "Threshold Exceeded!",
     "warning": "Close to exposure limit",
     "safe": "Safely within exposure limit"
-  },
-  "weekly_view" : {
-    "today": "Today"
   },
   "monthly_view": {
     "safe": "Safe day on",
@@ -82,13 +65,29 @@
     "week": "week",
     "month": "month"
   },
+  "english": "English",
+  "norwegian": "Norwegian",
+
+  "time": "Time",
+  "today": "Today",
+
+  "safe": "Safe",
+  "warning": "Warning",
+  "danger": "Danger",
+
+  "light": "Light",
+  "dark": "Dark",
+  "system": "System",
+
   "dust": "Dust",
   "vibration": "Vibration",
   "noise": "Noise",
 
+  "views": "Views",
   "day": "Day",
   "week": "Week",
   "month": "Month",
+
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",
   "noData": "No exposure data found for this day",

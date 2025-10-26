@@ -1,4 +1,6 @@
 {
+  "title": "HealthTech | Operatør Eksponeringsdashboard",
+  "description": "Overvåk og administrer eksponering for støv, vibrasjon og støy.",
   "alert": {
     "danger": "Fare!",
     "warning": "Advarsel! ",
@@ -10,15 +12,7 @@
     "pleaseBeCautious": "Vennligst vær forsiktig."
   },
   "layout": {
-    "overview": "Oversikt",
-    "dust": "Støv",
-    "vibration": "Vibrasjon",
-    "noise": "Støy",
-    "english": "Engelsk",
-    "norwegian": "Norsk",
-    "light": "Lys",
-    "dark": "Mørk",
-    "system": "System"
+    "overview": "Oversikt"
   },
   "overview" : {
     "title": "Oversikt over {{view}}",
@@ -51,21 +45,10 @@
     "noise": "Støy",
     "all": "Alle sensorer"
   },
-  "notifications": {
-    "dust": "Støv",
-    "vibration": "Vibrasjon",
-    "noise": "Støy",
-    "warning": "Advarsel",
-    "danger": "Fare"
-  },
   "line_chart": {
-    "time": "Tid",
     "danger": "Grense overskredet!",
     "warning": "Nær eksponeringsgrensen",
     "safe": "Trygt innenfor eksponeringsgrensen"
-  },
-  "weekly_view": {
-    "today": "I dag"
   },
   "monthly_view": {
     "safe": "Trygg dag den",
@@ -81,15 +64,32 @@
     "week": "uken",
     "month": "måneden"
   },
+  "english": "Engelsk",
+  "norwegian": "Norsk",
+
+  "time": "Tid",
+  "today": "I dag",
+
+  "safe": "Trygg",
+  "warning": "Advarsel",
+  "danger": "Fare",
+
+  "light": "Lys",
+  "dark": "Mørk",
+  "system": "System",
+
   "dust": "Støv",
   "vibration": "Vibrasjon",
   "noise": "Støy",
 
+  "views": "Visning",
   "day": "Dag",
   "week": "Uke",
   "month": "Måned",
+
   "loadingData": "Laster inn data...",
   "errorLoadingData": "Noe gikk galt under henting av sensordata.",
   "noData": "Ingen eksponeringsdata funnet for denne dagen",
+
   "points": "Poeng"
 }

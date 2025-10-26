@@ -1,4 +1,3 @@
-import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -8,6 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "./use-theme";
 
 export function ModeToggle() {
 	const { setTheme } = useTheme();
@@ -24,13 +24,13 @@ export function ModeToggle() {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<DropdownMenuItem onClick={() => setTheme("light")}>
-					{t("layout.light")}
+					{t("light")}
 				</DropdownMenuItem>
 				<DropdownMenuItem onClick={() => setTheme("dark")}>
-					{t("layout.dark")}
+					{t("dark")}
 				</DropdownMenuItem>
 				<DropdownMenuItem onClick={() => setTheme("system")}>
-					{t("layout.system")}
+					{t("system")}
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
