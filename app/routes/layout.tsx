@@ -1,4 +1,3 @@
-import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,
@@ -10,6 +9,7 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { ModeToggle } from "@/features/dark-mode/mode-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import {

@@ -1,4 +1,3 @@
-import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -8,6 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "./use-theme";
 
 export function ModeToggle() {
 	const { setTheme } = useTheme();
