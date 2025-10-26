@@ -1,25 +1,23 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
+
+import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
+import { MonthlyView } from "@/components/monthly-view";
+import { Notifications } from "@/components/notifications";
+import { Summary } from "@/components/summary";
+import { Card, CardTitle } from "@/components/ui/card";
+import { WeekView } from "@/components/weekly-view";
+import { useDate } from "@/features/date-picker/use-date";
 import { parseAsView } from "@/features/views/utils";
+import { languageToLocale } from "@/i18n/locale";
+import { sensorQueryOptions } from "@/lib/api";
+import type { SensorDataRequestDto } from "@/lib/dto";
+import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "@/lib/events";
+import { thresholds } from "@/lib/thresholds";
 import { makeCumulative } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { useQueryState } from "nuqs";
 import { useTranslation } from "react-i18next";
-import { ChartLineDefault, ThresholdLine } from "../../components/line-chart";
-import { MonthlyView } from "../../components/monthly-view";
-import { Summary } from "../../components/summary";
-import { Card, CardTitle } from "../../components/ui/card";
-import { Notifications } from "../../components/ui/notifications";
-import { WeekView } from "../../components/weekly-view";
-import { useDate } from "../../features/date-picker/use-date";
-import { languageToLocale } from "../../i18n/locale";
-import { sensorQueryOptions } from "../../lib/api";
-import type { SensorDataRequestDto } from "../../lib/dto";
-import {
-	mapSensorDataToMonthLists,
-	mapWeekDataToEvents,
-} from "../../lib/events";
-import { thresholds } from "../../lib/thresholds";
 
 // biome-ignore lint: page components can be default exports
 export default function Vibration() {
