@@ -1,4 +1,3 @@
-import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,
@@ -10,6 +9,10 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { ModeToggle } from "@/features/dark-mode/mode-toggle";
+import { sensors } from "@/features/sensor-picker/sensors";
+import { useSensor } from "@/features/sensor-picker/use-sensor";
+import { useView } from "@/features/views/use-view";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import {
@@ -19,7 +22,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
-import { useQueryState } from "nuqs";
 import { type ReactNode, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -30,7 +32,6 @@ import {
 	type To,
 	useLocation,
 } from "react-router";
-import { parseAsView } from "../lib/views";
 
 const Logo = () => (
 	<svg
@@ -131,8 +132,9 @@ export default function Layout() {
 }
 
 function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
-	const [view] = useQueryState("view", parseAsView.withDefault("day"));
+	const { view } = useView();
 	const location = useLocation();
+	const { setSensor } = useSensor();
 	const navLinkRefs = useRef<Array<HTMLElement>>([]); // Refs to the nav links
 	const [pillWidth, setPillWidth] = useState<number>();
 	const [pillLeft, setPillLeft] = useState<number>();
@@ -156,6 +158,11 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 							pathname: route.to.toString(),
 							search: `?view=${view}`,
 						}}
+						onClick={() =>
+							sensors.find(
+								(s) => route.to.toString().includes(s) && setSensor(s),
+							)
+						}
 						key={route.to.toString()}
 						ref={(el) => {
 							if (!el) return;

@@ -1,4 +1,6 @@
 {
+  "title": "HealthTech | Operatør Eksponeringsdashboard",
+  "description": "Overvåk og administrer eksponering for støv, vibrasjon og støy.",
   "layout": {
     "overview": "Oversikt"
   },
@@ -70,6 +72,7 @@
   "vibration": "Vibrasjon",
   "noise": "Støy",
 
+  "views": "Visning",
   "day": "Dag",
   "week": "Uke",
   "month": "Måned",

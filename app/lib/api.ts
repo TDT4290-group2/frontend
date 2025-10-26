@@ -1,6 +1,6 @@
+import type { Sensor } from "@/features/sensor-picker/sensors";
 import { queryOptions } from "@tanstack/react-query";
 import type { SensorDataRequestDto, SensorDataResponseDto } from "./dto";
-import type { Sensor } from "./sensors";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 

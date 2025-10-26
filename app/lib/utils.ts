@@ -1,3 +1,4 @@
+import type { View } from "@/features/views/views";
 import { type ClassValue, clsx } from "clsx";
 import {
 	addDays,
@@ -10,7 +11,6 @@ import {
 } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import type { SensorDataResponseDto } from "./dto";
-import type { View } from "./views";
 
 export function cn(...inputs: Array<ClassValue>) {
 	return twMerge(clsx(inputs));

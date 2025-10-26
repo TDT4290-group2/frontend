@@ -2,6 +2,7 @@
 
 // Core i18next library.
 import i18n from "i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
 // Bindings for React: allow components to
 // re-render when language changes.
 import { initReactI18next } from "react-i18next";
@@ -14,6 +15,7 @@ export const resources = {
 };
 
 i18n
+	.use(LanguageDetector)
 	// Add React bindings as a plugin.
 	.use(initReactI18next)
 	// Initialize the i18next instance.
@@ -34,7 +36,7 @@ i18n
 
 		// Enables useful output in the browser’s
 		// dev console.
-		debug: true,
+		debug: import.meta.env.DEV,
 
 		// Normally, we want `escapeValue: true` as it
 		// ensures that i18next escapes any code in
