@@ -1,3 +1,4 @@
+import type { View } from "@/features/views/views";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import type {
 	AggregateFnKey,
@@ -5,7 +6,6 @@ import type {
 	SensorDataRequestDto,
 } from "./dto";
 import type { Sensor } from "./sensors";
-import type { View } from "./views";
 
 const viewToGranularity: Record<View, GranularityKey> = {
 	day: "minute",

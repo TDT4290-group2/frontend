@@ -1,19 +1,20 @@
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/features/dark-mode/theme-provider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
-import "./i18n/config";
+import { useTranslation } from "react-i18next";
 import {
 	isRouteErrorResponse,
 	Links,
-	Meta,
 	Outlet,
 	Scripts,
 	ScrollRestoration,
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { DayContextProvider } from "./lib/day-context";
+import { DateProvider } from "./features/date-picker/date-provider";
+import { ViewProvider } from "./features/views/view-provider";
+import "./i18n/config";
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -29,13 +30,34 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+	const { t, i18n } = useTranslation();
 	return (
-		<html lang="en">
+		<html lang={i18n.language} dir={i18n.dir(i18n.language)}>
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<Meta />
+				<title>{t("title")}</title>
+				<meta name="description" content={t("description")} />
 				<Links />
+
+				<link
+					rel="apple-touch-icon"
+					sizes="180x180"
+					href="/apple-touch-icon.png"
+				/>
+				<link
+					rel="icon"
+					type="image/png"
+					sizes="32x32"
+					href="/favicon-32x32.png"
+				/>
+				<link
+					rel="icon"
+					type="image/png"
+					sizes="16x16"
+					href="/favicon-16x16.png"
+				/>
+				<link rel="manifest" href="/site.webmanifest" />
 			</head>
 			<body>
 				{children}
@@ -53,14 +75,16 @@ export default function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-				<DayContextProvider>
-					<NuqsAdapter>
-						{import.meta.env.DEV && (
-							<ReactQueryDevtools initialIsOpen={false} />
-						)}
-						<Outlet />
-					</NuqsAdapter>
-				</DayContextProvider>
+				<NuqsAdapter>
+					<DateProvider>
+						<ViewProvider>
+							{import.meta.env.DEV && (
+								<ReactQueryDevtools initialIsOpen={false} />
+							)}
+							<Outlet />
+						</ViewProvider>
+					</DateProvider>
+				</NuqsAdapter>
 			</ThemeProvider>
 		</QueryClientProvider>
 	);
