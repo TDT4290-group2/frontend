@@ -4,7 +4,7 @@ import { DailyBarChart } from "@/components/daily-bar-chart";
 import { DailyNotes } from "@/components/daily-notes";
 import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
-import { getSummaryForAll, Summary } from "@/components/summary";
+import { Summary, summarizeAllSensorData } from "@/components/summary";
 import { Button } from "@/components/ui/button";
 import { WeekView } from "@/components/weekly-view";
 import { useDate } from "@/features/date-picker/use-date";
@@ -74,7 +74,10 @@ export default function Home() {
 			</div>
 			<div className="flex w-full flex-col gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
-					<Summary exposureType="all" data={getSummaryForAll(view, data)} />
+					<Summary
+						exposureType="all"
+						data={summarizeAllSensorData(view, data)}
+					/>
 					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">

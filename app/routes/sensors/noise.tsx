@@ -3,7 +3,7 @@
 import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
 import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
-import { getSingleSummary, Summary } from "@/components/summary";
+import { Summary, summarizeSingleSensorData } from "@/components/summary";
 import { WeekView } from "@/components/weekly-view";
 import { useDate } from "@/features/date-picker/use-date";
 import { useView } from "@/features/views/use-view";
@@ -59,7 +59,7 @@ export default function Noise() {
 			<div className="flex flex-col gap-4">
 				<Summary
 					exposureType={"noise"}
-					data={getSingleSummary(view, "noise", data ?? [])}
+					data={summarizeSingleSensorData(view, "noise", data ?? [])}
 				/>
 				<Notifications />
 			</div>

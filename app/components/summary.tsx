@@ -37,14 +37,15 @@ const viewLabelConfig: Record<View, SummaryLabel> = {
 	},
 };
 
-type SummaryProps = {
-	exposureType: Sensor | "all";
-	data: SummaryType;
-};
-
 type SummaryLabel = Record<DangerKey, string>;
 
-export function Summary({ exposureType, data }: SummaryProps) {
+export function Summary({
+	exposureType,
+	data,
+}: {
+	exposureType: Sensor | "all";
+	data: SummaryData;
+}) {
 	const { view } = useView();
 	const isMobile = useIsMobile();
 
@@ -128,17 +129,17 @@ export function Summary({ exposureType, data }: SummaryProps) {
 	);
 }
 
-type SummaryType = {
+type SummaryData = {
 	safeCount: number;
 	dangerCount: number;
 	warningCount: number;
 };
 
-export const getSingleSummary = (
+export const summarizeSingleSensorData = (
 	view: View,
 	sensor: Sensor,
 	data: Array<SensorDataResponseDto>,
-): SummaryType => {
+): SummaryData => {
 	const summaryData = { safeCount: 0, dangerCount: 0, warningCount: 0 };
 
 	const threshold = thresholds[sensor];
@@ -190,11 +191,14 @@ export const getSingleSummary = (
 	return summaryData;
 };
 
-export const getSummaryForAll = (view: View, data: AllSensors): SummaryType => {
+export const summarizeAllSensorData = (
+	view: View,
+	data: AllSensors,
+): SummaryData => {
 	let allData = Object.entries(data)
 		.map(
 			([sensor, sensorData]) =>
-				data && getSingleSummary(view, sensor as Sensor, sensorData),
+				data && summarizeSingleSensorData(view, sensor as Sensor, sensorData),
 		)
 		.reduce(
 			(acc, curr) => {
