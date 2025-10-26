@@ -18,6 +18,7 @@ import {
 import { buildSensorQuery } from "@/lib/queries";
 import { getNextDay, getPrevDay } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
+import { Activity } from "react";
 import { useTranslation } from "react-i18next";
 
 // biome-ignore lint: page components can be default exports
@@ -79,13 +80,14 @@ export default function Home() {
 				<div className="flex flex-1 flex-col gap-1">
 					<div className="view-wrapper w-full">
 						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
-							{view === "month" && (
+							<Activity mode={view === "month" ? "visible" : "hidden"}>
 								<MonthlyView
 									selectedDay={date}
 									data={mapAllSensorDataToMonthLists(data)}
 								/>
-							)}
-							{view === "week" && (
+							</Activity>
+
+							<Activity mode={view === "week" ? "visible" : "hidden"}>
 								<WeekView
 									dayStartHour={8}
 									dayEndHour={16}
@@ -94,8 +96,9 @@ export default function Home() {
 									events={mapAllWeekDataToEvents(data)}
 									onEventClick={(event) => alert(event.dangerLevel)}
 								/>
-							)}
-							{view === "day" && (
+							</Activity>
+
+							<Activity mode={view === "day" ? "visible" : "hidden"}>
 								<DailyBarChart
 									data={data}
 									chartTitle={date.toLocaleDateString(i18n.language, {
@@ -104,7 +107,7 @@ export default function Home() {
 										year: "numeric",
 									})}
 								/>
-							)}
+							</Activity>
 							<DailyNotes />
 						</section>
 					</div>

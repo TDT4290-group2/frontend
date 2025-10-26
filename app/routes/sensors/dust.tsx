@@ -4,7 +4,6 @@ import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
 import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
 import { getSingleSummary, Summary } from "@/components/summary";
-import { Card, CardTitle } from "@/components/ui/card";
 import { WeekView } from "@/components/weekly-view";
 import { useDate } from "@/features/date-picker/use-date";
 import { useView } from "@/features/views/use-view";
@@ -49,7 +48,7 @@ export default function Dust() {
 	const query =
 		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
 
-	const { data, isLoading, isError } = useQuery(
+	const { data } = useQuery(
 		sensorQueryOptions({
 			sensor: "dust",
 			query,
@@ -66,20 +65,13 @@ export default function Dust() {
 				<Notifications />
 			</div>
 			<div className="flex flex-1 flex-col items-end gap-4">
-				{isLoading ? (
-					<Card className="flex h-24 w-full items-center">
-						<p>{t("loadingData")}</p>
-					</Card>
-				) : isError ? (
-					<Card className="flex h-24 w-full items-center">
-						<p>{t("errorLoadingData")}</p>
-					</Card>
-				) : view === "month" ? (
+				{view === "month" && (
 					<MonthlyView
 						selectedDay={date}
 						data={mapSensorDataToMonthLists(data ?? [], "dust") ?? []}
 					/>
-				) : view === "week" ? (
+				)}
+				{view === "week" && (
 					<WeekView
 						dayStartHour={8}
 						dayEndHour={16}
@@ -88,18 +80,8 @@ export default function Dust() {
 						events={mapWeekDataToEvents(data ?? [], "dust")}
 						onEventClick={(event) => alert(event.dangerLevel)}
 					/>
-				) : !data || data.length === 0 ? (
-					<Card className="flex h-24 w-full items-center">
-						<CardTitle>
-							{date.toLocaleDateString(i18n.language, {
-								day: "numeric",
-								month: "long",
-								year: "numeric",
-							})}
-						</CardTitle>
-						<p>{t("noData")}</p>
-					</Card>
-				) : (
+				)}
+				{view === "day" && (
 					<ChartLineDefault
 						chartData={data ?? []}
 						chartTitle={date.toLocaleDateString(i18n.language, {

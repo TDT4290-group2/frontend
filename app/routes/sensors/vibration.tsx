@@ -4,7 +4,6 @@ import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
 import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
 import { getSingleSummary, Summary } from "@/components/summary";
-import { Card, CardTitle } from "@/components/ui/card";
 import { WeekView } from "@/components/weekly-view";
 import { useDate } from "@/features/date-picker/use-date";
 import { useView } from "@/features/views/use-view";
@@ -15,6 +14,7 @@ import { thresholds } from "@/lib/thresholds";
 import { makeCumulative } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
+import { Activity } from "react";
 import { useTranslation } from "react-i18next";
 
 // biome-ignore lint: page components can be default exports
@@ -48,7 +48,7 @@ export default function Vibration() {
 	const query =
 		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
 
-	const { data, isLoading, isError } = useQuery(
+	const { data } = useQuery(
 		sensorQueryOptions({
 			sensor: "vibration",
 			query,
@@ -65,20 +65,14 @@ export default function Vibration() {
 				<Notifications />
 			</div>
 			<div className="flex flex-1 flex-col items-end gap-4">
-				{isLoading ? (
-					<Card className="flex h-24 w-full items-center">
-						<p>{t("loadingData")}</p>
-					</Card>
-				) : isError ? (
-					<Card className="flex h-24 w-full items-center">
-						<p>{t("errorLoadingData")}</p>
-					</Card>
-				) : view === "month" ? (
+				<Activity mode={view === "month" ? "visible" : "hidden"}>
 					<MonthlyView
 						selectedDay={date}
 						data={mapSensorDataToMonthLists(data ?? [], "vibration")}
 					/>
-				) : view === "week" ? (
+				</Activity>
+
+				<Activity mode={view === "week" ? "visible" : "hidden"}>
 					<WeekView
 						dayStartHour={8}
 						dayEndHour={16}
@@ -87,18 +81,9 @@ export default function Vibration() {
 						events={mapWeekDataToEvents(makeCumulative(data), "vibration")}
 						onEventClick={(event) => alert(event.dangerLevel)}
 					/>
-				) : !data || data.length === 0 ? (
-					<Card className="flex h-24 w-full items-center">
-						<CardTitle>
-							{date.toLocaleDateString(i18n.language, {
-								day: "numeric",
-								month: "long",
-								year: "numeric",
-							})}
-						</CardTitle>
-						<p>{t("noData")}</p>
-					</Card>
-				) : (
+				</Activity>
+
+				<Activity mode={view === "day" ? "visible" : "hidden"}>
 					<ChartLineDefault
 						chartData={makeCumulative(data)}
 						chartTitle={date.toLocaleDateString(i18n.language, {
@@ -121,7 +106,7 @@ export default function Vibration() {
 							dangerLevel="warning"
 						/>
 					</ChartLineDefault>
-				)}
+				</Activity>
 			</div>
 		</div>
 	);
