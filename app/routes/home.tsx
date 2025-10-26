@@ -1,20 +1,11 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 
-import { parseAsView, type View } from "@/features/views/utils";
 import {
 	mapAllSensorDataToMonthLists,
 	mapAllWeekDataToEvents,
 } from "@/lib/events";
 import { getNextDay, getPrevDay } from "@/lib/utils";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/ui/select";
 import { useQueries } from "@tanstack/react-query";
-import { useQueryState } from "nuqs";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { DailyBarChart } from "../components/daily-bar-chart";
@@ -26,6 +17,8 @@ import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import { WeekView } from "../components/weekly-view";
 import { useDate } from "../features/date-picker/use-date";
+import { useView } from "../features/views/use-view";
+import { ViewSelect } from "../features/views/view-select";
 import { languageToLocale } from "../i18n/locale";
 import { sensorQueryOptions } from "../lib/api";
 import type { AllSensors } from "../lib/dto";
@@ -43,7 +36,7 @@ export function meta() {
 export default function Home() {
 	const { t, i18n } = useTranslation();
 
-	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
+	const { view } = useView();
 	const translatedView = t(`overview.${view}`);
 	const { date, setDate } = useDate();
 
@@ -88,22 +81,7 @@ export default function Home() {
 					<Button onClick={() => setDate(getPrevDay(date, view))} size={"icon"}>
 						{"<"}
 					</Button>
-					<Select value={view} onValueChange={(value: View) => setView(value)}>
-						<SelectTrigger className="w-32">
-							<SelectValue placeholder="View" />
-						</SelectTrigger>
-						<SelectContent className="w-32">
-							<SelectItem key={"day"} value={"day"}>
-								{t("day")}
-							</SelectItem>
-							<SelectItem key={"week"} value={"week"}>
-								{t("week")}
-							</SelectItem>
-							<SelectItem key={"month"} value={"month"}>
-								{t("month")}
-							</SelectItem>
-						</SelectContent>
-					</Select>
+					<ViewSelect />
 					<Button onClick={() => setDate(getNextDay(date, view))} size={"icon"}>
 						{">"}
 					</Button>

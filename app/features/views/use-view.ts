@@ -1,15 +1,10 @@
 import { createContext, useContext } from "react";
-import type { View } from "./utils";
+import type { View } from "./views";
 
-type ContextValue = {
+export const ViewContext = createContext<{
 	view: View;
 	setView: (day: View) => void;
-};
-
-export const ViewContext = createContext<ContextValue>({
-	view: "day",
-	setView: () => {},
-});
+} | null>(null);
 
 export function useView() {
 	const context = useContext(ViewContext);

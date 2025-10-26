@@ -1,4 +1,4 @@
-import type { View } from "@/features/views/utils";
+import type { View } from "@/features/views/views";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { type DangerKey, dangerLevels } from "@/lib/danger-levels";
 import type { AllSensors, SensorDataResponseDto } from "@/lib/dto";
