@@ -18,9 +18,9 @@ import {
 } from "date-fns";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { useDate } from "../features/date-picker/use-date";
 import type { DangerKey } from "../lib/danger-levels";
 import { dangerLevels } from "../lib/danger-levels";
-import { useDayContext } from "../lib/day-context";
 import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
@@ -321,7 +321,7 @@ export function useWeekView({
 			disabledWeek?: (startDayOfWeek: Date) => boolean;
 	  }
 	| undefined = {}) {
-	const { selectedDay, setSelectedDay } = useDayContext();
+	const { date: selectedDay, setDate: setSelectedDay } = useDate();
 
 	const nextWeek = () => {
 		const _nextWeek = addDays(selectedDay, 7);

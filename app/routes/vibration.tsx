@@ -10,11 +10,11 @@ import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import { WeekView } from "../components/weekly-view";
+import { useDate } from "../features/date-picker/use-date";
 import { useView } from "../features/views/use-view";
 import { ViewSelect } from "../features/views/view-select";
 import { languageToLocale } from "../i18n/locale";
 import { sensorQueryOptions } from "../lib/api";
-import { useDayContext } from "../lib/day-context";
 import type { SensorDataRequestDto } from "../lib/dto";
 import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "../lib/events";
 import { thresholds } from "../lib/thresholds";
@@ -24,25 +24,25 @@ export default function Vibration() {
 	const { view } = useView();
 	const { t, i18n } = useTranslation();
 
-	const { selectedDay, setSelectedDay } = useDayContext();
+	const { date, setDate } = useDate();
 
 	const dayQuery: SensorDataRequestDto = {
-		startTime: new Date(selectedDay.setUTCHours(8)),
-		endTime: new Date(selectedDay.setUTCHours(16)),
+		startTime: new Date(date.setUTCHours(8)),
+		endTime: new Date(date.setUTCHours(16)),
 		granularity: "minute",
 		function: "avg",
 	};
 
 	const weekQuery: SensorDataRequestDto = {
-		startTime: startOfWeek(selectedDay, { weekStartsOn: 1 }),
-		endTime: endOfWeek(selectedDay, { weekStartsOn: 1 }),
+		startTime: startOfWeek(date, { weekStartsOn: 1 }),
+		endTime: endOfWeek(date, { weekStartsOn: 1 }),
 		granularity: "hour",
 		function: "max",
 	};
 
 	const monthQuery: SensorDataRequestDto = {
-		startTime: startOfMonth(selectedDay),
-		endTime: endOfMonth(selectedDay),
+		startTime: startOfMonth(date),
+		endTime: endOfMonth(date),
 		granularity: "day",
 		function: "sum",
 	};
@@ -62,17 +62,11 @@ export default function Vibration() {
 			<div className="flex flex-row">
 				<h1 className="p-2 text-3xl">{t("vibrationExposure.title")}</h1>
 				<div className="ml-auto flex flex-row gap-4">
-					<Button
-						onClick={() => setSelectedDay(getPrevDay(selectedDay, view))}
-						size={"icon"}
-					>
+					<Button onClick={() => setDate(getPrevDay(date, view))} size={"icon"}>
 						{"<"}
 					</Button>
 					<ViewSelect />
-					<Button
-						onClick={() => setSelectedDay(getNextDay(selectedDay, view))}
-						size={"icon"}
-					>
+					<Button onClick={() => setDate(getNextDay(date, view))} size={"icon"}>
 						{">"}
 					</Button>
 				</div>
@@ -93,7 +87,7 @@ export default function Vibration() {
 						</Card>
 					) : view === "month" ? (
 						<MonthlyView
-							selectedDay={selectedDay}
+							selectedDay={date}
 							data={mapSensorDataToMonthLists(data ?? [], "vibration")}
 						/>
 					) : view === "week" ? (
@@ -109,7 +103,7 @@ export default function Vibration() {
 					) : !data || data.length === 0 ? (
 						<Card className="flex h-24 w-full items-center">
 							<CardTitle>
-								{selectedDay.toLocaleDateString(i18n.language, {
+								{date.toLocaleDateString(i18n.language, {
 									day: "numeric",
 									month: "long",
 									year: "numeric",
@@ -120,7 +114,7 @@ export default function Vibration() {
 					) : (
 						<ChartLineDefault
 							chartData={makeCumulative(data)}
-							chartTitle={selectedDay.toLocaleDateString(i18n.language, {
+							chartTitle={date.toLocaleDateString(i18n.language, {
 								day: "numeric",
 								month: "long",
 								year: "numeric",

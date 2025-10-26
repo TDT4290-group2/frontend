@@ -16,11 +16,11 @@ import { Button } from "../components/ui/button";
 import { Card, CardTitle } from "../components/ui/card";
 import { Notifications } from "../components/ui/notifications";
 import { WeekView } from "../components/weekly-view";
+import { useDate } from "../features/date-picker/use-date";
 import { useView } from "../features/views/use-view";
 import { ViewSelect } from "../features/views/view-select";
 import { languageToLocale } from "../i18n/locale";
 import { sensorQueryOptions } from "../lib/api";
-import { useDayContext } from "../lib/day-context";
 import type { AllSensors } from "../lib/dto";
 import { buildSensorQuery } from "../lib/queries";
 import { sensors } from "../lib/sensors";
@@ -38,15 +38,15 @@ export default function Home() {
 
 	const { view } = useView();
 	const translatedView = t(`overview.${view}`);
-	const { selectedDay, setSelectedDay } = useDayContext();
+	const { date, setDate } = useDate();
 
 	const sensorQueries = useMemo(
 		() =>
 			sensors.map((sensor) => ({
 				sensor,
-				query: buildSensorQuery(sensor, view, selectedDay),
+				query: buildSensorQuery(sensor, view, date),
 			})),
-		[view, selectedDay],
+		[view, date],
 	);
 
 	const results = useQueries({
@@ -78,17 +78,11 @@ export default function Home() {
 					{t("overview.title", { view: translatedView })}
 				</h1>
 				<div className="flex flex-row gap-4">
-					<Button
-						onClick={() => setSelectedDay(getPrevDay(selectedDay, view))}
-						size={"icon"}
-					>
+					<Button onClick={() => setDate(getPrevDay(date, view))} size={"icon"}>
 						{"<"}
 					</Button>
 					<ViewSelect />
-					<Button
-						onClick={() => setSelectedDay(getNextDay(selectedDay, view))}
-						size={"icon"}
-					>
+					<Button onClick={() => setDate(getNextDay(date, view))} size={"icon"}>
 						{">"}
 					</Button>
 				</div>
@@ -111,7 +105,7 @@ export default function Home() {
 								</Card>
 							) : view === "month" ? (
 								<MonthlyView
-									selectedDay={selectedDay}
+									selectedDay={date}
 									data={mapAllSensorDataToMonthLists(everySensorData ?? [])}
 								/>
 							) : view === "week" ? (
@@ -130,7 +124,7 @@ export default function Home() {
 								) ? (
 								<Card className="flex h-24 w-full items-center">
 									<CardTitle>
-										{selectedDay.toLocaleDateString(i18n.language, {
+										{date.toLocaleDateString(i18n.language, {
 											day: "numeric",
 											month: "long",
 											year: "numeric",
@@ -141,7 +135,7 @@ export default function Home() {
 							) : (
 								<DailyBarChart
 									data={everySensorData}
-									chartTitle={selectedDay.toLocaleDateString(i18n.language, {
+									chartTitle={date.toLocaleDateString(i18n.language, {
 										day: "numeric",
 										month: "long",
 										year: "numeric",
