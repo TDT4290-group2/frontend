@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
-import "./i18n/config";
 import {
 	isRouteErrorResponse,
 	Links,
@@ -11,8 +12,8 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Toaster } from "./components/ui/sonner";
+import "./i18n/config";
 import { DayContextProvider } from "./lib/day-context";
 
 export const links: Route.LinksFunction = () => [
@@ -39,6 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				{children}
+				<Toaster expand richColors />
 				<ScrollRestoration />
 				<Scripts />
 			</body>

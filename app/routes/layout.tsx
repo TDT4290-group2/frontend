@@ -30,6 +30,8 @@ import {
 	type To,
 	useLocation,
 } from "react-router";
+import { triggerSensorAlert } from "../features/alerts";
+import { sensors } from "../lib/sensors";
 import { parseAsView } from "../lib/views";
 
 const Logo = () => (
@@ -106,6 +108,17 @@ export default function Layout() {
 						</>
 					)}
 					<div className="flex flex-row gap-4">
+						<Button
+							variant="outline"
+							onClick={() =>
+								triggerSensorAlert(
+									sensors[(Math.random() * sensors.length) | 0],
+									Math.random() > 0.5 ? "danger" : "warning",
+								)
+							}
+						>
+							{"Trigger Random Alert"}
+						</Button>
 						<Select onValueChange={(value) => i18n.changeLanguage(value)}>
 							<SelectTrigger className="w-32">
 								<SelectValue placeholder="Language" />
