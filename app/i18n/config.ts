@@ -8,16 +8,18 @@ import { initReactI18next } from "react-i18next";
 import en from "./locales/en.json";
 import no from "./locales/no.json";
 
+export const resources = {
+	en: { translation: en },
+	no: { translation: no },
+};
+
 i18n
 	// Add React bindings as a plugin.
 	.use(initReactI18next)
 	// Initialize the i18next instance.
 	.init({
 		// Config options
-		resources: {
-			en: { translation: en },
-			no: { translation: no },
-		},
+		resources,
 
 		// Specifies the default language (locale) used
 		// when a user visits our site for the first time.
