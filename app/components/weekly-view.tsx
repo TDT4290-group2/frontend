@@ -239,7 +239,7 @@ export function Header({
 						todayButton({ onToday })
 					) : (
 						<Button variant={"default"} onClick={onToday}>
-							{t("today")}
+							{t(($) => $.today)}
 						</Button>
 					))}
 			</h1>

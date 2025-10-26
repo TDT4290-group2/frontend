@@ -91,7 +91,7 @@ export function ChartLineDefault({
 							axisLine={false}
 							tickMargin={2}
 							label={{
-								value: t("time"),
+								value: t(($) => $.time),
 								position: "insideBottom",
 								offset: 0,
 							}}
@@ -139,7 +139,7 @@ export function ThresholdLine({
 }) {
 	const { t } = useTranslation();
 	const color = dangerLevels[dangerLevel].color;
-	const lineLabel = label ?? t(`line_chart.${dangerLevel}`);
+	const lineLabel = label ?? t(($) => $.line_chart[dangerLevel]);
 	return (
 		<ReferenceLine
 			y={y}

@@ -44,7 +44,7 @@ export default function Home() {
 	const { t, i18n } = useTranslation();
 
 	const [view, setView] = useQueryState("view", parseAsView.withDefault("day"));
-	const translatedView = t(`overview.${view}`);
+	const translatedView = t(($) => $.overview[view]);
 	const { selectedDay, setSelectedDay } = useDayContext();
 
 	const sensorQueries = useMemo(
@@ -82,7 +82,7 @@ export default function Home() {
 		<div className="flex w-full flex-col items-center md:items-start">
 			<div className="mb-4 flex w-full flex-col items-start gap-2 md:mb-0 md:flex-row md:justify-between">
 				<h1 className="p-2 text-3xl">
-					{t("overview.title", { view: translatedView })}
+					{t(($) => $.overview.title, { view: translatedView })}
 				</h1>
 				<div className="flex flex-row gap-4">
 					<Button
@@ -97,13 +97,13 @@ export default function Home() {
 						</SelectTrigger>
 						<SelectContent className="w-32">
 							<SelectItem key={"day"} value={"day"}>
-								{t("day")}
+								{t(($) => $.day)}
 							</SelectItem>
 							<SelectItem key={"week"} value={"week"}>
-								{t("week")}
+								{t(($) => $.week)}
 							</SelectItem>
 							<SelectItem key={"month"} value={"month"}>
-								{t("month")}
+								{t(($) => $.month)}
 							</SelectItem>
 						</SelectContent>
 					</Select>
@@ -129,11 +129,11 @@ export default function Home() {
 						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
 							{isLoadingAny ? (
 								<Card className="flex h-24 w-full items-center">
-									<p>{t("loadingData")}</p>
+									<p>{t(($) => $.loadingData)}</p>
 								</Card>
 							) : isErrorAny ? (
 								<Card className="flex h-24 w-full items-center">
-									<p>{t("errorLoadingData")}</p>
+									<p>{t(($) => $.errorLoadingData)}</p>
 								</Card>
 							) : view === "month" ? (
 								<MonthlyView
@@ -162,7 +162,7 @@ export default function Home() {
 											year: "numeric",
 										})}
 									</CardTitle>
-									<p>{t("noData")}</p>
+									<p>{t(($) => $.noData)}</p>
 								</Card>
 							) : (
 								<DailyBarChart

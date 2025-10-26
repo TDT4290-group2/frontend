@@ -28,9 +28,9 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 	}
 
 	const alertLabels = {
-		safe: t("monthly-view.safe"),
-		warning: t("monthly-view.warning"),
-		danger: t("monthly-view.danger"),
+		safe: t(($) => $.monthly_view.safe),
+		warning: t(($) => $.monthly_view.warning),
+		danger: t(($) => $.monthly_view.danger),
 	};
 
 	const hasData = (dateList: Array<Date>, clickedDay: Date) =>

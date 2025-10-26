@@ -70,7 +70,7 @@ export default function Dust() {
 	return (
 		<section className="flex w-full flex-col">
 			<div className="flex flex-row">
-				<h1 className="p-2 text-3xl">{t("dustExposure.title")}</h1>
+				<h1 className="p-2 text-3xl">{t(($) => $.dustExposure.title)}</h1>
 				<div className="ml-auto flex flex-row gap-4">
 					<Button
 						onClick={() => setSelectedDay(getPrevDay(selectedDay, view))}
@@ -87,13 +87,13 @@ export default function Dust() {
 						</SelectTrigger>
 						<SelectContent className="w-32">
 							<SelectItem key={"day"} value={"day"}>
-								{t("day")}
+								{t(($) => $.day)}
 							</SelectItem>
 							<SelectItem key={"week"} value={"week"}>
-								{t("week")}
+								{t(($) => $.week)}
 							</SelectItem>
 							<SelectItem key={"month"} value={"month"}>
-								{t("month")}
+								{t(($) => $.month)}
 							</SelectItem>
 						</SelectContent>
 					</Select>
@@ -113,11 +113,11 @@ export default function Dust() {
 				<div className="flex flex-1 flex-col items-end gap-4">
 					{isLoading ? (
 						<Card className="flex h-24 w-full items-center">
-							<p>{t("loadingData")}</p>
+							<p>{t(($) => $.loadingData)}</p>
 						</Card>
 					) : isError ? (
 						<Card className="flex h-24 w-full items-center">
-							<p>{t("errorLoadingData")}</p>
+							<p>{t(($) => $.errorLoadingData)}</p>
 						</Card>
 					) : view === "month" ? (
 						<MonthlyView
@@ -143,7 +143,7 @@ export default function Dust() {
 									year: "numeric",
 								})}
 							</CardTitle>
-							<p>{t("noData")}</p>
+							<p>{t(($) => $.noData)}</p>
 						</Card>
 					) : (
 						<ChartLineDefault
@@ -153,7 +153,7 @@ export default function Dust() {
 								month: "long",
 								year: "numeric",
 							})}
-							unit={t("points")}
+							unit={t(($) => $.points)}
 							startHour={8}
 							endHour={16}
 							maxY={110}

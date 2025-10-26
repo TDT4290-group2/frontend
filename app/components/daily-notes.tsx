@@ -70,12 +70,12 @@ export const DailyNotes = () => {
 		return (
 			<Card className="max-h-64 w-full overflow-y-auto">
 				<CardHeader>
-					<h2 className="text-xl">{t("daily_notes.dayTitle")}</h2>
+					<h2 className="text-xl">{t(($) => $.daily_notes.dayTitle)}</h2>
 				</CardHeader>
 				<CardContent>
 					{showTextArea ? (
 						<Textarea
-							placeholder={t("daily_notes.writeHere")}
+							placeholder={t(($) => $.daily_notes.writeHere)}
 							value={noteText}
 							onChange={(e) => setNoteText(e.target.value)}
 						/>
@@ -85,10 +85,10 @@ export const DailyNotes = () => {
 				</CardContent>
 				<CardFooter className="justify-end gap-2">
 					<Button variant={"secondary"} onClick={handleEdit}>
-						{t("daily_notes.edit")}
+						{t(($) => $.daily_notes.edit)}
 					</Button>
 					<Button disabled={!showTextArea} onClick={handleSubmit}>
-						{t("daily_notes.save")}
+						{t(($) => $.daily_notes.save)}
 					</Button>
 				</CardFooter>
 			</Card>
@@ -100,8 +100,8 @@ export const DailyNotes = () => {
 			<Card className="max-h-64 w-full overflow-y-auto">
 				<CardHeader>
 					<h2 className="text-xl">
-						{t("daily_notes.notesFromThis")}
-						<strong>{t("daily_notes.week")}</strong>
+						{t(($) => $.daily_notes.notesFromThis)}
+						<strong>{t(($) => $.daily_notes.week)}</strong>
 						{":"}
 					</h2>
 				</CardHeader>
@@ -134,8 +134,8 @@ export const DailyNotes = () => {
 		<Card className="max-h-64 w-full overflow-y-auto">
 			<CardHeader>
 				<h2 className="text-xl">
-					{t("daily_notes.notesFromThis")}
-					<strong>{t("daily_notes.month")}</strong>
+					{t(($) => $.daily_notes.notesFromThis)}
+					<strong>{t(($) => $.daily_notes.month)}</strong>
 					{":"}
 				</h2>
 			</CardHeader>
