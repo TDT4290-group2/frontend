@@ -25,13 +25,6 @@ import { useQueries } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-export function meta() {
-	return [
-		{ title: "New React Router App" },
-		{ name: "description", content: "Welcome to React Router!" },
-	];
-}
-
 // biome-ignore lint: page components can be default exports
 export default function Home() {
 	const { t, i18n } = useTranslation();
