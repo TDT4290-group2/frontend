@@ -10,6 +10,7 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { useView } from "@/features/views/use-view";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import {
@@ -19,7 +20,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/ui/select";
-import { useQueryState } from "nuqs";
 import { type ReactNode, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -30,7 +30,6 @@ import {
 	type To,
 	useLocation,
 } from "react-router";
-import { parseAsView } from "../lib/views";
 
 const Logo = () => (
 	<svg
@@ -131,7 +130,7 @@ export default function Layout() {
 }
 
 function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
-	const [view] = useQueryState("view", parseAsView.withDefault("day"));
+	const { view } = useView();
 	const location = useLocation();
 	const navLinkRefs = useRef<Array<HTMLElement>>([]); // Refs to the nav links
 	const [pillWidth, setPillWidth] = useState<number>();

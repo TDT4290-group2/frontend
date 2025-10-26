@@ -2,6 +2,7 @@
 
 // Core i18next library.
 import i18n from "i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
 // Bindings for React: allow components to
 // re-render when language changes.
 import { initReactI18next } from "react-i18next";
@@ -9,6 +10,7 @@ import en from "./locales/en.json";
 import no from "./locales/no.json";
 
 i18n
+	.use(LanguageDetector)
 	// Add React bindings as a plugin.
 	.use(initReactI18next)
 	// Initialize the i18next instance.
