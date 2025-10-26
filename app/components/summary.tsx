@@ -1,13 +1,13 @@
+import type { Sensor } from "@/features/sensor-picker/sensors";
+import { useView } from "@/features/views/use-view";
 import type { View } from "@/features/views/views";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { type DangerKey, dangerLevels } from "@/lib/danger-levels";
 import type { AllSensors, SensorDataResponseDto } from "@/lib/dto";
-import type { Sensor } from "@/lib/sensors";
 import { thresholds } from "@/lib/thresholds";
 import { cn } from "@/lib/utils";
 import { Card } from "@/ui/card";
 import { useTranslation } from "react-i18next";
-import { useView } from "../features/views/use-view";
 
 type SummaryProps = {
 	exposureType: Sensor | "all";

@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/features/dark-mode/mode-toggle";
+import { sensors } from "@/features/sensor-picker/sensors";
+import { useSensor } from "@/features/sensor-picker/use-sensor";
 import { useView } from "@/features/views/use-view";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -132,6 +134,7 @@ export default function Layout() {
 function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 	const { view } = useView();
 	const location = useLocation();
+	const { setSensor } = useSensor();
 	const navLinkRefs = useRef<Array<HTMLElement>>([]); // Refs to the nav links
 	const [pillWidth, setPillWidth] = useState<number>();
 	const [pillLeft, setPillLeft] = useState<number>();
@@ -155,6 +158,11 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 							pathname: route.to.toString(),
 							search: `?view=${view}`,
 						}}
+						onClick={() =>
+							sensors.find(
+								(s) => route.to.toString().includes(s) && setSensor(s),
+							)
+						}
 						key={route.to.toString()}
 						ref={(el) => {
 							if (!el) return;

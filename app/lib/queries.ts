@@ -1,3 +1,4 @@
+import type { Sensor } from "@/features/sensor-picker/sensors";
 import type { View } from "@/features/views/views";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import type {
@@ -5,7 +6,6 @@ import type {
 	GranularityKey,
 	SensorDataRequestDto,
 } from "./dto";
-import type { Sensor } from "./sensors";
 
 const viewToGranularity: Record<View, GranularityKey> = {
 	day: "minute",
