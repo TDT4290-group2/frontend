@@ -1,6 +1,16 @@
 {
   "title": "HealthTech | Operator Exposure Dashboard",
   "description": "Monitor and manage exposure to dust, vibration, and noise.",
+  "alert": {
+    "danger": "Danger!",
+    "warning": "Warning!",
+
+    "measuresAtCriticalLevels": "{{sensor}} has reached critical levels.",
+    "measuresExceededRecommendedLimits": "{{sensor}} has exceeded recommended limits.",
+
+    "immediateActionRequired": "Immediate action is required!",
+    "pleaseBeCautious": "Please be cautious."
+  },
   "layout": {
     "overview": "Overview"
   },

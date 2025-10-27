@@ -1,6 +1,16 @@
 {
   "title": "HealthTech | Operatør Eksponeringsdashboard",
   "description": "Overvåk og administrer eksponering for støv, vibrasjon og støy.",
+  "alert": {
+    "danger": "Fare!",
+    "warning": "Advarsel! ",
+
+    "measuresAtCriticalLevels": "{{sensor}} har nådd kritiske nivåer.",
+    "measuresExceededRecommendedLimits": "{{sensor}} har overskredet anbefalte grenser.",
+
+    "immediateActionRequired": "Umiddelbar handling kreves!",
+    "pleaseBeCautious": "Vennligst vær forsiktig."
+  },
   "layout": {
     "overview": "Oversikt"
   },

@@ -12,6 +12,7 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
+import { Toaster } from "./components/ui/sonner";
 import { DateProvider } from "./features/date-picker/date-provider";
 import { SensorProvider } from "./features/sensor-picker/sensor-provider";
 import { ViewProvider } from "./features/views/view-provider";
@@ -62,6 +63,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				{children}
+				<Toaster expand richColors />
 				<ScrollRestoration />
 				<Scripts />
 			</body>
