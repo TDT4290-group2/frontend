@@ -80,6 +80,6 @@
 
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",
-  "noData": "No exposure data found for this day",
+  "noData": "No exposure data found for this period of time",
   "points": "Points"
 }
