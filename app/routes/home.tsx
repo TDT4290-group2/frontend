@@ -106,7 +106,7 @@ export default function Home() {
 								</Card>
 							</Activity>
 
-							<Activity mode={isDataEmpty ? "visible" : "hidden"}>
+							<Activity mode={isNoData ? "visible" : "hidden"}>
 								<Card className="flex h-24 w-full items-center">
 									<CardTitle>
 										{date.toLocaleDateString(i18n.language, {
