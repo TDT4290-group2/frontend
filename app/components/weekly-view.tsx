@@ -424,7 +424,6 @@ export function WeekView({
 	weekStartsOn = 1,
 	dayStartHour = 8,
 	dayEndHour = 16,
-	locale,
 	rowHeight = 56,
 	disabledCell,
 	disabledDay,
@@ -436,7 +435,6 @@ export function WeekView({
 	weekStartsOn?: Day;
 	dayStartHour?: number;
 	dayEndHour?: number;
-	locale?: Locale;
 	rowHeight?: number;
 	disabledCell?: (date: Date) => boolean;
 	disabledDay?: (date: Date) => boolean;
@@ -450,7 +448,6 @@ export function WeekView({
 		weekStartsOn,
 		dayStartHour,
 		dayEndHour,
-		locale,
 		disabledCell,
 		disabledDay,
 		disabledWeek,

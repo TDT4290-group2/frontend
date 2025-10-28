@@ -31,16 +31,4 @@ export type SensorDataResponseDto = {
 	value: number;
 };
 
-export type SensorDataResult = {
-	data: Array<SensorDataResponseDto> | undefined;
-	isLoading: boolean;
-	isError: boolean;
-};
-
-export type AllSensors = Record<Sensor, SensorDataResult>;
-
-export type AllSensorData = {
-	everySensorData: AllSensors;
-	isLoadingAny: boolean;
-	isErrorAny: boolean;
-};
+export type AllSensors = Record<Sensor, Array<SensorDataResponseDto>>;

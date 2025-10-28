@@ -3,18 +3,18 @@
 import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
 import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
-import { Summary } from "@/components/summary";
-import { Card, CardTitle } from "@/components/ui/card";
 import { WeekView } from "@/components/weekly-view";
 import { useDate } from "@/features/date-picker/use-date";
+import { summarizeSingleSensorData } from "@/features/sensor-summary/summarize-sensor-data";
+import { Summary } from "@/features/sensor-summary/summary-widget";
 import { useView } from "@/features/views/use-view";
-import { languageToLocale } from "@/i18n/locale";
 import { sensorQueryOptions } from "@/lib/api";
 import type { SensorDataRequestDto } from "@/lib/dto";
 import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "@/lib/events";
 import { thresholds } from "@/lib/thresholds";
 import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
+import { Activity } from "react";
 import { useTranslation } from "react-i18next";
 
 // biome-ignore lint: page components can be default exports
@@ -50,7 +50,7 @@ export default function Dust() {
 	const query =
 		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
 
-	const { data, isLoading, isError } = useQuery(
+	const { data } = useQuery(
 		sensorQueryOptions({
 			sensor: "dust",
 			query,
@@ -60,26 +60,22 @@ export default function Dust() {
 	return (
 		<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 			<div className="flex flex-col gap-4">
-				<Summary exposureType={"dust"} data={data} />
+				<Summary
+					exposureType={"dust"}
+					data={summarizeSingleSensorData(view, "dust", data ?? [])}
+				/>
 				<Notifications />
 			</div>
 			<div className="flex flex-1 flex-col items-end gap-4">
-				{isLoading ? (
-					<Card className="flex h-24 w-full items-center">
-						<p>{t("loadingData")}</p>
-					</Card>
-				) : isError ? (
-					<Card className="flex h-24 w-full items-center">
-						<p>{t("errorLoadingData")}</p>
-					</Card>
-				) : view === "month" ? (
+				<Activity mode={view === "month" ? "visible" : "hidden"}>
 					<MonthlyView
 						selectedDay={date}
 						data={mapSensorDataToMonthLists(data ?? [], "dust") ?? []}
 					/>
-				) : view === "week" ? (
+				</Activity>
+
+				<Activity mode={view === "week" ? "visible" : "hidden"}>
 					<WeekView
-						locale={languageToLocale[i18n.language]}
 						dayStartHour={8}
 						dayEndHour={16}
 						weekStartsOn={1}
@@ -87,18 +83,9 @@ export default function Dust() {
 						events={mapWeekDataToEvents(data ?? [], "dust")}
 						onEventClick={(event) => alert(event.dangerLevel)}
 					/>
-				) : !data || data.length === 0 ? (
-					<Card className="flex h-24 w-full items-center">
-						<CardTitle>
-							{date.toLocaleDateString(i18n.language, {
-								day: "numeric",
-								month: "long",
-								year: "numeric",
-							})}
-						</CardTitle>
-						<p>{t("noData")}</p>
-					</Card>
-				) : (
+				</Activity>
+
+				<Activity mode={view === "day" ? "visible" : "hidden"}>
 					<ChartLineDefault
 						chartData={data ?? []}
 						chartTitle={date.toLocaleDateString(i18n.language, {
@@ -114,7 +101,7 @@ export default function Dust() {
 						<ThresholdLine y={thresholds.dust.danger} dangerLevel="danger" />
 						<ThresholdLine y={thresholds.dust.warning} dangerLevel="warning" />
 					</ChartLineDefault>
-				)}
+				</Activity>
 			</div>
 		</div>
 	);
