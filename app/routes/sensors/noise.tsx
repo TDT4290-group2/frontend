@@ -3,6 +3,7 @@
 import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
 import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
+import { Card, CardTitle } from "@/components/ui/card";
 import { WeekView } from "@/components/weekly-view";
 import { useDate } from "@/features/date-picker/use-date";
 import { summarizeSingleSensorData } from "@/features/sensor-summary/summarize-sensor-data";
@@ -14,6 +15,7 @@ import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "@/lib/events";
 import { thresholds } from "@/lib/thresholds";
 import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
+import { t } from "i18next";
 import { Activity } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -48,12 +50,14 @@ export default function Noise() {
 	const query =
 		view === "day" ? dayQuery : view === "week" ? weekQuery : monthQuery;
 
-	const { data } = useQuery(
+	const { data, isLoading, isError } = useQuery(
 		sensorQueryOptions({
 			sensor: "noise",
 			query,
 		}),
 	);
+
+	const isDataEmpty = data?.length === 0;
 
 	return (
 		<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
@@ -65,40 +69,65 @@ export default function Noise() {
 				<Notifications />
 			</div>
 			<div className="flex flex-1 flex-col items-end gap-4">
-				<Activity mode={view === "month" ? "visible" : "hidden"}>
-					<MonthlyView
-						selectedDay={date}
-						data={mapSensorDataToMonthLists(data ?? [], "noise") ?? []}
-					/>
+				<Activity mode={isLoading ? "visible" : "hidden"}>
+					<Card className="flex h-24 w-full items-center">
+						<p>{t("loadingData")}</p>
+					</Card>
 				</Activity>
-
-				<Activity mode={view === "week" ? "visible" : "hidden"}>
-					<WeekView
-						dayStartHour={8}
-						dayEndHour={16}
-						weekStartsOn={1}
-						minuteStep={60}
-						events={mapWeekDataToEvents(data ?? [], "noise")}
-						onEventClick={(event) => alert(event.dangerLevel)}
-					/>
+				<Activity mode={isError ? "visible" : "hidden"}>
+					<Card className="flex h-24 w-full items-center">
+						<p>{t("errorLoadingData")}</p>
+					</Card>
 				</Activity>
-
-				<Activity mode={view === "day" ? "visible" : "hidden"}>
-					<ChartLineDefault
-						chartData={data ?? []}
-						chartTitle={date.toLocaleDateString(i18n.language, {
-							day: "numeric",
-							month: "long",
-							year: "numeric",
-						})}
-						unit="db (TWA)"
-						startHour={8}
-						endHour={16}
-						maxY={130}
-					>
-						<ThresholdLine y={thresholds.noise.danger} dangerLevel="danger" />
-						<ThresholdLine y={thresholds.noise.warning} dangerLevel="warning" />
-					</ChartLineDefault>
+				<Activity mode={isDataEmpty ? "visible" : "hidden"}>
+					<Card className="flex h-24 w-full items-center">
+						<CardTitle>
+							{date.toLocaleDateString(i18n.language, {
+								day: "numeric",
+								month: "long",
+								year: "numeric",
+							})}
+						</CardTitle>
+						<p>{t("noData")}</p>
+					</Card>
+				</Activity>
+				<Activity mode={data ? "visible" : "hidden"}>
+					<Activity mode={view === "month" ? "visible" : "hidden"}>
+						<MonthlyView
+							selectedDay={date}
+							data={mapSensorDataToMonthLists(data ?? [], "noise") ?? []}
+						/>
+					</Activity>
+					<Activity mode={view === "week" ? "visible" : "hidden"}>
+						<WeekView
+							dayStartHour={8}
+							dayEndHour={16}
+							weekStartsOn={1}
+							minuteStep={60}
+							events={mapWeekDataToEvents(data ?? [], "noise")}
+							onEventClick={(event) => alert(event.dangerLevel)}
+						/>
+					</Activity>
+					<Activity mode={view === "day" ? "visible" : "hidden"}>
+						<ChartLineDefault
+							chartData={data ?? []}
+							chartTitle={date.toLocaleDateString(i18n.language, {
+								day: "numeric",
+								month: "long",
+								year: "numeric",
+							})}
+							unit="db (TWA)"
+							startHour={8}
+							endHour={16}
+							maxY={130}
+						>
+							<ThresholdLine y={thresholds.noise.danger} dangerLevel="danger" />
+							<ThresholdLine
+								y={thresholds.noise.warning}
+								dangerLevel="warning"
+							/>
+						</ChartLineDefault>
+					</Activity>
 				</Activity>
 			</div>
 		</div>
