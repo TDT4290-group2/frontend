@@ -126,7 +126,7 @@ export function EventGrid({
 								type="button"
 								className={cn(
 									"absolute inset-1 flex cursor-pointer flex-col overflow-y-auto rounded-md text-xs leading-5 transition",
-									`bg-[${dangerLevels[event.dangerLevel].color}]`,
+									`bg-${event.dangerLevel}`,
 									"border-t-2 border-t-muted-foreground border-dotted",
 									`${event.startDate.getUTCHours() === dayStartHour && "border-t-0"} `,
 									"hover:brightness-85",
