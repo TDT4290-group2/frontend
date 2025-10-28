@@ -79,7 +79,7 @@
 
   "loadingData": "Laster inn data...",
   "errorLoadingData": "Noe gikk galt under henting av sensordata.",
-  "noData": "Ingen eksponeringsdata funnet for denne dagen",
+  "noData": "Ingen eksponeringsdata funnet for denne tiden",
 
   "points": "Poeng"
 }

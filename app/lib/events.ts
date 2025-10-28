@@ -34,16 +34,10 @@ export const mapWeekDataToEvents = (
 export const mapAllWeekDataToEvents = (
 	everySensorData: AllSensors,
 ): Array<Event> => {
-	const dustEvents = mapWeekDataToEvents(
-		everySensorData.dust.data ?? [],
-		"dust",
-	);
-	const noiseEvents = mapWeekDataToEvents(
-		everySensorData.noise.data ?? [],
-		"noise",
-	);
+	const dustEvents = mapWeekDataToEvents(everySensorData.dust ?? [], "dust");
+	const noiseEvents = mapWeekDataToEvents(everySensorData.noise ?? [], "noise");
 	const vibrationEvents = mapWeekDataToEvents(
-		everySensorData.vibration.data ?? [],
+		everySensorData.vibration ?? [],
 		"vibration",
 	);
 	const allEvents = [...dustEvents, ...noiseEvents, ...vibrationEvents];
@@ -120,15 +114,15 @@ export const mapAllSensorDataToMonthLists = (
 	everySensorData: AllSensors,
 ): Record<DangerKey, Array<Date>> => {
 	const dustData = mapSensorDataToMonthLists(
-		everySensorData.dust.data ?? [],
+		everySensorData.dust ?? [],
 		"dust",
 	);
 	const noiseData = mapSensorDataToMonthLists(
-		everySensorData.noise.data ?? [],
+		everySensorData.noise ?? [],
 		"noise",
 	);
 	const vibrationData = mapSensorDataToMonthLists(
-		everySensorData.vibration.data ?? [],
+		everySensorData.vibration ?? [],
 		"vibration",
 	);
 	const mergedData = {
