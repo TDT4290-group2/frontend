@@ -5,6 +5,7 @@ import { DailyNotes } from "@/components/daily-notes";
 import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
 import { Button } from "@/components/ui/button";
+import { Card, CardTitle } from "@/components/ui/card";
 import { WeekView } from "@/components/weekly-view";
 import { useDate } from "@/features/date-picker/use-date";
 import { summarizeAllSensorData } from "@/features/sensor-summary/summarize-sensor-data";
@@ -51,12 +52,21 @@ export default function Home() {
 		}),
 	);
 
+	const isLoading = noise.isLoading || vibration.isLoading || dust.isLoading;
+	const isError = noise.isError || vibration.isError || dust.isError;
+
 	const data = {
 		noise: noise.data ?? [],
 		vibration: vibration.data ?? [],
 		dust: dust.data ?? [],
 	};
 
+	const isDataEmpty =
+		data.noise.length === 0 &&
+		data.vibration.length === 0 &&
+		data.dust.length === 0;
+	const isNoData = isDataEmpty && !isLoading && !isError;
+	const isDataAvailable = isNoData || !isLoading || !isError;
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
 			<div className="mb-4 flex w-full flex-col items-start gap-2 md:mb-0 md:flex-row md:justify-between">
@@ -84,34 +94,62 @@ export default function Home() {
 				<div className="flex flex-1 flex-col gap-1">
 					<div className="view-wrapper w-full">
 						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
-							<Activity mode={view === "month" ? "visible" : "hidden"}>
-								<MonthlyView
-									selectedDay={date}
-									data={mapAllSensorDataToMonthLists(data)}
-								/>
+							<Activity mode={isLoading ? "visible" : "hidden"}>
+								<Card className="flex h-24 w-full items-center">
+									<p>{t("loadingData")}</p>
+								</Card>
 							</Activity>
 
-							<Activity mode={view === "week" ? "visible" : "hidden"}>
-								<WeekView
-									dayStartHour={8}
-									dayEndHour={16}
-									weekStartsOn={1}
-									minuteStep={60}
-									events={mapAllWeekDataToEvents(data)}
-									onEventClick={(event) => alert(event.dangerLevel)}
-								/>
+							<Activity mode={isError ? "visible" : "hidden"}>
+								<Card className="flex h-24 w-full items-center">
+									<p>{t("errorLoadingData")}</p>
+								</Card>
 							</Activity>
 
-							<Activity mode={view === "day" ? "visible" : "hidden"}>
-								<DailyBarChart
-									data={data}
-									chartTitle={date.toLocaleDateString(i18n.language, {
-										day: "numeric",
-										month: "long",
-										year: "numeric",
-									})}
-								/>
+							<Activity mode={isDataEmpty ? "visible" : "hidden"}>
+								<Card className="flex h-24 w-full items-center">
+									<CardTitle>
+										{date.toLocaleDateString(i18n.language, {
+											day: "numeric",
+											month: "long",
+											year: "numeric",
+										})}
+									</CardTitle>
+									<p>{t("noData")}</p>
+								</Card>
 							</Activity>
+
+							<Activity mode={isDataAvailable ? "hidden" : "visible"}>
+								<Activity mode={view === "day" ? "visible" : "hidden"}>
+									<DailyBarChart
+										data={data}
+										chartTitle={date.toLocaleDateString(i18n.language, {
+											day: "numeric",
+											month: "long",
+											year: "numeric",
+										})}
+									/>
+								</Activity>
+
+								<Activity mode={view === "week" ? "visible" : "hidden"}>
+									<WeekView
+										dayStartHour={8}
+										dayEndHour={16}
+										weekStartsOn={1}
+										minuteStep={60}
+										events={mapAllWeekDataToEvents(data ?? [])}
+										onEventClick={(event) => alert(event.dangerLevel)}
+									/>
+								</Activity>
+
+								<Activity mode={view === "month" ? "visible" : "hidden"}>
+									<MonthlyView
+										selectedDay={date}
+										data={mapAllSensorDataToMonthLists(data ?? [])}
+									/>
+								</Activity>
+							</Activity>
+
 							<DailyNotes />
 						</section>
 					</div>
