@@ -1,6 +1,5 @@
 import { useDate } from "@/features/date-picker/use-date";
 import type { DangerKey } from "@/lib/danger-levels";
-import { dangerLevels } from "@/lib/danger-levels";
 import { cn } from "@/lib/utils";
 import {
 	addDays,

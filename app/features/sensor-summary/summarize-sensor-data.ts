@@ -1,7 +1,7 @@
 import type { Sensor } from "@/features/sensor-picker/sensors";
 import type { View } from "@/features/views/views";
 import type { AllSensors, SensorDataResponseDto } from "@/lib/dto";
-import { thresholds } from "@/lib/thresholds";
+import { type Threshold, thresholds } from "@/lib/thresholds";
 
 export type SummaryData = {
 	safeCount: number;
@@ -14,46 +14,23 @@ export const summarizeSingleSensorData = (
 	sensor: Sensor,
 	data: Array<SensorDataResponseDto>,
 ): SummaryData => {
-	const summaryData = { safeCount: 0, dangerCount: 0, warningCount: 0 };
+	let summaryData: SummaryData = {
+		safeCount: 0,
+		dangerCount: 0,
+		warningCount: 0,
+	};
 
-	const threshold = thresholds[sensor];
+	const threshold: Threshold = thresholds[sensor];
 
 	switch (view) {
 		case "month":
-			for (const item of data) {
-				if (item.value < threshold.warning) {
-					summaryData.safeCount++;
-				} else if (item.value < threshold.danger) {
-					summaryData.warningCount++;
-				} else {
-					summaryData.dangerCount++;
-				}
-			}
+			summaryData = getSummaryForMonth(data, threshold);
 			break;
 		case "week":
-			for (const item of data) {
-				if (item.value < threshold.warning) {
-					summaryData.safeCount++;
-				} else if (item.value < threshold.danger) {
-					summaryData.warningCount++;
-				} else {
-					summaryData.dangerCount++;
-				}
-			}
+			summaryData = getSummaryForWeekly(data, threshold);
 			break;
 		case "day":
-			for (const item of data) {
-				if (item.value < threshold.warning) {
-					summaryData.safeCount++;
-				} else if (item.value < threshold.danger) {
-					summaryData.warningCount++;
-				} else {
-					summaryData.dangerCount++;
-				}
-			}
-			summaryData.dangerCount = Math.ceil(summaryData.dangerCount / 60);
-			summaryData.warningCount = Math.round(summaryData.warningCount / 60);
-			summaryData.safeCount = Math.floor(summaryData.safeCount / 60);
+			summaryData = getSummaryForDay(data, threshold);
 			break;
 
 		default: {
@@ -87,3 +64,56 @@ export const summarizeAllSensorData = (
 	if (!allData) allData = { safeCount: 0, dangerCount: 0, warningCount: 0 };
 	return allData;
 };
+
+const getSummaryForMonth = (
+	data: Array<SensorDataResponseDto>,
+	threshold: Threshold,
+): SummaryData => {
+	const monthSummary = countByThreshold(data, threshold);
+	return monthSummary;
+};
+
+const getSummaryForWeekly = (
+	data: Array<SensorDataResponseDto>,
+	threshold: Threshold,
+): SummaryData => {
+	const weekSummary = countByThreshold(data, threshold);
+	return weekSummary;
+};
+
+const getSummaryForDay = (
+	data: Array<SensorDataResponseDto>,
+	threshold: Threshold,
+): SummaryData => {
+	const unscaledDaySummary = countByThreshold(data, threshold);
+	return scaleForDay(unscaledDaySummary);
+};
+
+const countByThreshold = (
+	data: Array<SensorDataResponseDto>,
+	threshold: Threshold,
+): SummaryData => {
+	const summaryData: SummaryData = {
+		safeCount: 0,
+		warningCount: 0,
+		dangerCount: 0,
+	};
+
+	for (const item of data) {
+		if (item.value < threshold.warning) {
+			summaryData.safeCount++;
+		} else if (item.value < threshold.danger) {
+			summaryData.warningCount++;
+		} else {
+			summaryData.dangerCount++;
+		}
+	}
+
+	return summaryData;
+};
+
+const scaleForDay = (summaryData: SummaryData): SummaryData => ({
+	dangerCount: Math.ceil(summaryData.dangerCount / 60),
+	warningCount: Math.round(summaryData.warningCount / 60),
+	safeCount: Math.floor(summaryData.safeCount / 60),
+});

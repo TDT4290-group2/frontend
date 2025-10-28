@@ -34,14 +34,8 @@ export const mapWeekDataToEvents = (
 export const mapAllWeekDataToEvents = (
 	everySensorData: AllSensors,
 ): Array<Event> => {
-	const dustEvents = mapWeekDataToEvents(
-		everySensorData.dust ?? [],
-		"dust",
-	);
-	const noiseEvents = mapWeekDataToEvents(
-		everySensorData.noise ?? [],
-		"noise",
-	);
+	const dustEvents = mapWeekDataToEvents(everySensorData.dust ?? [], "dust");
+	const noiseEvents = mapWeekDataToEvents(everySensorData.noise ?? [], "noise");
 	const vibrationEvents = mapWeekDataToEvents(
 		everySensorData.vibration ?? [],
 		"vibration",

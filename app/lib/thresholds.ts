@@ -1,6 +1,6 @@
 import type { Sensor } from "@/features/sensor-picker/sensors";
 
-type Threshold = {
+export type Threshold = {
 	warning: number;
 	danger: number;
 };
