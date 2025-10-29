@@ -103,9 +103,7 @@ export function DailyBarChart({
 							tickLine={false}
 							axisLine={false}
 							width={80}
-							tickFormatter={(value: string) =>
-								t(($) => $.overview[value as keyof typeof $.overview])
-							}
+							tickFormatter={(value) => t(($) => $.overview[value as Sensor])}
 						/>
 						{hourKeys.map((key) => (
 							<Bar key={key} dataKey={key} stackId="a">
