@@ -14,14 +14,15 @@ import { t } from "i18next";
 import { PopupNotes } from "./daily-notes";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import type { Event } from "./weekly-view";
+import type { WeekEvent } from "@/features/week-widget/types";
+import { NavLink } from "react-router";
 
 type PopupProps = {
 	title: string;
 	selectedDate: Date | null;
 	exposureData?: PopupData | null;
 	togglePopup?: () => void;
-	handleDayNav?: () => void;
+	handleDayNav: (date: Date) => void;
 	children?: React.ReactNode;
 };
 
@@ -43,7 +44,7 @@ export function PopupModal({
 					<DialogTitle className="font-bold text-xl">{title}</DialogTitle>
 				</DialogHeader>
 				<DialogDescription className="font-medium text-xl">
-					{t("popup.exposureTitle")}
+					{t(($) => $.popup.exposureTitle)}
 				</DialogDescription>
 				{selectedDate !== null ? (
 					<div className="flex flex-col gap-2">
@@ -62,34 +63,44 @@ export function PopupModal({
 										</span>
 										<span className="text-muted-foreground">{"->"}</span>
 										<div className={`text-${danger}`}>
-											{t(`popup.${danger}`)}
+											{t(($) => $.popup[danger])}
 										</div>
 									</div>
 								))}
 							</Card>
 						)}
-						<h2 className="pt-4 font-bold">{t("popup.notesTitle")}</h2>
+						<h2 className="pt-4 font-bold">{t(($) => $.popup.notesTitle)}</h2>
 						<PopupNotes selectedDate={selectedDate} />
 					</div>
 				) : (
-					<div>{t("noData")}</div>
+					<div>{t(($) => $.noData)}</div>
 				)}
 				<div>{children}</div>
 
 				<DialogFooter>
-					<Button
-						variant={"default"}
-						onClick={handleDayNav}
-						className="cursor-pointer"
-					>
-						{t("popup.toDay")}
-					</Button>
+					{selectedDate !== null && (
+						<Button
+							variant={"default"}
+							onClick={() => handleDayNav(selectedDate)}
+							className={"cursor-pointer"}
+						>
+							<NavLink
+								to={{
+									search: `?view=Day&date=${selectedDate?.toLocaleDateString("en-CA")}`,
+								}}
+								prefetch="intent"
+							>
+								{t(($) => $.popup.toDay)}
+							</NavLink>
+						</Button>
+					)}
+
 					<Button
 						variant={"destructive"}
 						onClick={togglePopup}
 						className="cursor-pointer"
 					>
-						{t("buttons.close")}
+						{t(($) => $.buttons.close)}
 					</Button>
 				</DialogFooter>
 			</DialogContent>
@@ -106,7 +117,7 @@ export function WeeklyPopup({
 	children,
 }: {
 	title: string;
-	event: Event;
+	event: WeekEvent;
 	highestExposure: DangerKey;
 	togglePopup: () => void;
 	handleDayNav: () => void;
@@ -120,7 +131,7 @@ export function WeeklyPopup({
 					<DialogTitle className="font-bold text-xl">{title}</DialogTitle>
 				</DialogHeader>
 				<DialogDescription className="font-medium text-xl">
-					{t("popup.exposureTitle")}
+					{t(($) => $.popup.exposureTitle)}
 				</DialogDescription>
 				{event !== null ? (
 					<div className="flex flex-col gap-2">
@@ -128,15 +139,15 @@ export function WeeklyPopup({
 							<Card className="p-2 md:p-5">
 								<div className="flex flex-col justify-start gap-2">
 									<div className={`text-${highestExposure}`}>
-										{t(`popup.${highestExposure}`)}
+										{t(($) => $.popup[highestExposure])}
 									</div>
-									<div>{t("popup.openDaily")}</div>
+									<div>{t(($) => $.popup.openDaily)}</div>
 								</div>
 							</Card>
 						)}
 					</div>
 				) : (
-					<div>{t("noData")}</div>
+					<div>{t(($) => $.noData)}</div>
 				)}
 				<div>{children}</div>
 
@@ -146,14 +157,14 @@ export function WeeklyPopup({
 						onClick={handleDayNav}
 						className="cursor-pointer"
 					>
-						{t("popup.toDay")}
+						{t(($) => $.popup.toDay)}
 					</Button>
 					<Button
 						variant={"destructive"}
 						onClick={togglePopup}
 						className="cursor-pointer"
 					>
-						{t("buttons.close")}
+						{t(($) => $.buttons.close)}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

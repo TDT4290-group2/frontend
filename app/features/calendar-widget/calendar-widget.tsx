@@ -61,6 +61,7 @@ export function CalendarWidget({ selectedDay, data }: MonthlyProps) {
 	}
 
 	function handleDayClick(clickedDay: Date) {
+		console.log("clicked day: ", clickedDay?.toLocaleDateString("en-CA"));
 		const type = getDayType(clickedDay);
 		if (type === "none") return;
 		const exposureData = getExposureData(clickedDay);
@@ -71,9 +72,10 @@ export function CalendarWidget({ selectedDay, data }: MonthlyProps) {
 		setPopupData((p) => ({ ...p, open: !p.open }));
 	}
 
-	function navToDay() {
+	function navToDay(date: Date) {
+		
 		// biome-ignore lint/suspicious/noConsole: We are in development duh
-		console.log("Navigating to day");
+		console.log("Navigating to day: ", date?.toISOString());
 	}
 
 	function getExposureData(clickedDay: Date) {
