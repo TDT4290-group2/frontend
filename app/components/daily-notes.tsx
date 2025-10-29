@@ -143,7 +143,7 @@ export const DailyNotes = () => {
 					{notes
 						.filter((note) => isSameMonth(new Date(), note.date))
 						.map((note) => (
-							<li key={note.date.toDateString()}>
+							<li key={`Month ${note.date.getTime()} ${Math.random() * 5}`}>
 								<strong>
 									{note.date.toLocaleDateString(locale, {
 										day: "numeric",
@@ -160,32 +160,20 @@ export const DailyNotes = () => {
 	);
 };
 
+export const PopupNotes = ({ selectedDate }: { selectedDate: Date }) => {
+	const { t } = useTranslation();
 
-export const PopupNotes = ({selectedDate}: {selectedDate: Date}) => {
-
-	const { t, i18n } = useTranslation();
-
-	const [notes, setNotes] = useState<Array<Note>>([
+	const [note, setNote] = useState<Note>(
 		{
 			date: today,
-			note: "Sandblåsing kl 10. Dette er et langt notat. Et veldig veldig veldig langt notat. Forhåpentligvis gjør det ikke at siden ser dårlig ut eller noe.",
-		},
-		{ date: d1, note: "Sveising kl 11." },
-		{ date: d2, note: "Ingenting å rapportere." },
-		{ date: d3, note: "Slipemaskin kl 12." },
-		{ date: d4, note: "Slipemaskin kl 12." },
-		{ date: d5, note: "Slipemaskin kl 12." },
-		{ date: d6, note: "Slipemaskin kl 12." },
-		{ date: d7, note: "Slipemaskin kl 12." },
-		{ date: d8, note: "Slipemaskin kl 12." },
-		{ date: d9, note: "Slipemaskin kl 12." },
-		{ date: d10, note: "Slipemaskin kl 12." },
-	]);
+			note: "Popup placeholder notat - må fikse funksjonaliteten her",
+		}
+	);
 
 	const [showTextArea, setShowTextArea] = useState<boolean>(
-		!notes.some((note) => isToday(note.date)),
+		!isToday(note.date),
 	);
-	const [noteText, setNoteText] = useState<string>(notes[0].note);
+	const [noteText, setNoteText] = useState<string>(note.note);
 
 	const handleEdit = () => {
 		setShowTextArea(!showTextArea);
@@ -193,11 +181,7 @@ export const PopupNotes = ({selectedDate}: {selectedDate: Date}) => {
 
 	const handleSubmit = () => {
 		//this will be replaced by api call
-		if (notes.some((note) => isToday(note.date))) {
-			notes[0] = { date: new Date(), note: noteText };
-		} else {
-			setNotes([{ date: new Date(), note: noteText } as Note].concat(notes));
-		}
+		setNote({date: selectedDate, note: noteText});
 		setShowTextArea(false);
 	};
 	return (
@@ -210,7 +194,7 @@ export const PopupNotes = ({selectedDate}: {selectedDate: Date}) => {
 						onChange={(e) => setNoteText(e.target.value)}
 					/>
 				) : (
-					<p>{notes[0].note}</p>
+					<p>{note.note}</p>
 				)}
 			</CardContent>
 			<CardFooter className="justify-end gap-2">
@@ -223,4 +207,4 @@ export const PopupNotes = ({selectedDate}: {selectedDate: Date}) => {
 			</CardFooter>
 		</Card>
 	);
-}
+};
