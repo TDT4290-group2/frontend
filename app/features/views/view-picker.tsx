@@ -20,7 +20,7 @@ export function ViewPicker() {
 			<SelectContent className="w-32">
 				{views.map((v: View) => (
 					<SelectItem key={v} value={v}>
-						{t(v)}
+						{t(($) => $[v])}
 					</SelectItem>
 				))}
 			</SelectContent>
