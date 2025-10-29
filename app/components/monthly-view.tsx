@@ -93,7 +93,7 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 					selectedDate={popupData.day}
 					togglePopup={togglePopup}
 					handleDayNav={navToDay}
-					overview={overviewTest}
+					exposureData={overviewTest}
 				></PopupModal>
 			)}
 		</>

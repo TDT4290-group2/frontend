@@ -17,15 +17,15 @@ import { cn } from "@/lib/utils";
 type PopupProps = {
 	title: string;
 	selectedDate: Date | null;
-    overview?: OverviewPopup;
+	exposureData?: PopupData;
 	togglePopup?: () => void;
 	handleDayNav?: () => void;
 	children?: React.ReactNode;
 };
 
-type OverviewPopup = Record<Sensor, DangerKey>
+type PopupData = Record<Sensor, DangerKey>
 
-export function PopupModal({ title, selectedDate, overview, togglePopup, handleDayNav, children }: PopupProps) {
+export function PopupModal({ title, selectedDate, exposureData, togglePopup, handleDayNav, children }: PopupProps) {
 	return (
 		<Dialog open={true} onOpenChange={togglePopup}>
 			<DialogTrigger onClick={togglePopup}></DialogTrigger>
@@ -37,9 +37,9 @@ export function PopupModal({ title, selectedDate, overview, togglePopup, handleD
 				{selectedDate !== null ? (
 					<div className="flex flex-col gap-2">
 						<h2 className="font-bold">{t("popup.exposureTitle")}</h2>
-						{overview && (
+						{exposureData && (
 							<Card className="p-2 md:p-5">
-								{Object.entries(overview).map(([sensor, danger]) => (
+								{Object.entries(exposureData).map(([sensor, danger]) => (
 									<div key={sensor} className="flex justify-start gap-2">
 										<span
 											className={cn(
