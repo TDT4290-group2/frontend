@@ -36,7 +36,7 @@ export function WeekHeader({
 						todayButton({ onToday })
 					) : (
 						<Button variant={"default"} onClick={onToday}>
-							{t("today")}
+							{t(($) => $.today)}
 						</Button>
 					))}
 			</h1>

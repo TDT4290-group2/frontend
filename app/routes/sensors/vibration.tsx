@@ -67,11 +67,11 @@ export default function Vibration() {
 			<div className="flex flex-1 flex-col items-end gap-4">
 				{isLoading ? (
 					<Card className="flex h-24 w-full items-center">
-						<p>{t("loadingData")}</p>
+						<p>{t(($) => $.loadingData)}</p>
 					</Card>
 				) : isError ? (
 					<Card className="flex h-24 w-full items-center">
-						<p>{t("errorLoadingData")}</p>
+						<p>{t(($) => $.errorLoadingData)}</p>
 					</Card>
 				) : view === "month" ? (
 					<CalendarWidget
@@ -97,7 +97,7 @@ export default function Vibration() {
 								year: "numeric",
 							})}
 						</CardTitle>
-						<p>{t("noData")}</p>
+						<p>{t(($) => $.noData)}</p>
 					</Card>
 				) : (
 					<ChartLineDefault
@@ -107,7 +107,7 @@ export default function Vibration() {
 							month: "long",
 							year: "numeric",
 						})}
-						unit={t("points")}
+						unit={t(($) => $.points)}
 						startHour={8}
 						endHour={16}
 						maxY={450}

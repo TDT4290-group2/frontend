@@ -71,9 +71,11 @@ export function Notifications() {
 							)}
 						</ItemMedia>
 						<ItemContent>
-							<ItemTitle className="line-clamp-1">{t(sensor)}</ItemTitle>
+							<ItemTitle className="line-clamp-1">
+								{t(($) => $[sensor])}
+							</ItemTitle>
 							<ItemDescription className={cn(`text-${dangerLevel}`)}>
-								{t(dangerLevel)}
+								{t(($) => $[dangerLevel])}
 							</ItemDescription>
 						</ItemContent>
 						<ItemContent>
