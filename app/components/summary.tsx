@@ -163,36 +163,17 @@ const getSingleSummary = (
 
 	const threshold = thresholds[sensor];
 
-	if (view === "month") {
-		for (const item of data) {
-			if (item.value < threshold.warning) {
-				summaryData.safeCount++;
-			} else if (item.value < threshold.danger) {
-				summaryData.warningCount++;
-			} else {
-				summaryData.dangerCount++;
-			}
+	for (const item of data) {
+		if (item.value < threshold.warning) {
+			summaryData.safeCount++;
+		} else if (item.value < threshold.danger) {
+			summaryData.warningCount++;
+		} else {
+			summaryData.dangerCount++;
 		}
-	} else if (view === "week") {
-		for (const item of data) {
-			if (item.value < threshold.warning) {
-				summaryData.safeCount++;
-			} else if (item.value < threshold.danger) {
-				summaryData.warningCount++;
-			} else {
-				summaryData.dangerCount++;
-			}
-		}
-	} else {
-		for (const item of data) {
-			if (item.value < threshold.warning) {
-				summaryData.safeCount++;
-			} else if (item.value < threshold.danger) {
-				summaryData.warningCount++;
-			} else {
-				summaryData.dangerCount++;
-			}
-		}
+	}
+
+	if (view === "day") {
 		summaryData.dangerCount = Math.ceil(summaryData.dangerCount / 60);
 		summaryData.warningCount = Math.round(summaryData.warningCount / 60);
 		summaryData.safeCount = Math.floor(summaryData.safeCount / 60);

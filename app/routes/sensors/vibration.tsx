@@ -1,17 +1,18 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 
 import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
-import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
 import { Summary } from "@/components/summary";
 import { Card, CardTitle } from "@/components/ui/card";
-import { WeekView } from "@/components/weekly-view";
+import { CalendarWidget } from "@/features/calendar-widget/calendar-widget";
+import { mapSensorDataToMonthLists } from "@/features/calendar-widget/data-transform";
 import { useDate } from "@/features/date-picker/use-date";
 import { parseAsView } from "@/features/views/utils";
+import { mapWeekDataToEvents } from "@/features/week-widget/data-transform";
+import { WeekWidget } from "@/features/week-widget/week-widget";
 import { languageToLocale } from "@/i18n/locale";
 import { sensorQueryOptions } from "@/lib/api";
 import type { SensorDataRequestDto } from "@/lib/dto";
-import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "@/lib/events";
 import { thresholds } from "@/lib/thresholds";
 import { makeCumulative } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -73,12 +74,12 @@ export default function Vibration() {
 						<p>{t(($) => $.errorLoadingData)}</p>
 					</Card>
 				) : view === "month" ? (
-					<MonthlyView
+					<CalendarWidget
 						selectedDay={date}
 						data={mapSensorDataToMonthLists(data ?? [], "vibration")}
 					/>
 				) : view === "week" ? (
-					<WeekView
+					<WeekWidget
 						locale={languageToLocale[i18n.language]}
 						dayStartHour={8}
 						dayEndHour={16}

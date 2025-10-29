@@ -1,4 +1,4 @@
-export const DangerTypes: Record<DangerKey, number> = {
+export const dangerTypes: Record<DangerKey, number> = {
 	danger: 2,
 	warning: 1,
 	safe: 0,
@@ -14,14 +14,14 @@ type DangerLevelInfo = {
 export const dangerLevels: Record<DangerKey, DangerLevelInfo> = {
 	danger: {
 		label: "Threshold exceeded!",
-		color: "var(--danger)",
+		color: "danger",
 	},
 	warning: {
 		label: "Close to exposure limit",
-		color: "var(--warning)",
+		color: "warning",
 	},
 	safe: {
 		label: "Safely within exposure limit",
-		color: "var(--safe)",
+		color: "safe",
 	},
 };

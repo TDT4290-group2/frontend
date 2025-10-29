@@ -138,7 +138,7 @@ export function ThresholdLine({
 	label?: string;
 }) {
 	const { t } = useTranslation();
-	const color = dangerLevels[dangerLevel].color;
+	const color = `var(--${dangerLevels[dangerLevel].color})`;
 	const lineLabel = label ?? t(($) => $.line_chart[dangerLevel]);
 	return (
 		<ReferenceLine

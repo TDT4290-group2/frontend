@@ -2,23 +2,21 @@
 
 import { DailyBarChart } from "@/components/daily-bar-chart";
 import { DailyNotes } from "@/components/daily-notes";
-import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
 import { Summary } from "@/components/summary";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
-import { WeekView } from "@/components/weekly-view";
+import { CalendarWidget } from "@/features/calendar-widget/calendar-widget";
+import { mapAllSensorDataToMonthLists } from "@/features/calendar-widget/data-transform";
 import { useDate } from "@/features/date-picker/use-date";
 import { sensors } from "@/features/sensor-picker/sensors";
 import { useView } from "@/features/views/use-view";
 import { ViewSelect } from "@/features/views/view-select";
+import { mapAllWeekDataToEvents } from "@/features/week-widget/data-transform";
+import { WeekWidget } from "@/features/week-widget/week-widget";
 import { languageToLocale } from "@/i18n/locale";
 import { sensorQueryOptions } from "@/lib/api";
 import type { AllSensors } from "@/lib/dto";
-import {
-	mapAllSensorDataToMonthLists,
-	mapAllWeekDataToEvents,
-} from "@/lib/events";
 import { buildSensorQuery } from "@/lib/queries";
 import { getNextDay, getPrevDay } from "@/lib/utils";
 import { useQueries } from "@tanstack/react-query";
@@ -97,12 +95,12 @@ export default function Home() {
 									<p>{t(($) => $.errorLoadingData)}</p>
 								</Card>
 							) : view === "month" ? (
-								<MonthlyView
+								<CalendarWidget
 									selectedDay={date}
 									data={mapAllSensorDataToMonthLists(everySensorData ?? [])}
 								/>
 							) : view === "week" ? (
-								<WeekView
+								<WeekWidget
 									locale={languageToLocale[i18n.language]}
 									dayStartHour={8}
 									dayEndHour={16}
