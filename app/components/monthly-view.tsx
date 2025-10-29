@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { Calendar } from "./ui/calendar";
 import { Card } from "./ui/card";
 
-export type MonthData = Record<DangerKey, Record<Sensor, Array<Date>>>;
+export type MonthData = Record<DangerKey, Partial<Record<Sensor, Array<Date>>>>;
 
 type MonthlyProps = {
 	selectedDay: Date;

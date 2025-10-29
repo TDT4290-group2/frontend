@@ -1,6 +1,6 @@
 import type { Event } from "@/components/weekly-view";
 import type { Sensor } from "@/features/sensor-picker/sensors";
-import { type DangerKey, DangerTypes, dangerKeys } from "./danger-levels";
+import { type DangerKey, DangerTypes } from "./danger-levels";
 import type { AllSensors, SensorDataResponseDto } from "./dto";
 import { thresholds } from "./thresholds";
 import type { MonthData } from "@/components/monthly-view";
@@ -99,22 +99,25 @@ export const mapMonthDataToDangerLists = (
 export const mapSensorDataToMonthLists = (
 	data: Array<SensorDataResponseDto>,
 	relevantSensor: Sensor,
-): Record<DangerKey, Array<Date>> => {
-	const safe: Array<Date> = [];
-	const warning: Array<Date> = [];
-	const danger: Array<Date> = [];
+): MonthData => {
+	const safeDates: Array<Date> = [];
+	const warningDates: Array<Date> = [];
+	const dangerDates: Array<Date> = [];
 
 	Object.values(data).forEach((item) => {
 		if (item.value < thresholds[relevantSensor].warning) {
-			safe.push(new Date(item.time));
+			safeDates.push(new Date(item.time));
 		} else if (item.value < thresholds[relevantSensor].danger) {
-			warning.push(new Date(item.time));
+			warningDates.push(new Date(item.time));
 		} else {
-			danger.push(new Date(item.time));
+			dangerDates.push(new Date(item.time));
 		}
 	});
-
-	return { safe, warning, danger };
+	return {
+		safe: { [relevantSensor]: safeDates },
+		warning: { [relevantSensor]: warningDates },
+		danger: { [relevantSensor]: dangerDates },
+	};
 };
 
 export const mapAllSensorDataToMonthLists = (
@@ -132,21 +135,21 @@ export const mapAllSensorDataToMonthLists = (
 		everySensorData.vibration.data ?? [],
 		"vibration",
 	);
-	const mergedData = {
+	const mergedData: MonthData = {
 		safe: {
-			dust: [...dustData.safe],
-			noise: [...noiseData.safe],
-			vibration: [...vibrationData.safe],
+			dust: dustData.safe?.dust ?? [],
+			noise: noiseData.safe?.noise ?? [],
+			vibration: vibrationData.safe?.vibration ?? [],
 		},
 		warning: {
-			dust: [...dustData.warning],
-			noise: [...noiseData.warning],
-			vibration: [...vibrationData.warning],
+			dust: dustData.warning?.dust ?? [],
+			noise: noiseData.warning?.noise ?? [],
+			vibration: vibrationData.warning?.vibration ?? [],
 		},
 		danger: {
-			dust: [...dustData.danger],
-			noise: [...noiseData.danger],
-			vibration: [...vibrationData.danger],
+			dust: dustData.danger?.dust ?? [],
+			noise: noiseData.danger?.noise ?? [],
+			vibration: vibrationData.danger?.vibration ?? [],
 		},
 	};
 	return mergedData;
