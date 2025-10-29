@@ -16,10 +16,20 @@ type MonthlyProps = {
 	data: Record<DangerKey, Array<Date>>;
 };
 
-export function MonthlyView({ selectedDay, data }: MonthlyProps) {
-	// UTILS
+import { useState } from "react";
+import { PopupModal } from "./view-popup";
 
+export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 	const { t, i18n } = useTranslation();
+
+	const [popupData, setPopupData] = useState<{
+		day: Date | null;
+		type: Lowercase<DangerKey> | "none";
+		open: boolean;
+	}>({ day: null, type: "none", open: false });
+
+	const hasData = (list: Array<Date>, d: Date) =>
+		list.some((day) => day.toDateString() === d.toDateString());
 
 	function getDayType(day: Date): Lowercase<DangerKey> | "none" {
 		if (hasData(data.safe, day)) return "safe";
@@ -28,50 +38,83 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 		return "none";
 	}
 
-	const alertLabels = {
-		safe: t("monthly-view.safe"),
-		warning: t("monthly-view.warning"),
-		danger: t("monthly-view.danger"),
-	};
+	function handleDayClick(clickedDay: Date) {
+		const type = getDayType(clickedDay);
+		if (type === "none") return;
+		setPopupData({ day: clickedDay, type, open: true });
+	}
 
-	const hasData = (dateList: Array<Date>, clickedDay: Date) =>
-		dateList.some((day) => day.toDateString() === clickedDay.toDateString());
+	function closePopup() {
+		setPopupData((p) => ({ ...p, open: false }));
+	}
 
-	// Click handler
-	// Checks if the day clicked has data with temporary interaction with alert
-	const handleDayClick = (clickedDay: Date) => {
-		const clickedType = getDayType(clickedDay);
-		if (clickedType === "none") return;
-		alert(`${alertLabels[clickedType]} ${clickedDay.toLocaleDateString()}`);
-	};
+	function navToDay() {
+		// biome-ignore lint/suspicious/noConsole: We are in development duh
+		console.log("Navigating to day");
+	}
 
 	return (
-		<Card className="w-full">
-			<Calendar
-				locale={languageToLocale[i18n.language]}
-				month={selectedDay}
-				hideNavigation
-				showWeekNumber
-				weekStartsOn={1}
-				onDayClick={(day) => handleDayClick(day)}
-				components={{
-					DayButton: (props) => (
-						<CustomDay
-							{...props}
-							getDayType={getDayType}
-							handleDayClick={handleDayClick}
-						/>
-					),
-				}}
-				modifiers={{ ...data }}
-				className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
-				captionLayout="label"
-				buttonVariant="default"
-				mode="single"
-			/>
-		</Card>
+		<>
+			<Card className="w-full">
+				<Calendar
+					locale={languageToLocale[i18n.language]}
+					month={selectedDay}
+					hideNavigation
+					showWeekNumber
+					weekStartsOn={1}
+					onDayClick={handleDayClick}
+					components={{
+						DayButton: (props) => (
+							<CustomDay
+								{...props}
+								getDayType={getDayType}
+								handleDayClick={handleDayClick}
+							/>
+						),
+					}}
+					modifiers={{ ...data }}
+					className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
+					captionLayout="label"
+					buttonVariant="default"
+					mode="single"
+				/>
+			</Card>
+
+			{/* interaction popup window */}
+			{popupData.open && popupData.day && (
+				<PopupModal
+					title={popupData.day.toLocaleDateString(i18n.language, {
+						day: "numeric",
+						month: "short",
+						year: "numeric",
+					})}
+					handleClose={closePopup}
+					handleDayNav={navToDay}
+				>
+					{/* 					
+					<div className="flex flex-col gap-2">
+						<p>
+							{t("details.forDay")}{" "}
+							<strong>{popupData.day.toLocaleDateString(i18n.language)}</strong>
+						</p>
+						<p>{t(`details.${popupData.type}-description`)}</p>
+					</div>
+					<div className="flex justify-end pt-4">
+						<button
+							type="button"
+							onClick={closePopup}
+							className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
+						>
+							{t("close")}
+						</button>
+					</div> 
+					*/}
+				</PopupModal>
+			)}
+		</>
 	);
 }
+
 
 type CustomDayProps = {
 	day: CalendarDay;

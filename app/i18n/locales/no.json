@@ -54,6 +54,10 @@
     "week": "uken",
     "month": "måneden"
   },
+  "buttons": {
+    "confirm": "Ok",
+    "close": "Lukk"
+  },
   "english": "Engelsk",
   "norwegian": "Norsk",
 
@@ -76,6 +80,9 @@
   "day": "Dag",
   "week": "Uke",
   "month": "Måned",
+  "popup": {
+    "toDay": "Se denne dagen"
+  },
 
   "loadingData": "Laster inn data...",
   "errorLoadingData": "Noe gikk galt under henting av sensordata.",
