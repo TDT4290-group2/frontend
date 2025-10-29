@@ -2,23 +2,21 @@
 
 import { DailyBarChart } from "@/components/daily-bar-chart";
 import { DailyNotes } from "@/components/daily-notes";
-import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
 import { Summary } from "@/components/summary";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
-import { WeekView } from "@/components/weekly-view";
+import { CalendarWidget } from "@/features/calendar-widget/calendar-widget";
+import { mapAllSensorDataToMonthLists } from "@/features/calendar-widget/data-transform";
 import { useDate } from "@/features/date-picker/use-date";
 import { sensors } from "@/features/sensor-picker/sensors";
 import { useView } from "@/features/views/use-view";
 import { ViewSelect } from "@/features/views/view-select";
+import { mapAllWeekDataToEvents } from "@/features/week-widget/data-transform";
+import { WeekWidget } from "@/features/week-widget/week-widget";
 import { languageToLocale } from "@/i18n/locale";
 import { sensorQueryOptions } from "@/lib/api";
 import type { AllSensors } from "@/lib/dto";
-import {
-	mapAllSensorDataToMonthLists,
-	mapAllWeekDataToEvents,
-} from "@/lib/events";
 import { buildSensorQuery } from "@/lib/queries";
 import { getNextDay, getPrevDay } from "@/lib/utils";
 import { useQueries } from "@tanstack/react-query";
@@ -30,7 +28,7 @@ export default function Home() {
 	const { t, i18n } = useTranslation();
 
 	const { view } = useView();
-	const translatedView = t(`overview.${view}`);
+	const translatedView = t(($) => $.overview[view]);
 	const { date, setDate } = useDate();
 
 	const sensorQueries = useMemo(
@@ -68,7 +66,7 @@ export default function Home() {
 		<div className="flex w-full flex-col items-center md:items-start">
 			<div className="mb-4 flex w-full flex-col items-start gap-2 md:mb-0 md:flex-row md:justify-between">
 				<h1 className="p-2 text-3xl">
-					{t("overview.title", { view: translatedView })}
+					{t(($) => $.overview.title, { view: translatedView })}
 				</h1>
 				<div className="flex flex-row gap-4">
 					<Button onClick={() => setDate(getPrevDay(date, view))} size={"icon"}>
@@ -90,19 +88,19 @@ export default function Home() {
 						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
 							{isLoadingAny ? (
 								<Card className="flex h-24 w-full items-center">
-									<p>{t("loadingData")}</p>
+									<p>{t(($) => $.loadingData)}</p>
 								</Card>
 							) : isErrorAny ? (
 								<Card className="flex h-24 w-full items-center">
-									<p>{t("errorLoadingData")}</p>
+									<p>{t(($) => $.errorLoadingData)}</p>
 								</Card>
 							) : view === "month" ? (
-								<MonthlyView
+								<CalendarWidget
 									selectedDay={date}
 									data={mapAllSensorDataToMonthLists(everySensorData ?? [])}
 								/>
 							) : view === "week" ? (
-								<WeekView
+								<WeekWidget
 									locale={languageToLocale[i18n.language]}
 									dayStartHour={8}
 									dayEndHour={16}
@@ -122,7 +120,7 @@ export default function Home() {
 											year: "numeric",
 										})}
 									</CardTitle>
-									<p>{t("noData")}</p>
+									<p>{t(($) => $.noData)}</p>
 								</Card>
 							) : (
 								<DailyBarChart

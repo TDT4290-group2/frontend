@@ -1,17 +1,18 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 
 import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
-import { MonthlyView } from "@/components/monthly-view";
 import { Notifications } from "@/components/notifications";
 import { Summary } from "@/components/summary";
 import { Card, CardTitle } from "@/components/ui/card";
-import { WeekView } from "@/components/weekly-view";
+import { CalendarWidget } from "@/features/calendar-widget/calendar-widget";
+import { mapSensorDataToMonthLists } from "@/features/calendar-widget/data-transform";
 import { useDate } from "@/features/date-picker/use-date";
 import { useView } from "@/features/views/use-view";
+import { mapWeekDataToEvents } from "@/features/week-widget/data-transform";
+import { WeekWidget } from "@/features/week-widget/week-widget";
 import { languageToLocale } from "@/i18n/locale";
 import { sensorQueryOptions } from "@/lib/api";
 import type { SensorDataRequestDto } from "@/lib/dto";
-import { mapSensorDataToMonthLists, mapWeekDataToEvents } from "@/lib/events";
 import { thresholds } from "@/lib/thresholds";
 import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
@@ -28,7 +29,7 @@ export default function Noise() {
 		startTime: new Date(date.setUTCHours(8)),
 		endTime: new Date(date.setUTCHours(16)),
 		granularity: "minute",
-		function: "avg",
+		function: "max",
 	};
 
 	const weekQuery: SensorDataRequestDto = {
@@ -64,19 +65,19 @@ export default function Noise() {
 			<div className="flex flex-1 flex-col items-end gap-4">
 				{isLoading ? (
 					<Card className="flex h-24 w-full items-center">
-						<p>{t("loadingData")}</p>
+						<p>{t(($) => $.loadingData)}</p>
 					</Card>
 				) : isError ? (
 					<Card className="flex h-24 w-full items-center">
-						<p>{t("errorLoadingData")}</p>
+						<p>{t(($) => $.errorLoadingData)}</p>
 					</Card>
 				) : view === "month" ? (
-					<MonthlyView
+					<CalendarWidget
 						selectedDay={date}
 						data={mapSensorDataToMonthLists(data ?? [], "noise") ?? []}
 					/>
 				) : view === "week" ? (
-					<WeekView
+					<WeekWidget
 						locale={languageToLocale[i18n.language]}
 						dayStartHour={8}
 						dayEndHour={16}
@@ -93,7 +94,7 @@ export default function Noise() {
 								year: "numeric",
 							})}
 						</CardTitle>
-						<p>{t("noData")}</p>
+						<p>{t(($) => $.noData)}</p>
 					</Card>
 				) : (
 					<ChartLineDefault
@@ -106,7 +107,8 @@ export default function Noise() {
 						unit="db (TWA)"
 						startHour={8}
 						endHour={16}
-						maxY={130}
+						maxY={150}
+						lineType="monotone"
 					>
 						<ThresholdLine y={thresholds.noise.danger} dangerLevel="danger" />
 						<ThresholdLine y={thresholds.noise.warning} dangerLevel="warning" />

@@ -1,14 +1,13 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 /** biome-ignore-all lint/correctness/noNestedComponentDefinitions: CustomDay is intentionally defined inside MonthlyView for prop access. */
 
-import type { Sensor } from "@/features/sensor-picker/sensors";
+import { Calendar } from "@/components/ui/calendar";
+import { Card } from "@/components/ui/card";
 import { languageToLocale } from "@/i18n/locale";
 import type { DangerKey } from "@/lib/danger-levels";
 import { cn } from "@/lib/utils";
 import type { CalendarDay, Modifiers } from "react-day-picker";
 import { useTranslation } from "react-i18next";
-import { Calendar } from "./ui/calendar";
-import { Card } from "./ui/card";
 
 export type MonthData = Record<DangerKey, Partial<Record<Sensor, Array<Date>>>>;
 
@@ -19,9 +18,10 @@ type MonthlyProps = {
 };
 
 import { useState } from "react";
-import { PopupModal, type PopupData } from "./view-popup";
+import { PopupModal, type PopupData } from "@/components/view-popup";
+import type { Sensor } from "../sensor-picker/sensors";
 
-export function MonthlyView({ selectedDay, data }: MonthlyProps) {
+export function CalendarWidget({ selectedDay, data }: MonthlyProps) {
 	const { i18n } = useTranslation();
 
 	const [popupData, setPopupData] = useState<{
@@ -150,7 +150,7 @@ type CustomDayProps = {
 	handleDayClick: (day: Date) => void;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function CustomDay({
+function CustomDay({
 	day,
 	className,
 	getDayType,

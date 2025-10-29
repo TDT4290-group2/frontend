@@ -37,8 +37,8 @@
     "all": "Every sensor"
   },
   "line_chart": {
-    "danger": "Threshold Exceeded!",
-    "warning": "Close to exposure limit",
+    "danger": "Exposure Limit",
+    "warning": "Action Limit",
     "safe": "Safely within exposure limit"
   },
   "monthly_view": {

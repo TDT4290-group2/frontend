@@ -37,8 +37,8 @@
     "all": "Hver sensor"
   },
   "line_chart": {
-    "danger": "Grense overskredet!",
-    "warning": "Nær eksponeringsgrensen",
+    "danger": "Grenseverdi",
+    "warning": "Tiltaksverdi",
     "safe": "Trygt innenfor eksponeringsgrensen"
   },
   "monthly_view": {

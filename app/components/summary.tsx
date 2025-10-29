@@ -32,19 +32,19 @@ export function Summary({ exposureType, data }: SummaryProps) {
 
 	const viewLabelConfig: Record<View, SummaryLabel> = {
 		day: {
-			safe: t("exposure_summary.greenHourText"),
-			warning: t("exposure_summary.orangeHourText"),
-			danger: t("exposure_summary.redHourText"),
+			safe: t(($) => $.exposure_summary.greenHourText),
+			warning: t(($) => $.exposure_summary.orangeHourText),
+			danger: t(($) => $.exposure_summary.redHourText),
 		},
 		week: {
-			safe: t("exposure_summary.greenHourText"),
-			warning: t("exposure_summary.orangeHourText"),
-			danger: t("exposure_summary.redHourText"),
+			safe: t(($) => $.exposure_summary.greenHourText),
+			warning: t(($) => $.exposure_summary.orangeHourText),
+			danger: t(($) => $.exposure_summary.redHourText),
 		},
 		month: {
-			safe: t("exposure_summary.greenDayText"),
-			warning: t("exposure_summary.orangeDayText"),
-			danger: t("exposure_summary.redDayText"),
+			safe: t(($) => $.exposure_summary.greenDayText),
+			warning: t(($) => $.exposure_summary.orangeDayText),
+			danger: t(($) => $.exposure_summary.redDayText),
 		},
 	};
 	const summaryData: SummaryType = getSummaryData({ view, exposureType, data });
@@ -61,15 +61,15 @@ export function Summary({ exposureType, data }: SummaryProps) {
 		<Card className="flex w-full flex-col gap-0 p-5 shadow">
 			<div className="border-b-2 border-b-slate-300 md:pb-2 md:pl-2">
 				<h2 className="text-center text-xl md:text-left md:text-2xl">
-					{t("exposure_summary.title")}
+					{t(($) => $.exposure_summary.title)}
 				</h2>
 			</div>
 			<div className="exposure-subheader">
 				<h4 className="text-center text-slate-400 text-sm md:text-right">
 					<span>
 						{exposureType
-							? t(`exposure_summary.${exposureType}`)
-							: t("exposure_summary.allSensors")}
+							? t(($) => $.exposure_summary[exposureType])
+							: t(($) => $.exposure_summary.allSensors)}
 					</span>
 				</h4>
 			</div>
@@ -163,36 +163,17 @@ const getSingleSummary = (
 
 	const threshold = thresholds[sensor];
 
-	if (view === "month") {
-		for (const item of data) {
-			if (item.value < threshold.warning) {
-				summaryData.safeCount++;
-			} else if (item.value < threshold.danger) {
-				summaryData.warningCount++;
-			} else {
-				summaryData.dangerCount++;
-			}
+	for (const item of data) {
+		if (item.value < threshold.warning) {
+			summaryData.safeCount++;
+		} else if (item.value < threshold.danger) {
+			summaryData.warningCount++;
+		} else {
+			summaryData.dangerCount++;
 		}
-	} else if (view === "week") {
-		for (const item of data) {
-			if (item.value < threshold.warning) {
-				summaryData.safeCount++;
-			} else if (item.value < threshold.danger) {
-				summaryData.warningCount++;
-			} else {
-				summaryData.dangerCount++;
-			}
-		}
-	} else {
-		for (const item of data) {
-			if (item.value < threshold.warning) {
-				summaryData.safeCount++;
-			} else if (item.value < threshold.danger) {
-				summaryData.warningCount++;
-			} else {
-				summaryData.dangerCount++;
-			}
-		}
+	}
+
+	if (view === "day") {
 		summaryData.dangerCount = Math.ceil(summaryData.dangerCount / 60);
 		summaryData.warningCount = Math.round(summaryData.warningCount / 60);
 		summaryData.safeCount = Math.floor(summaryData.safeCount / 60);

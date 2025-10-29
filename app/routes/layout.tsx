@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/features/dark-mode/mode-toggle";
+import { useDate } from "@/features/date-picker/use-date";
 import { sensors } from "@/features/sensor-picker/sensors";
 import { useSensor } from "@/features/sensor-picker/use-sensor";
 import { useView } from "@/features/views/use-view";
@@ -24,14 +25,7 @@ import {
 } from "@/ui/select";
 import { type ReactNode, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-	href,
-	Link,
-	NavLink,
-	Outlet,
-	type To,
-	useLocation,
-} from "react-router";
+import { href, NavLink, Outlet, type To, useLocation } from "react-router";
 
 const Logo = () => (
 	<svg
@@ -73,10 +67,10 @@ export default function Layout() {
 	const { t, i18n } = useTranslation();
 
 	const links: Array<{ to: To; label: string }> = [
-		{ to: href("/"), label: t("layout.overview") },
-		{ to: href("/dust"), label: t("dust") },
-		{ to: href("/vibration"), label: t("vibration") },
-		{ to: href("/noise"), label: t("noise") },
+		{ to: href("/"), label: t(($) => $.layout.overview) },
+		{ to: href("/dust"), label: t(($) => $.dust) },
+		{ to: href("/vibration"), label: t(($) => $.vibration) },
+		{ to: href("/noise"), label: t(($) => $.noise) },
 	];
 
 	return (
@@ -113,10 +107,10 @@ export default function Layout() {
 							</SelectTrigger>
 							<SelectContent className="w-32">
 								<SelectItem key={"en"} value={"en"}>
-									{t("english")}
+									{t(($) => $.english)}
 								</SelectItem>
 								<SelectItem key={"no"} value={"no"}>
-									{t("norwegian")}
+									{t(($) => $.norwegian)}
 								</SelectItem>
 							</SelectContent>
 						</Select>
@@ -133,6 +127,7 @@ export default function Layout() {
 
 function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 	const { view } = useView();
+	const { date } = useDate();
 	const location = useLocation();
 	const { setSensor } = useSensor();
 	const navLinkRefs = useRef<Array<HTMLElement>>([]); // Refs to the nav links
@@ -156,7 +151,7 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 					<NavLink
 						to={{
 							pathname: route.to.toString(),
-							search: `?view=${view}`,
+							search: `?view=${view}&date=${date.toISOString().split("T")[0]}`,
 						}}
 						onClick={() =>
 							sensors.find(
@@ -195,6 +190,9 @@ function MobileMenu({
 	routes: Array<{ label: string; to: To }>;
 	children?: ReactNode;
 }) {
+	const { view } = useView();
+	const { date } = useDate();
+	const { setSensor } = useSensor();
 	return (
 		<div className="md:hidden">
 			<Drawer>
@@ -206,13 +204,25 @@ function MobileMenu({
 							<ul className="flex w-full flex-col items-start gap-4 text-center">
 								{routes.map((route) => (
 									<li key={route.to.toString()}>
-										<Link
-											className="text-lg text-primary"
-											to={route.to}
-											prefetch="render"
-										>
-											{route.label}
-										</Link>
+										<DrawerClose asChild>
+											<NavLink
+												to={{
+													pathname: route.to.toString(),
+													search: `?view=${view}&date=${date.toISOString().split("T")[0]}`,
+												}}
+												onClick={() =>
+													sensors.find(
+														(s) =>
+															route.to.toString().includes(s) && setSensor(s),
+													)
+												}
+												key={route.to.toString()}
+												prefetch="intent"
+												className="text-lg text-primary"
+											>
+												{route.label}
+											</NavLink>
+										</DrawerClose>
 									</li>
 								))}
 							</ul>
