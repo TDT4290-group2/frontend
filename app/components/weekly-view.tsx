@@ -1,6 +1,5 @@
 import { useDate } from "@/features/date-picker/use-date";
 import type { DangerKey } from "@/lib/danger-levels";
-import { dangerLevels } from "@/lib/danger-levels";
 import { cn } from "@/lib/utils";
 import {
 	addDays,
@@ -20,10 +19,11 @@ import {
 	startOfDay,
 	startOfWeek,
 } from "date-fns";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
+import { PopupModal, WeeklyPopup, type PopupData } from "./view-popup";
 
 export function DaysHeader({ days }: { days: Days }) {
 	return (
@@ -65,84 +65,84 @@ export function DaysHeader({ days }: { days: Days }) {
 }
 
 export function EventGrid({
-	days,
-	events,
-	weekStartsOn,
-	minuteStep,
-	rowHeight,
-	onEventClick,
-	dayStartHour,
-	dayEndHour,
-}: {
-	days: Days;
-	events?: Array<Event>;
-	weekStartsOn: Day;
-	minuteStep: number;
-	rowHeight: number;
-	onEventClick?: (event: Event) => void;
-	dayStartHour: number;
-	dayEndHour: number;
-}) {
-	return (
-		<div
-			style={{
-				display: "grid",
-				gridTemplateColumns: `repeat(${days.length + 1}, minmax(0, 1fr))`,
-				gridTemplateRows: `repeat(${days[0].cells.length}, minmax(${rowHeight}px, 1fr))`,
-			}}
-		>
-			{(events || [])
-				.filter(
-					(event) =>
-						isSameWeek(days[0].date, event.startDate) &&
-						event.endDate.getUTCHours() <= dayEndHour &&
-						event.startDate.getUTCHours() >= dayStartHour,
-				)
-				.map((event) => {
-					const start = event.startDate.getUTCHours() - dayStartHour + 1;
-					const end = event.endDate.getUTCHours() - dayStartHour + 1;
-					const paddingTop =
-						((getMinutes(event.startDate) % minuteStep) / minuteStep) *
-						rowHeight;
+		days,
+		events,
+		handleEventClick,
+		weekStartsOn,
+		minuteStep,
+		rowHeight,
+		dayStartHour,
+		dayEndHour,
+	}: {
+		days: Days;
+		events?: Array<Event>;
+		handleEventClick: (event: Event) => void;
+		weekStartsOn: Day;
+		minuteStep: number;
+		rowHeight: number;
+		dayStartHour: number;
+		dayEndHour: number;
+	}) {
+		return (
+			<div
+				style={{
+					display: "grid",
+					gridTemplateColumns: `repeat(${days.length + 1}, minmax(0, 1fr))`,
+					gridTemplateRows: `repeat(${days[0].cells.length}, minmax(${rowHeight}px, 1fr))`,
+				}}
+			>
+				{(events || [])
+					.filter(
+						(event) =>
+							isSameWeek(days[0].date, event.startDate) &&
+							event.endDate.getUTCHours() <= dayEndHour &&
+							event.startDate.getUTCHours() >= dayStartHour,
+					)
+					.map((event) => {
+						const start = event.startDate.getUTCHours() - dayStartHour + 1;
+						const end = event.endDate.getUTCHours() - dayStartHour + 1;
+						const paddingTop =
+							((getMinutes(event.startDate) % minuteStep) / minuteStep) *
+							rowHeight;
 
-					const paddingBottom =
-						(rowHeight -
-							((getMinutes(event.endDate) % minuteStep) / minuteStep) *
-								rowHeight) %
-						rowHeight;
+						const paddingBottom =
+							(rowHeight -
+								((getMinutes(event.endDate) % minuteStep) / minuteStep) *
+									rowHeight) %
+							rowHeight;
 
-					return (
-						<div
-							key={event.startDate.toISOString()}
-							className="relative flex transition-all"
-							style={{
-								gridRowStart: start,
-								gridRowEnd: end,
-								gridColumnStart: getDay(event.startDate) - weekStartsOn + 2,
-								gridColumnEnd: "span 1",
-							}}
-						>
-							<button
-								type="button"
-								className={cn(
-									"absolute inset-1 flex cursor-pointer flex-col overflow-y-auto rounded-md text-xs leading-5 transition",
-									`bg-[${dangerLevels[event.dangerLevel].color}]`,
-									"border-t-2 border-t-muted-foreground border-dotted",
-									`${event.startDate.getUTCHours() === dayStartHour && "border-t-0"} `,
-									"hover:brightness-85",
-								)}
+						return (
+							<div
+								key={event.startDate.toISOString()}
+								className="relative flex transition-all"
 								style={{
-									top: paddingTop,
-									bottom: paddingBottom,
+									gridRowStart: start,
+									gridRowEnd: end,
+									gridColumnStart: getDay(event.startDate) - weekStartsOn + 2,
+									gridColumnEnd: "span 1",
 								}}
-								onClick={() => onEventClick?.(event)}
-							/>
-						</div>
-					);
-				})}
-		</div>
-	);
-}
+							>
+								<button
+									type="button"
+									className={cn(
+										"absolute inset-1 flex cursor-pointer flex-col overflow-y-auto rounded-md text-xs leading-5 transition",
+										`bg-${event.dangerLevel}`,
+										"border-t-2 border-t-muted-foreground border-dotted",
+										`${event.startDate.getUTCHours() === dayStartHour && "border-t-0"} `,
+										"hover:brightness-85",
+									)}
+									onClick={() => handleEventClick(event)}
+									style={{
+										top: paddingTop,
+										bottom: paddingBottom,
+									}}
+								/>
+							</div>
+						);
+					})}
+			</div>
+		);
+	}
 
 export function Grid({
 	days,
@@ -430,7 +430,6 @@ export function WeekView({
 	disabledDay,
 	disabledWeek,
 	events,
-	onEventClick,
 }: {
 	minuteStep?: number;
 	weekStartsOn?: Day;
@@ -443,7 +442,6 @@ export function WeekView({
 	disabledWeek?: (startDayOfWeek: Date) => boolean;
 	events?: Array<Event>;
 	onCellClick?: (cell: Cell) => void;
-	onEventClick?: (event: Event) => void;
 }) {
 	const { days, nextWeek, previousWeek, goToToday, viewTitle } = useWeekView({
 		minuteStep,
@@ -456,8 +454,50 @@ export function WeekView({
 		disabledWeek,
 	});
 
+	const { i18n } = useTranslation();
+	const [popupData, setPopupData] = useState<{
+		event: Event | null;
+		open: boolean;
+		exposures: PopupData | null;
+	}>({ event: null, open: false, exposures: null });
+	
+	function togglePopup() {
+		setPopupData((p) => ({ ...p, open: !p.open }));
+	}
+
+	function navToDay() {
+		// biome-ignore lint/suspicious/noConsole: We are in development duh
+		console.log("Navigating to day");
+	}
+
+	function handleEventClick(event: Event): void {
+		const exposureData = { dust: "safe", noise: "safe", vibration: "safe"} as PopupData;
+		setPopupData({ event: event, open: true, exposures: exposureData });
+	}
+
+	const eventTitle = (event: Event) => {
+		const actualDay = event.startDate.toLocaleDateString(i18n.language);
+		const timeConfig: Intl.DateTimeFormatOptions = {
+			hour: "2-digit",
+			minute: "2-digit",
+		};
+		const start = event.startDate.toLocaleTimeString(i18n.language, timeConfig);
+		const end = event.endDate.toLocaleTimeString(i18n.language, timeConfig);
+		return `${actualDay}, from ${start} to ${end}`;
+	}
+
 	return (
 		<Card className="w-full">
+			{/* interaction popup window */}
+			{popupData.open && popupData.event && (
+				<WeeklyPopup
+					title={eventTitle(popupData.event)}
+					event={popupData.event}
+					togglePopup={togglePopup}
+					handleDayNav={navToDay}
+					highestExposure={popupData.event.dangerLevel}
+				></WeeklyPopup>
+			)}
 			<div className="flex flex-col overflow-hidden px-1">
 				<Header
 					title={viewTitle}
@@ -482,10 +522,10 @@ export function WeekView({
 									<EventGrid
 										days={days}
 										events={events}
+										handleEventClick={handleEventClick}
 										weekStartsOn={weekStartsOn}
 										minuteStep={minuteStep}
 										rowHeight={rowHeight}
-										onEventClick={onEventClick}
 										dayStartHour={dayStartHour}
 										dayEndHour={dayEndHour}
 									/>

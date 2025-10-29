@@ -86,9 +86,10 @@
     "toDay": "See details",
     "notesTitle": "Note for this day:",
     "exposureTitle": "Exposure:",
-    "safe": "No exposure limit was exceeded this day",
+    "safe": "No exposure limit was exceeded",
     "warning": "An exposure limit was almost exceeded",
-    "danger": "An exposure limit was exceeded"
+    "danger": "An exposure limit was exceeded",
+    "openDaily": "See details for information about type of exposure"
   },
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",

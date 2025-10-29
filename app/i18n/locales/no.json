@@ -33,7 +33,8 @@
     "dust": "Støv",
     "vibration": "Vibrasjon",
     "noise": "Støy",
-    "all": "Alle sensorer"
+    "allSensors": "Alle sensorer",
+    "all": "Hver sensor"
   },
   "line_chart": {
     "danger": "Grense overskredet!",
@@ -87,12 +88,12 @@
     "exposureTitle": "Eksponering:",
     "safe": "Ingen eksponeringsgrense brutt",
     "warning": "En eksponeringsgrense var nær å bli brutt",
-    "danger": "Eksponeringsgrense ble brutt"
+    "danger": "Eksponeringsgrense ble brutt",
+    "openDaily": "Se detaljer for informasjon om eksponeringstype" 
   },
 
   "loadingData": "Laster inn data...",
   "errorLoadingData": "Noe gikk galt under henting av sensordata.",
   "noData": "Ingen eksponeringsdata funnet for denne dagen",
-
   "points": "Poeng"
 }

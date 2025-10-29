@@ -109,7 +109,6 @@ export default function Home() {
 									weekStartsOn={1}
 									minuteStep={60}
 									events={mapAllWeekDataToEvents(everySensorData ?? [])}
-									onEventClick={(event) => alert(event.dangerLevel)}
 								/>
 							) : !everySensorData ||
 								Object.values(everySensorData).every(

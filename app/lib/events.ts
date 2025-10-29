@@ -1,6 +1,6 @@
 import type { Event } from "@/components/weekly-view";
 import type { Sensor } from "@/features/sensor-picker/sensors";
-import { type DangerKey, DangerTypes } from "./danger-levels";
+import { type DangerKey, DangerTypes, dangerKeys } from "./danger-levels";
 import type { AllSensors, SensorDataResponseDto } from "./dto";
 import { thresholds } from "./thresholds";
 import type { MonthData } from "@/components/monthly-view";
@@ -96,6 +96,14 @@ export const mapMonthDataToDangerLists = (
 	return { safe, warning, danger };
 };
 
+					/**
+					 * {
+    safe: Record<"dust" | "noise" | "vibration", Date[]>;
+    warning: Record<"dust" | "noise" | "vibration", Date[]>;
+    danger: Record<"dust" | "noise" | "vibration", Date[]>;
+
+}
+					 */
 export const mapSensorDataToMonthLists = (
 	data: Array<SensorDataResponseDto>,
 	relevantSensor: Sensor,
