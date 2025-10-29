@@ -163,9 +163,7 @@ export const DailyNotes = () => {
 
 export const PopupNotes = ({selectedDate}: {selectedDate: Date}) => {
 
-	const temp = "Placeholder";
 	const { t, i18n } = useTranslation();
-	const locale = i18n.language;
 
 	const [notes, setNotes] = useState<Array<Note>>([
 		{

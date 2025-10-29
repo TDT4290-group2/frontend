@@ -20,7 +20,7 @@ import { useState } from "react";
 import { PopupModal } from "./view-popup";
 
 export function MonthlyView({ selectedDay, data }: MonthlyProps) {
-	const { t, i18n } = useTranslation();
+	const { i18n } = useTranslation();
 
 	const [popupData, setPopupData] = useState<{
 		day: Date | null;
@@ -44,14 +44,16 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 		setPopupData({ day: clickedDay, type, open: true });
 	}
 
-	function closePopup() {
-		setPopupData((p) => ({ ...p, open: false }));
+	function togglePopup() {
+		setPopupData((p) => ({ ...p, open: !p.open }));
 	}
 
 	function navToDay() {
 		// biome-ignore lint/suspicious/noConsole: We are in development duh
 		console.log("Navigating to day");
 	}
+
+	const overviewTest: Record<Sensor, DangerKey> = {dust: "safe", vibration: "warning", noise: "danger"}
 
 	return (
 		<>
@@ -85,32 +87,14 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 				<PopupModal
 					title={popupData.day.toLocaleDateString(i18n.language, {
 						day: "numeric",
-						month: "short",
+						month: "long",
 						year: "numeric",
 					})}
 					selectedDate={popupData.day}
-					handleClose={closePopup}
+					togglePopup={togglePopup}
 					handleDayNav={navToDay}
-				>
-					{/* 					
-					<div className="flex flex-col gap-2">
-						<p>
-							{t("details.forDay")}{" "}
-							<strong>{popupData.day.toLocaleDateString(i18n.language)}</strong>
-						</p>
-						<p>{t(`details.${popupData.type}-description`)}</p>
-					</div>
-					<div className="flex justify-end pt-4">
-						<button
-							type="button"
-							onClick={closePopup}
-							className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
-						>
-							{t("close")}
-						</button>
-					</div> 
-					*/}
-				</PopupModal>
+					overview={overviewTest}
+				></PopupModal>
 			)}
 		</>
 	);

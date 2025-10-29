@@ -9,35 +9,62 @@ import {
 } from "@/components/ui/dialog";
 import { PopupNotes } from "./daily-notes";
 import { t } from "i18next";
+import type { DangerKey } from "@/lib/danger-levels";
+import type { Sensor } from "@/lib/sensors";
+import { Card } from "./ui/card";
+import { cn } from "@/lib/utils";
 
 type PopupProps = {
 	title: string;
-    selectedDate: Date | null;
-    handleClose?: () => void;
-    handleDayNav?: () => void;
+	selectedDate: Date | null;
+    overview?: OverviewPopup;
+	togglePopup?: () => void;
+	handleDayNav?: () => void;
 	children?: React.ReactNode;
-}
+};
 
-export function PopupModal({ title, selectedDate, handleClose, handleDayNav, children }: PopupProps) {
+type OverviewPopup = Record<Sensor, DangerKey>
+
+export function PopupModal({ title, selectedDate, overview, togglePopup, handleDayNav, children }: PopupProps) {
 	return (
-		<Dialog open={true}>
-            <DialogTrigger onClick={handleClose}></DialogTrigger>
+		<Dialog open={true} onOpenChange={togglePopup}>
+			<DialogTrigger onClick={togglePopup}></DialogTrigger>
 			<DialogContent className="max-w-md">
 				<DialogHeader>
-					<DialogTitle>{title}</DialogTitle>
+					<DialogTitle className="font-bold text-xl">{title}</DialogTitle>
 				</DialogHeader>
 
 				{selectedDate !== null ? (
 					<div className="flex flex-col gap-2">
 						<h2 className="font-bold">{t("popup.exposureTitle")}</h2>
-						<div>{"[Exposures placeholder...]"}</div>
-						<h2 className="font-bold">{t("popup.notesTitle")}</h2>
+						{overview && (
+							<Card className="p-2 md:p-5">
+								{Object.entries(overview).map(([sensor, danger]) => (
+									<div key={sensor} className="flex justify-start gap-2">
+										<span
+											className={cn(
+												"rounded-full text-center font-medium capitalize",
+												`bg-${danger} ${danger === "danger" && "text-secondary"}`,
+												"h-fit w-fit px-2",
+											)}
+										>
+											{sensor}
+										</span>
+										<span className="text-muted-foreground">{"->"}</span>
+										<div className={`text-${danger}`}>
+											{t(`popup.${danger}`)}
+										</div>
+									</div>
+								))}
+							</Card>
+						)}
+						<h2 className="pt-4 font-bold">{t("popup.notesTitle")}</h2>
 						<PopupNotes selectedDate={selectedDate} />
 					</div>
 				) : (
 					<div>{t("noData")}</div>
 				)}
-				<div className="bg-card py-4">{children}</div>
+				<div>{children}</div>
 
 				<DialogFooter>
 					<Button
@@ -49,7 +76,7 @@ export function PopupModal({ title, selectedDate, handleClose, handleDayNav, chi
 					</Button>
 					<Button
 						variant={"destructive"}
-						onClick={handleClose}
+						onClick={togglePopup}
 						className="cursor-pointer"
 					>
 						{t("buttons.close")}

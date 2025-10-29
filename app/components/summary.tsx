@@ -22,7 +22,7 @@ export function Summary({ exposureType, data }: SummaryProps) {
 
 	const safeColor = "text-safe";
 	const warningColor = "text-warning";
-	const dangerColor = "text-destructive";
+	const dangerColor = "text-danger";
 
 	const defaultLabels: SummaryLabel = {
 		safe: "SAFE",

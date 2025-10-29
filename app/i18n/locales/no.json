@@ -82,9 +82,12 @@
   "week": "Uke",
   "month": "Måned",
   "popup": {
-    "toDay": "Se denne dagen",
+    "toDay": "Se detaljer",
     "notesTitle": "Notater denne dagen:",
-    "exposureTitle": "Din eksponering denne dagen:"
+    "exposureTitle": "Eksponering:",
+    "safe": "Ingen eksponeringsgrense brutt",
+    "warning": "En eksponeringsgrense var nær å bli brutt",
+    "danger": "Eksponeringsgrense ble brutt"
   },
 
   "loadingData": "Laster inn data...",

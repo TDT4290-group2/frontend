@@ -83,9 +83,12 @@
   "week": "Week",
   "month": "Month",
   "popup": {
-    "toDay": "See this day",
+    "toDay": "See details",
     "notesTitle": "Note for this day:",
-    "exposureTitle": "Your exposure this day:"
+    "exposureTitle": "Exposure:",
+    "safe": "No exposure limit was exceeded this day",
+    "warning": "An exposure limit was almost exceeded",
+    "danger": "An exposure limit was exceeded"
   },
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",
