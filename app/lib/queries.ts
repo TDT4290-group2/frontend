@@ -16,11 +16,11 @@ const viewToGranularity: Record<View, GranularityKey> = {
 const sensorViewToAggregateFn: Record<Sensor, Record<View, AggregateFnKey>> = {
 	dust: {
 		day: "avg",
-		week: "avg",
-		month: "avg",
+		week: "max",
+		month: "max",
 	},
 	noise: {
-		day: "avg",
+		day: "max",
 		week: "max",
 		month: "max",
 	},

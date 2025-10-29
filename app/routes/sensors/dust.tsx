@@ -36,7 +36,7 @@ export default function Dust() {
 		startTime: startOfWeek(date, { weekStartsOn: 1 }),
 		endTime: endOfWeek(date, { weekStartsOn: 1 }),
 		granularity: "hour",
-		function: "avg",
+		function: "max",
 		field: "pm1_stel",
 	};
 
@@ -44,7 +44,7 @@ export default function Dust() {
 		startTime: startOfMonth(date),
 		endTime: endOfMonth(date),
 		granularity: "day",
-		function: "avg",
+		function: "max",
 		field: "pm1_stel",
 	};
 

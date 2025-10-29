@@ -108,7 +108,7 @@ export default function Noise() {
 						unit="db (TWA)"
 						startHour={8}
 						endHour={16}
-						maxY={130}
+						maxY={150}
 					>
 						<ThresholdLine y={thresholds.noise.danger} dangerLevel="danger" />
 						<ThresholdLine y={thresholds.noise.warning} dangerLevel="warning" />
