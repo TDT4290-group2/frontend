@@ -78,6 +78,7 @@ export default function Dust() {
 						<p>{t("errorLoadingData")}</p>
 					</Card>
 				</Activity>
+
 				<Activity mode={isDataEmpty ? "visible" : "hidden"}>
 					<Card className="flex h-24 w-full items-center">
 						<CardTitle>
@@ -90,13 +91,15 @@ export default function Dust() {
 						<p>{t("noData")}</p>
 					</Card>
 				</Activity>
-				<Activity mode={data ? "visible" : "hidden"}>
+
+				<Activity mode={data && !isDataEmpty ? "visible" : "hidden"}>
 					<Activity mode={view === "month" ? "visible" : "hidden"}>
 						<MonthlyView
 							selectedDay={date}
 							data={mapSensorDataToMonthLists(data ?? [], "dust") ?? []}
 						/>
 					</Activity>
+
 					<Activity mode={view === "week" ? "visible" : "hidden"}>
 						<WeekView
 							locale={languageToLocale[i18n.language]}
@@ -108,6 +111,7 @@ export default function Dust() {
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
 					</Activity>
+
 					<Activity mode={view === "day" ? "visible" : "hidden"}>
 						<ChartLineDefault
 							chartData={data ?? []}

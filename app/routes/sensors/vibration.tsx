@@ -89,7 +89,7 @@ export default function Vibration() {
 						<p>{t("noData")}</p>
 					</Card>
 				</Activity>
-				<Activity mode={data ? "visible" : "hidden"}>
+				<Activity mode={data && !isDataEmpty ? "visible" : "hidden"}>
 					<Activity mode={view === "month" ? "visible" : "hidden"}>
 						<MonthlyView
 							selectedDay={date}

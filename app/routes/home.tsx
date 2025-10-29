@@ -70,7 +70,7 @@ export default function Home() {
 			(sensor) => !sensor.data || sensor.data.length === 0,
 		);
 	const isDataEmpty = isNoData && !isLoadingAny && !isErrorAny;
-	const isDataAvailable = isNoData || !isLoadingAny || !isErrorAny;
+	const isDataUnavailable = isNoData || !isLoadingAny || !isErrorAny;
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
 			<div className="mb-4 flex w-full flex-col items-start gap-2 md:mb-0 md:flex-row md:justify-between">
@@ -120,7 +120,7 @@ export default function Home() {
 								</Card>
 							</Activity>
 
-							<Activity mode={isDataAvailable ? "hidden" : "visible"}>
+							<Activity mode={isDataUnavailable ? "hidden" : "visible"}>
 								<Activity mode={view === "day" ? "visible" : "hidden"}>
 									<DailyBarChart
 										data={everySensorData}

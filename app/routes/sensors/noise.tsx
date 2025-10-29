@@ -87,13 +87,15 @@ export default function Noise() {
 						<p>{t("noData")}</p>
 					</Card>
 				</Activity>
-				<Activity mode={data ? "visible" : "hidden"}>
+
+				<Activity mode={data && !isDataEmpty ? "visible" : "hidden"}>
 					<Activity mode={view === "month" ? "visible" : "hidden"}>
 						<MonthlyView
 							selectedDay={date}
 							data={mapSensorDataToMonthLists(data ?? [], "noise") ?? []}
 						/>
 					</Activity>
+
 					<Activity mode={view === "week" ? "visible" : "hidden"}>
 						<WeekView
 							locale={languageToLocale[i18n.language]}
@@ -105,6 +107,7 @@ export default function Noise() {
 							onEventClick={(event) => alert(event.dangerLevel)}
 						/>
 					</Activity>
+
 					<Activity mode={view === "day" ? "visible" : "hidden"}>
 						<ChartLineDefault
 							chartData={data ?? []}
