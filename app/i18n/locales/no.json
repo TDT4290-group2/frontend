@@ -51,6 +51,7 @@
     "edit": "Rediger",
     "save": "Lagre",
     "notesFromThis": "Notater fra denne ",
+    "day": "dagen",
     "week": "uken",
     "month": "måneden"
   },
@@ -81,7 +82,9 @@
   "week": "Uke",
   "month": "Måned",
   "popup": {
-    "toDay": "Se denne dagen"
+    "toDay": "Se denne dagen",
+    "notesTitle": "Notater denne dagen:",
+    "exposureTitle": "Din eksponering denne dagen:"
   },
 
   "loadingData": "Laster inn data...",

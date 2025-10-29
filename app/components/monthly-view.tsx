@@ -88,6 +88,7 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 						month: "short",
 						year: "numeric",
 					})}
+					selectedDate={popupData.day}
 					handleClose={closePopup}
 					handleDayNav={navToDay}
 				>

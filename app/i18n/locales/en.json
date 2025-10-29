@@ -52,6 +52,7 @@
     "edit": "Edit",
     "save": "Save",
     "notesFromThis": "Notes from this ",
+    "day": "day",
     "week": "week",
     "month": "month"
   },
@@ -82,7 +83,9 @@
   "week": "Week",
   "month": "Month",
   "popup": {
-    "toDay": "See this day"
+    "toDay": "See this day",
+    "notesTitle": "Note for this day:",
+    "exposureTitle": "Your exposure this day:"
   },
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",
