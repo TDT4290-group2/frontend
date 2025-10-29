@@ -25,7 +25,7 @@ const _mapMonthDataToDangerLists = (
 	return { safe, warning, danger };
 };
 
-					/**
+/**
 					 * {
     safe: Record<"dust" | "noise" | "vibration", Date[]>;
     warning: Record<"dust" | "noise" | "vibration", Date[]>;

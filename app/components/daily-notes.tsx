@@ -143,7 +143,7 @@ export const DailyNotes = () => {
 					{notes
 						.filter((note) => isSameMonth(new Date(), note.date))
 						.map((note) => (
-							<li key={`Month ${note.date.getTime()} ${Math.random() * 5}`}>
+							<li key={note.date.getTime()}>
 								<strong>
 									{note.date.toLocaleDateString(locale, {
 										day: "numeric",
@@ -163,12 +163,10 @@ export const DailyNotes = () => {
 export const PopupNotes = ({ selectedDate }: { selectedDate: Date }) => {
 	const { t } = useTranslation();
 
-	const [note, setNote] = useState<Note>(
-		{
-			date: today,
-			note: "Popup placeholder notat - må fikse funksjonaliteten her",
-		}
-	);
+	const [note, setNote] = useState<Note>({
+		date: today,
+		note: "Popup placeholder notat - må fikse funksjonaliteten her",
+	});
 
 	const [showTextArea, setShowTextArea] = useState<boolean>(
 		!isToday(note.date),
@@ -181,7 +179,7 @@ export const PopupNotes = ({ selectedDate }: { selectedDate: Date }) => {
 
 	const handleSubmit = () => {
 		//this will be replaced by api call
-		setNote({date: selectedDate, note: noteText});
+		setNote({ date: selectedDate, note: noteText });
 		setShowTextArea(false);
 	};
 	return (

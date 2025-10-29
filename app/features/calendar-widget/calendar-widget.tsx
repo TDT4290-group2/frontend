@@ -17,8 +17,8 @@ type MonthlyProps = {
 	data: MonthData;
 };
 
+import { type PopupData, PopupModal } from "@/components/view-popup";
 import { useState } from "react";
-import { PopupModal, type PopupData } from "@/components/view-popup";
 import type { Sensor } from "../sensor-picker/sensors";
 
 export function CalendarWidget({ selectedDay, data }: MonthlyProps) {
@@ -33,7 +33,9 @@ export function CalendarWidget({ selectedDay, data }: MonthlyProps) {
 	const dayKey = (d: Date) => d.toDateString();
 
 	const safeDaysSet = new Set(Object.values(data.safe).flat().map(dayKey));
-	const warningDaysSet = new Set(Object.values(data.warning).flat().map(dayKey));
+	const warningDaysSet = new Set(
+		Object.values(data.warning).flat().map(dayKey),
+	);
 	const dangerDaysSet = new Set(Object.values(data.danger).flat().map(dayKey));
 
 	// Remove duplicates
@@ -50,20 +52,18 @@ export function CalendarWidget({ selectedDay, data }: MonthlyProps) {
 
 	const hasData = (list: Array<Date>, d: Date) =>
 		list.some((day) => day.toDateString() === d.toDateString());
-	
-	function getDayType(
-		day: Date,
-	): Lowercase<DangerKey> | "none" {
+
+	function getDayType(day: Date): Lowercase<DangerKey> | "none" {
 		if (hasData(safeDays, day)) return "safe";
 		if (hasData(warningDays, day)) return "warning";
 		if (hasData(dangerDays, day)) return "danger";
 		return "none";
-	};
+	}
 
 	function handleDayClick(clickedDay: Date) {
 		const type = getDayType(clickedDay);
 		if (type === "none") return;
-		const exposureData = getExposureData(clickedDay)
+		const exposureData = getExposureData(clickedDay);
 		setPopupData({ day: clickedDay, open: true, exposures: exposureData });
 	}
 
@@ -116,7 +116,11 @@ export function CalendarWidget({ selectedDay, data }: MonthlyProps) {
 							/>
 						),
 					}}
-					modifiers={{safe: safeDays, warning: warningDays, danger: dangerDays}}
+					modifiers={{
+						safe: safeDays,
+						warning: warningDays,
+						danger: dangerDays,
+					}}
 					className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
 					captionLayout="label"
 					buttonVariant="default"

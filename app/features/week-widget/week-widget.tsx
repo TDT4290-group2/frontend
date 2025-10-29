@@ -1,14 +1,14 @@
 import { Card } from "@/components/ui/card";
+import { type PopupData, WeeklyPopup } from "@/components/view-popup";
 import { type Day, isSameWeek, type Locale } from "date-fns";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { WeekDaysHeader } from "./components/week-days-header";
 import { WeekEventGrid } from "./components/week-event-grid";
 import { WeekGrid } from "./components/week-grid";
 import { WeekHeader } from "./components/week-header";
 import type { Cell, WeekEvent } from "./types";
 import { useWeekView } from "./use-week-view";
-import { WeeklyPopup, type PopupData } from "@/components/view-popup";
-import { useTranslation } from "react-i18next";
-import { useState } from "react";
 
 export function WeekWidget({
 	minuteStep = 30,
@@ -122,7 +122,7 @@ export function WeekWidget({
 					</div>
 				</div>
 			</Card>
-			
+
 			{/* interaction popup window */}
 			{popupData.open && popupData.event && (
 				<WeeklyPopup
