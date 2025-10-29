@@ -29,7 +29,7 @@ export default function Noise() {
 		startTime: new Date(date.setUTCHours(8)),
 		endTime: new Date(date.setUTCHours(16)),
 		granularity: "minute",
-		function: "avg",
+		function: "max",
 	};
 
 	const weekQuery: SensorDataRequestDto = {
@@ -109,6 +109,7 @@ export default function Noise() {
 						startHour={8}
 						endHour={16}
 						maxY={150}
+						lineType="monotone"
 					>
 						<ThresholdLine y={thresholds.noise.danger} dangerLevel="danger" />
 						<ThresholdLine y={thresholds.noise.warning} dangerLevel="warning" />
