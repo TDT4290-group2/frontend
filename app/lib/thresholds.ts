@@ -7,7 +7,7 @@ type Threshold = {
 
 export const thresholds: Record<Sensor, Threshold> = {
 	dust: {
-		warning: 69,
+		warning: 80,
 		danger: 100,
 	},
 	noise: {

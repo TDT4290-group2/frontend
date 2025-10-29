@@ -7,8 +7,11 @@ import {
 	ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useDate } from "@/features/date-picker/use-date";
+import { useSensor } from "@/features/sensor-picker/use-sensor";
 import { type DangerKey, dangerLevels } from "@/lib/danger-levels";
 import type { SensorDataResponseDto } from "@/lib/dto";
+import { thresholds } from "@/lib/thresholds";
+import { useId } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	CartesianGrid,
@@ -51,6 +54,17 @@ export function ChartLineDefault({
 	const { date: selectedDay } = useDate();
 
 	const { t } = useTranslation();
+
+	const id = useId();
+
+	const { sensor } = useSensor();
+	const { warning, danger } = thresholds[sensor];
+
+	const maxValue = Math.max(...chartData.map((d) => d.value));
+	const minValue = Math.min(...chartData.map((d) => d.value));
+
+	const getOffset = (y: number) =>
+		`${((maxValue - y) / (maxValue - minValue)) * 100}%`;
 
 	const transformedData = chartData.map((item) => ({
 		time: new Date(item.time).getTime(),
@@ -113,12 +127,59 @@ export function ChartLineDefault({
 							content={<ChartTooltipContent hideLabel />}
 							formatter={(value: number) => [`${value.toFixed(2)}`, ` ${unit}`]}
 						/>
+
+						<defs>
+							<linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+								{maxValue < warning ? (
+									<>
+										{/* Whole line is green */}
+										<stop offset="0%" stopColor="var(--safe)" />
+										<stop offset="100%" stopColor="var(--safe)" />
+									</>
+								) : maxValue >= warning && maxValue <= danger ? (
+									<>
+										{/* Green and yellow line*/}
+										<stop
+											offset={getOffset(warning)}
+											stopColor="var(--warning)"
+										/>
+										<stop offset={getOffset(warning)} stopColor="var(--safe)" />
+
+										<stop offset="100%" stopColor="var(--safe)" />
+									</>
+								) : (
+									maxValue > danger && (
+										<>
+											{/* green, yellow and red line */}
+											<stop
+												offset={getOffset(danger)}
+												stopColor="var(--danger)"
+											/>
+											<stop
+												offset={getOffset(danger)}
+												stopColor="var(--warning)"
+											/>
+											<stop
+												offset={getOffset(warning)}
+												stopColor="var(--warning)"
+											/>
+											<stop
+												offset={getOffset(warning)}
+												stopColor="var(--safe)"
+											/>
+											<stop offset="100%" stopColor="var(--safe)" />
+										</>
+									)
+								)}
+							</linearGradient>
+						</defs>
 						<Line
 							dataKey="value"
 							type={lineType as CurveType}
-							stroke="var(--color-desktop)"
+							stroke={`url(#${id})`}
 							strokeWidth={2}
 							dot={false}
+							activeDot={<Dot />}
 						/>
 						{children}
 					</LineChart>
@@ -127,6 +188,23 @@ export function ChartLineDefault({
 		</Card>
 	);
 }
+
+// biome-ignore lint/suspicious/noExplicitAny: cannot find the correct type for props here.
+const Dot = (props: any) => {
+	const { cx, cy, value, isActive } = props;
+
+	const { sensor } = useSensor();
+	const { warning, danger } = thresholds[sensor];
+
+	const fillColor =
+		value < warning
+			? "var(--safe)"
+			: value < danger
+				? "var(--warning)"
+				: "var(--danger)";
+
+	return <circle cx={cx} cy={cy} r={isActive ? 6 : 3} fill={fillColor} />;
+};
 
 export function ThresholdLine({
 	y,
@@ -149,7 +227,7 @@ export function ThresholdLine({
 				value: lineLabel,
 				position: "left",
 				fill: color,
-				offset: -150,
+				offset: -80,
 				dy: -10,
 			}}
 		/>
