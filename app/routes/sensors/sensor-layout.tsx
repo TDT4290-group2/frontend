@@ -9,7 +9,7 @@ import { t } from "i18next";
 import { Outlet } from "react-router";
 
 function Title({ sensor }: { sensor: Sensor }) {
-	return <h1 className="p-2 text-3xl">{t(`${sensor}Exposure.title`)}</h1>;
+	return <h1 className="p-2 text-3xl">{t(($) => $[sensor])}</h1>;
 }
 
 // biome-ignore lint: page components can be default exports

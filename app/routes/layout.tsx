@@ -73,10 +73,10 @@ export default function Layout() {
 	const { t, i18n } = useTranslation();
 
 	const links: Array<{ to: To; label: string }> = [
-		{ to: href("/"), label: t("layout.overview") },
-		{ to: href("/dust"), label: t("dust") },
-		{ to: href("/vibration"), label: t("vibration") },
-		{ to: href("/noise"), label: t("noise") },
+		{ to: href("/"), label: t(($) => $.layout.overview) },
+		{ to: href("/dust"), label: t(($) => $.dust) },
+		{ to: href("/vibration"), label: t(($) => $.vibration) },
+		{ to: href("/noise"), label: t(($) => $.noise) },
 	];
 
 	return (
@@ -113,10 +113,10 @@ export default function Layout() {
 							</SelectTrigger>
 							<SelectContent className="w-32">
 								<SelectItem key={"en"} value={"en"}>
-									{t("english")}
+									{t(($) => $.english)}
 								</SelectItem>
 								<SelectItem key={"no"} value={"no"}>
-									{t("norwegian")}
+									{t(($) => $.norwegian)}
 								</SelectItem>
 							</SelectContent>
 						</Select>
