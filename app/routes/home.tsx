@@ -22,7 +22,7 @@ import {
 import { buildSensorQuery } from "@/lib/queries";
 import { getNextDay, getPrevDay } from "@/lib/utils";
 import { useQueries } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { Activity, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 // biome-ignore lint: page components can be default exports
@@ -64,6 +64,13 @@ export default function Home() {
 	);
 	const isErrorAny = Object.values(everySensorData).some((res) => res.isError);
 
+	const isNoData =
+		!everySensorData ||
+		Object.values(everySensorData).every(
+			(sensor) => !sensor.data || sensor.data.length === 0,
+		);
+	const isDataEmpty = isNoData && !isLoadingAny && !isErrorAny;
+	const isDataUnavailable = isNoData || !isLoadingAny || !isErrorAny;
 	return (
 		<div className="flex w-full flex-col items-center md:items-start">
 			<div className="mb-4 flex w-full flex-col items-start gap-2 md:mb-0 md:flex-row md:justify-between">
@@ -88,33 +95,19 @@ export default function Home() {
 				<div className="flex flex-1 flex-col gap-1">
 					<div className="view-wrapper w-full">
 						<section className="flex w-full flex-col place-items-center gap-4 pb-5">
-							{isLoadingAny ? (
+							<Activity mode={isLoadingAny ? "visible" : "hidden"}>
 								<Card className="flex h-24 w-full items-center">
 									<p>{t("loadingData")}</p>
 								</Card>
-							) : isErrorAny ? (
+							</Activity>
+
+							<Activity mode={isErrorAny ? "visible" : "hidden"}>
 								<Card className="flex h-24 w-full items-center">
 									<p>{t("errorLoadingData")}</p>
 								</Card>
-							) : view === "month" ? (
-								<MonthlyView
-									selectedDay={date}
-									data={mapAllSensorDataToMonthLists(everySensorData ?? [])}
-								/>
-							) : view === "week" ? (
-								<WeekView
-									locale={languageToLocale[i18n.language]}
-									dayStartHour={8}
-									dayEndHour={16}
-									weekStartsOn={1}
-									minuteStep={60}
-									events={mapAllWeekDataToEvents(everySensorData ?? [])}
-									onEventClick={(event) => alert(event.dangerLevel)}
-								/>
-							) : !everySensorData ||
-								Object.values(everySensorData).every(
-									(sensor) => !sensor.data || sensor.data.length === 0,
-								) ? (
+							</Activity>
+
+							<Activity mode={isDataEmpty ? "visible" : "hidden"}>
 								<Card className="flex h-24 w-full items-center">
 									<CardTitle>
 										{date.toLocaleDateString(i18n.language, {
@@ -125,16 +118,40 @@ export default function Home() {
 									</CardTitle>
 									<p>{t("noData")}</p>
 								</Card>
-							) : (
-								<DailyBarChart
-									data={everySensorData}
-									chartTitle={date.toLocaleDateString(i18n.language, {
-										day: "numeric",
-										month: "long",
-										year: "numeric",
-									})}
-								/>
-							)}
+							</Activity>
+
+							<Activity mode={isDataUnavailable ? "hidden" : "visible"}>
+								<Activity mode={view === "day" ? "visible" : "hidden"}>
+									<DailyBarChart
+										data={everySensorData}
+										chartTitle={date.toLocaleDateString(i18n.language, {
+											day: "numeric",
+											month: "long",
+											year: "numeric",
+										})}
+									/>
+								</Activity>
+
+								<Activity mode={view === "week" ? "visible" : "hidden"}>
+									<WeekView
+										locale={languageToLocale[i18n.language]}
+										dayStartHour={8}
+										dayEndHour={16}
+										weekStartsOn={1}
+										minuteStep={60}
+										events={mapAllWeekDataToEvents(everySensorData ?? [])}
+										onEventClick={(event) => alert(event.dangerLevel)}
+									/>
+								</Activity>
+
+								<Activity mode={view === "month" ? "visible" : "hidden"}>
+									<MonthlyView
+										selectedDay={date}
+										data={mapAllSensorDataToMonthLists(everySensorData ?? [])}
+									/>
+								</Activity>
+							</Activity>
+
 							<DailyNotes />
 						</section>
 					</div>
