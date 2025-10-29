@@ -13,17 +13,18 @@ import type { DangerKey } from "@/lib/danger-levels";
 import type { Sensor } from "@/lib/sensors";
 import { Card } from "./ui/card";
 import { cn } from "@/lib/utils";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 type PopupProps = {
 	title: string;
 	selectedDate: Date | null;
-	exposureData?: PopupData;
+	exposureData?: PopupData | null;
 	togglePopup?: () => void;
 	handleDayNav?: () => void;
 	children?: React.ReactNode;
 };
 
-type PopupData = Record<Sensor, DangerKey>
+export type PopupData = Record<Sensor, DangerKey>
 
 export function PopupModal({ title, selectedDate, exposureData, togglePopup, handleDayNav, children }: PopupProps) {
 	return (
@@ -33,10 +34,9 @@ export function PopupModal({ title, selectedDate, exposureData, togglePopup, han
 				<DialogHeader>
 					<DialogTitle className="font-bold text-xl">{title}</DialogTitle>
 				</DialogHeader>
-
+				<DialogDescription className="font-medium text-xl">{t("popup.exposureTitle")}</DialogDescription>
 				{selectedDate !== null ? (
 					<div className="flex flex-col gap-2">
-						<h2 className="font-bold">{t("popup.exposureTitle")}</h2>
 						{exposureData && (
 							<Card className="p-2 md:p-5">
 								{Object.entries(exposureData).map(([sensor, danger]) => (

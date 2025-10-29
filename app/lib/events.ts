@@ -3,6 +3,7 @@ import type { Sensor } from "@/features/sensor-picker/sensors";
 import { type DangerKey, DangerTypes, dangerKeys } from "./danger-levels";
 import type { AllSensors, SensorDataResponseDto } from "./dto";
 import { thresholds } from "./thresholds";
+import type { MonthData } from "@/components/monthly-view";
 
 export const mapWeekDataToEvents = (
 	data: Array<SensorDataResponseDto>,
@@ -118,7 +119,7 @@ export const mapSensorDataToMonthLists = (
 
 export const mapAllSensorDataToMonthLists = (
 	everySensorData: AllSensors,
-): Record<DangerKey, Array<Date>> => {
+): MonthData => {
 	const dustData = mapSensorDataToMonthLists(
 		everySensorData.dust.data ?? [],
 		"dust",
@@ -132,36 +133,21 @@ export const mapAllSensorDataToMonthLists = (
 		"vibration",
 	);
 	const mergedData = {
-		safe: [...dustData.safe, ...noiseData.safe, ...vibrationData.safe],
-		warning: [
-			...dustData.warning,
-			...noiseData.warning,
-			...vibrationData.warning,
-		],
-		danger: [...dustData.danger, ...noiseData.danger, ...vibrationData.danger],
+		safe: {
+			dust: [...dustData.safe],
+			noise: [...noiseData.safe],
+			vibration: [...vibrationData.safe],
+		},
+		warning: {
+			dust: [...dustData.warning],
+			noise: [...noiseData.warning],
+			vibration: [...vibrationData.warning],
+		},
+		danger: {
+			dust: [...dustData.danger],
+			noise: [...noiseData.danger],
+			vibration: [...vibrationData.danger],
+		},
 	};
-	// Prioritize duplicate dates based on danger level
-	const mergedDays: Record<string, Lowercase<DangerKey>> = {};
-	for (const level of dangerKeys) {
-		for (const date of mergedData[level]) {
-			const key = date.toDateString();
-
-			const existing = mergedDays[key];
-			if (!existing || DangerTypes[level] > DangerTypes[existing]) {
-				mergedDays[key] = level;
-			}
-		}
-	}
-
-	// Convert to the right format
-	const result: Record<DangerKey, Array<Date>> = {
-		safe: [],
-		warning: [],
-		danger: [],
-	};
-	for (const [key, level] of Object.entries(mergedDays)) {
-		result[level].push(new Date(key));
-	}
-
-	return result;
+	return mergedData;
 };

@@ -10,38 +10,61 @@ import { useTranslation } from "react-i18next";
 import { Calendar } from "./ui/calendar";
 import { Card } from "./ui/card";
 
+export type MonthData = Record<DangerKey, Record<Sensor, Array<Date>>>;
+
 type MonthlyProps = {
 	selectedDay: Date;
 	exposureType?: Sensor;
-	data: Record<DangerKey, Array<Date>>;
+	data: MonthData;
 };
 
 import { useState } from "react";
-import { PopupModal } from "./view-popup";
+import { PopupModal, type PopupData } from "./view-popup";
 
 export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 	const { i18n } = useTranslation();
 
 	const [popupData, setPopupData] = useState<{
 		day: Date | null;
-		type: Lowercase<DangerKey> | "none";
 		open: boolean;
-	}>({ day: null, type: "none", open: false });
+		exposures: PopupData | null;
+	}>({ day: null, open: false, exposures: null });
+
+	const dayKey = (d: Date) => d.toDateString();
+
+	const safeDaysSet = new Set(Object.values(data.safe).flat().map(dayKey));
+	const warningDaysSet = new Set(Object.values(data.warning).flat().map(dayKey));
+	const dangerDaysSet = new Set(Object.values(data.danger).flat().map(dayKey));
+
+	// Remove duplicates
+	warningDaysSet.forEach((d) => {
+		if (dangerDaysSet.has(d)) warningDaysSet.delete(d);
+	});
+	safeDaysSet.forEach((d) => {
+		if (dangerDaysSet.has(d) || warningDaysSet.has(d)) safeDaysSet.delete(d);
+	});
+
+	const safeDays = Array.from(safeDaysSet).map((s) => new Date(s));
+	const warningDays = Array.from(warningDaysSet).map((s) => new Date(s));
+	const dangerDays = Array.from(dangerDaysSet).map((s) => new Date(s));
 
 	const hasData = (list: Array<Date>, d: Date) =>
 		list.some((day) => day.toDateString() === d.toDateString());
-
-	function getDayType(day: Date): Lowercase<DangerKey> | "none" {
-		if (hasData(data.safe, day)) return "safe";
-		if (hasData(data.warning, day)) return "warning";
-		if (hasData(data.danger, day)) return "danger";
+	
+	function getDayType(
+		day: Date,
+	): Lowercase<DangerKey> | "none" {
+		if (hasData(safeDays, day)) return "safe";
+		if (hasData(warningDays, day)) return "warning";
+		if (hasData(dangerDays, day)) return "danger";
 		return "none";
-	}
+	};
 
 	function handleDayClick(clickedDay: Date) {
 		const type = getDayType(clickedDay);
 		if (type === "none") return;
-		setPopupData({ day: clickedDay, type, open: true });
+		const exposureData = getExposureData(clickedDay)
+		setPopupData({ day: clickedDay, open: true, exposures: exposureData });
 	}
 
 	function togglePopup() {
@@ -53,7 +76,26 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 		console.log("Navigating to day");
 	}
 
-	const overviewTest: Record<Sensor, DangerKey> = {dust: "safe", vibration: "warning", noise: "danger"}
+	function getExposureData(clickedDay: Date) {
+		const exposureData: PopupData = {} as PopupData;
+
+		(Object.keys(data) as Array<DangerKey>).forEach((dangerKey) => {
+			Object.entries(data[dangerKey]).forEach(([sensor, dates]) => {
+				if (dates.some((d) => d.toDateString() === clickedDay.toDateString())) {
+					//Override lower danger with the higher one
+					const prev = exposureData[sensor as Sensor];
+					if (
+						!prev ||
+						(prev === "safe" && dangerKey !== "safe") ||
+						(prev === "warning" && dangerKey === "danger")
+					) {
+						exposureData[sensor as Sensor] = dangerKey;
+					}
+				}
+			});
+		});
+		return exposureData;
+	}
 
 	return (
 		<>
@@ -74,7 +116,7 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 							/>
 						),
 					}}
-					modifiers={{ ...data }}
+					modifiers={{safe: safeDays, warning: warningDays, danger: dangerDays}}
 					className="w-full bg-transparent font-bold text-foreground [--cell-size:--spacing(6)] sm:[--cell-size:--spacing(10)] md:[--cell-size:--spacing(12)]"
 					captionLayout="label"
 					buttonVariant="default"
@@ -93,13 +135,12 @@ export function MonthlyView({ selectedDay, data }: MonthlyProps) {
 					selectedDate={popupData.day}
 					togglePopup={togglePopup}
 					handleDayNav={navToDay}
-					exposureData={overviewTest}
+					exposureData={popupData.exposures}
 				></PopupModal>
 			)}
 		</>
 	);
 }
-
 
 type CustomDayProps = {
 	day: CalendarDay;
