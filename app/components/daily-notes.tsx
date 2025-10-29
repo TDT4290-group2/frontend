@@ -159,3 +159,70 @@ export const DailyNotes = () => {
 		</Card>
 	);
 };
+
+
+export const PopupNotes = ({selectedDate}: {selectedDate: Date}) => {
+
+	const temp = "Placeholder";
+	const { t, i18n } = useTranslation();
+	const locale = i18n.language;
+
+	const [notes, setNotes] = useState<Array<Note>>([
+		{
+			date: today,
+			note: "Sandblåsing kl 10. Dette er et langt notat. Et veldig veldig veldig langt notat. Forhåpentligvis gjør det ikke at siden ser dårlig ut eller noe.",
+		},
+		{ date: d1, note: "Sveising kl 11." },
+		{ date: d2, note: "Ingenting å rapportere." },
+		{ date: d3, note: "Slipemaskin kl 12." },
+		{ date: d4, note: "Slipemaskin kl 12." },
+		{ date: d5, note: "Slipemaskin kl 12." },
+		{ date: d6, note: "Slipemaskin kl 12." },
+		{ date: d7, note: "Slipemaskin kl 12." },
+		{ date: d8, note: "Slipemaskin kl 12." },
+		{ date: d9, note: "Slipemaskin kl 12." },
+		{ date: d10, note: "Slipemaskin kl 12." },
+	]);
+
+	const [showTextArea, setShowTextArea] = useState<boolean>(
+		!notes.some((note) => isToday(note.date)),
+	);
+	const [noteText, setNoteText] = useState<string>(notes[0].note);
+
+	const handleEdit = () => {
+		setShowTextArea(!showTextArea);
+	};
+
+	const handleSubmit = () => {
+		//this will be replaced by api call
+		if (notes.some((note) => isToday(note.date))) {
+			notes[0] = { date: new Date(), note: noteText };
+		} else {
+			setNotes([{ date: new Date(), note: noteText } as Note].concat(notes));
+		}
+		setShowTextArea(false);
+	};
+	return (
+		<Card className="max-h-64 w-full overflow-y-auto">
+			<CardContent>
+				{showTextArea ? (
+					<Textarea
+						placeholder={t("daily_notes.writeHere")}
+						value={noteText}
+						onChange={(e) => setNoteText(e.target.value)}
+					/>
+				) : (
+					<p>{notes[0].note}</p>
+				)}
+			</CardContent>
+			<CardFooter className="justify-end gap-2">
+				<Button variant={"secondary"} onClick={handleEdit}>
+					{t("daily_notes.edit")}
+				</Button>
+				<Button disabled={!showTextArea} onClick={handleSubmit}>
+					{t("daily_notes.save")}
+				</Button>
+			</CardFooter>
+		</Card>
+	);
+}
