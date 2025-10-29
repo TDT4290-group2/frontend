@@ -31,7 +31,7 @@ export default function Vibration() {
 		startTime: new Date(date.setUTCHours(8)),
 		endTime: new Date(date.setUTCHours(16)),
 		granularity: "minute",
-		function: "avg",
+		function: "max",
 	};
 
 	const weekQuery: SensorDataRequestDto = {
@@ -45,7 +45,7 @@ export default function Vibration() {
 		startTime: startOfMonth(date),
 		endTime: endOfMonth(date),
 		granularity: "day",
-		function: "sum",
+		function: "max",
 	};
 
 	const query =
