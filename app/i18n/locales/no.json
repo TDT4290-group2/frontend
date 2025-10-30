@@ -89,7 +89,8 @@
     "safe": "Ingen eksponeringsgrense brutt",
     "warning": "En eksponeringsgrense var nær å bli brutt",
     "danger": "Eksponeringsgrense ble brutt",
-    "openDaily": "Se detaljer for informasjon om eksponeringstype" 
+    "openDaily": "Se detaljer for informasjon om eksponeringstype",
+    "eventTitle": "{{day}}, fra {{start}} til {{end}}"
   },
 
   "loadingData": "Laster inn data...",
