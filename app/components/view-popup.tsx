@@ -15,6 +15,7 @@ import { PopupNotes } from "./daily-notes";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { NavLink } from "react-router";
+import type { WeekEvent } from "@/features/week-widget/types";
 
 type PopupProps = {
 	title: string;
@@ -104,15 +105,15 @@ export function PopupModal({
 
 export function WeeklyPopup({
 	title,
-	highestExposure,
+	event,
 	togglePopup,
 	handleDayNav,
 	children,
 }: {
 	title: string;
-	highestExposure: DangerKey;
+	event: WeekEvent;
 	togglePopup: () => void;
-	handleDayNav: () => void;
+	handleDayNav: (day: Date) => void;
 	children?: React.ReactNode;
 }) {
 	return (
@@ -126,11 +127,11 @@ export function WeeklyPopup({
 					{t(($) => $.popup.exposureTitle)}
 				</DialogDescription>
 				<div className="flex flex-col gap-2">
-					{highestExposure && (
+					{event.dangerLevel && (
 						<Card className="p-2 md:p-5">
 							<div className="flex flex-col justify-start gap-2">
-								<div className={`text-${highestExposure}`}>
-									{t(($) => $.popup[highestExposure])}
+								<div className={`text-${event.dangerLevel}`}>
+									{t(($) => $.popup[event.dangerLevel])}
 								</div>
 								<div>{t(($) => $.popup.openDaily)}</div>
 							</div>
@@ -140,13 +141,22 @@ export function WeeklyPopup({
 				<div>{children}</div>
 
 				<DialogFooter>
-					<Button
-						variant={"default"}
-						onClick={handleDayNav}
-						className="cursor-pointer"
-					>
-						{t(($) => $.popup.toDay)}
-					</Button>
+					{event.startDate && (
+						<Button
+							variant={"default"}
+							onClick={() => handleDayNav(event.startDate)}
+							className="cursor-pointer"
+						>
+							<NavLink
+								to={{
+									search: `?view=Day&date=${event.startDate?.toLocaleDateString("en-CA")}`,
+								}}
+								prefetch="intent"
+							>
+								{t(($) => $.popup.toDay)}
+							</NavLink>
+						</Button>
+					)}
 					<Button
 						variant={"destructive"}
 						onClick={togglePopup}

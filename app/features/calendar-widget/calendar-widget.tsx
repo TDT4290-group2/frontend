@@ -59,7 +59,6 @@ export function CalendarWidget({ selectedDay, data }: MonthlyProps) {
 	}
 
 	function handleDayClick(clickedDay: Date) {
-		console.log("clicked day: ", clickedDay?.toLocaleDateString("en-CA"));
 		const type = getDayType(clickedDay);
 		if (type === "none") return;
 		const exposureData = getExposureData(clickedDay);

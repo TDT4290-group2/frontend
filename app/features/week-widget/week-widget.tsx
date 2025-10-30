@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { type PopupData, WeeklyPopup } from "@/components/view-popup";
+import { WeeklyPopup } from "@/components/view-popup";
 import { type Day, isSameWeek, type Locale } from "date-fns";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -49,29 +49,28 @@ export function WeekWidget({
 	const [popupData, setPopupData] = useState<{
 		event: WeekEvent | null;
 		open: boolean;
-		exposures: PopupData | null;
-	}>({ event: null, open: false, exposures: null });
+	}>({ event: null, open: false });
 
 	function togglePopup() {
 		setPopupData((p) => ({ ...p, open: !p.open }));
 	}
 
-	function navToDay() {
+	function navToDay(day: Date) {
 		// biome-ignore lint/suspicious/noConsole: We are in development duh
-		console.log("Navigating to day");
+		console.log("Navigating to: ", day?.toLocaleDateString("en-CA"));
 	}
 
 	function handleEventClick(event: WeekEvent): void {
-		const exposureData = {
-			dust: "safe",
-			noise: "safe",
-			vibration: "safe",
-		} as PopupData;
-		setPopupData({ event: event, open: true, exposures: exposureData });
+		// biome-ignore lint/suspicious/noConsole: We are in development duh
+		console.log("clicked day: ", event?.startDate?.toLocaleDateString("en-CA"));
+		setPopupData({ event: event, open: true});
 	}
 
 	const eventTitle = (event: WeekEvent) => {
-		const actualDay = event.startDate.toLocaleDateString(i18n.language);
+		const actualDay = event.startDate.toLocaleDateString(i18n.language, {
+			day: "numeric",
+			month: "long"
+		});
 		const timeConfig: Intl.DateTimeFormatOptions = {
 			hour: "2-digit",
 			minute: "2-digit",
@@ -134,7 +133,7 @@ export function WeekWidget({
 					title={eventTitle(popupData.event)}
 					togglePopup={togglePopup}
 					handleDayNav={navToDay}
-					highestExposure={popupData.event.dangerLevel}
+					event={popupData.event}
 				></WeeklyPopup>
 			)}
 		</>
