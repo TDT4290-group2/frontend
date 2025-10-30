@@ -84,7 +84,6 @@ export default function Noise() {
 						weekStartsOn={1}
 						minuteStep={60}
 						events={mapWeekDataToEvents(data ?? [], "noise")}
-						onEventClick={(event) => alert(event.dangerLevel)}
 					/>
 				) : !data || data.length === 0 ? (
 					<Card className="flex h-24 w-full items-center">

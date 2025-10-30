@@ -9,7 +9,7 @@ export function WeekEventGrid({
 	weekStartsOn,
 	minuteStep,
 	rowHeight,
-	onEventClick,
+	handleEventClick,
 	dayStartHour,
 	dayEndHour,
 }: {
@@ -18,7 +18,7 @@ export function WeekEventGrid({
 	weekStartsOn: Day;
 	minuteStep: number;
 	rowHeight: number;
-	onEventClick?: (event: WeekEvent) => void;
+	handleEventClick: (event: WeekEvent) => void;
 	dayStartHour: number;
 	dayEndHour: number;
 }) {
@@ -74,7 +74,7 @@ export function WeekEventGrid({
 									top: paddingTop,
 									bottom: paddingBottom,
 								}}
-								onClick={() => onEventClick?.(event)}
+								onClick={() => handleEventClick(event)}
 							/>
 						</div>
 					);

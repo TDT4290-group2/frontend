@@ -1,7 +1,7 @@
 import type { Sensor } from "@/features/sensor-picker/sensors";
-import { type DangerKey, dangerKeys, dangerTypes } from "@/lib/danger-levels";
 import type { AllSensors, SensorDataResponseDto } from "@/lib/dto";
 import { thresholds } from "@/lib/thresholds";
+import type { MonthData } from "./calendar-widget";
 
 const _mapMonthDataToDangerLists = (
 	data: Array<SensorDataResponseDto>,
@@ -10,7 +10,6 @@ const _mapMonthDataToDangerLists = (
 	const safe: Array<Date> = [];
 	const warning: Array<Date> = [];
 	const danger: Array<Date> = [];
-
 	const _thresholds = thresholds[sensor];
 
 	Object.values(data).forEach((item) => {
@@ -29,27 +28,30 @@ const _mapMonthDataToDangerLists = (
 export const mapSensorDataToMonthLists = (
 	data: Array<SensorDataResponseDto>,
 	relevantSensor: Sensor,
-): Record<DangerKey, Array<Date>> => {
-	const safe: Array<Date> = [];
-	const warning: Array<Date> = [];
-	const danger: Array<Date> = [];
+): MonthData => {
+	const safeDates: Array<Date> = [];
+	const warningDates: Array<Date> = [];
+	const dangerDates: Array<Date> = [];
 
 	Object.values(data).forEach((item) => {
 		if (item.value < thresholds[relevantSensor].warning) {
-			safe.push(new Date(item.time));
+			safeDates.push(new Date(item.time));
 		} else if (item.value < thresholds[relevantSensor].danger) {
-			warning.push(new Date(item.time));
+			warningDates.push(new Date(item.time));
 		} else {
-			danger.push(new Date(item.time));
+			dangerDates.push(new Date(item.time));
 		}
 	});
-
-	return { safe, warning, danger };
+	return {
+		safe: { [relevantSensor]: safeDates },
+		warning: { [relevantSensor]: warningDates },
+		danger: { [relevantSensor]: dangerDates },
+	};
 };
 
 export const mapAllSensorDataToMonthLists = (
 	everySensorData: AllSensors,
-): Record<DangerKey, Array<Date>> => {
+): MonthData => {
 	const dustData = mapSensorDataToMonthLists(
 		everySensorData.dust.data ?? [],
 		"dust",
@@ -62,37 +64,22 @@ export const mapAllSensorDataToMonthLists = (
 		everySensorData.vibration.data ?? [],
 		"vibration",
 	);
-	const mergedData = {
-		safe: [...dustData.safe, ...noiseData.safe, ...vibrationData.safe],
-		warning: [
-			...dustData.warning,
-			...noiseData.warning,
-			...vibrationData.warning,
-		],
-		danger: [...dustData.danger, ...noiseData.danger, ...vibrationData.danger],
+	const mergedData: MonthData = {
+		safe: {
+			dust: dustData.safe?.dust ?? [],
+			noise: noiseData.safe?.noise ?? [],
+			vibration: vibrationData.safe?.vibration ?? [],
+		},
+		warning: {
+			dust: dustData.warning?.dust ?? [],
+			noise: noiseData.warning?.noise ?? [],
+			vibration: vibrationData.warning?.vibration ?? [],
+		},
+		danger: {
+			dust: dustData.danger?.dust ?? [],
+			noise: noiseData.danger?.noise ?? [],
+			vibration: vibrationData.danger?.vibration ?? [],
+		},
 	};
-	// Prioritize duplicate dates based on danger level
-	const mergedDays: Record<string, Lowercase<DangerKey>> = {};
-	for (const level of dangerKeys) {
-		for (const date of mergedData[level]) {
-			const key = date.toDateString();
-
-			const existing = mergedDays[key];
-			if (!existing || dangerTypes[level] > dangerTypes[existing]) {
-				mergedDays[key] = level;
-			}
-		}
-	}
-
-	// Convert to the right format
-	const result: Record<DangerKey, Array<Date>> = {
-		safe: [],
-		warning: [],
-		danger: [],
-	};
-	for (const [key, level] of Object.entries(mergedDays)) {
-		result[level].push(new Date(key));
-	}
-
-	return result;
+	return mergedData;
 };

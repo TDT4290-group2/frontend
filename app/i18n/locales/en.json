@@ -52,8 +52,13 @@
     "edit": "Edit",
     "save": "Save",
     "notesFromThis": "Notes from this ",
+    "day": "day",
     "week": "week",
     "month": "month"
+  },
+  "buttons": {
+    "confirm": "Ok",
+    "close": "Close"
   },
   "english": "English",
   "norwegian": "Norwegian",
@@ -77,7 +82,16 @@
   "day": "Day",
   "week": "Week",
   "month": "Month",
-
+  "popup": {
+    "toDay": "See details",
+    "notesTitle": "Note for this day:",
+    "exposureTitle": "Exposure:",
+    "safe": "No exposure limit was exceeded",
+    "warning": "An exposure limit was almost exceeded",
+    "danger": "An exposure limit was exceeded",
+    "openDaily": "See details for information about type of exposure",
+    "eventTitle": "{{day}}, from {{start}} to {{end}}"
+  },
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",
   "noData": "No exposure data found for this day",

@@ -143,7 +143,7 @@ export const DailyNotes = () => {
 					{notes
 						.filter((note) => isSameMonth(new Date(), note.date))
 						.map((note) => (
-							<li key={note.date.toDateString()}>
+							<li key={note.date.getTime()}>
 								<strong>
 									{note.date.toLocaleDateString(locale, {
 										day: "numeric",
@@ -156,6 +156,53 @@ export const DailyNotes = () => {
 						))}
 				</ul>
 			</CardContent>
+		</Card>
+	);
+};
+
+export const PopupNotes = ({ selectedDate }: { selectedDate: Date }) => {
+	const { t } = useTranslation();
+
+	const [note, setNote] = useState<Note>({
+		date: today,
+		note: "Popup placeholder notat - må fikse funksjonaliteten her",
+	});
+
+	const [showTextArea, setShowTextArea] = useState<boolean>(
+		!isToday(note.date),
+	);
+	const [noteText, setNoteText] = useState<string>(note.note);
+
+	const handleEdit = () => {
+		setShowTextArea(!showTextArea);
+	};
+
+	const handleSubmit = () => {
+		//this will be replaced by api call
+		setNote({ date: selectedDate, note: noteText });
+		setShowTextArea(false);
+	};
+	return (
+		<Card className="max-h-64 w-full overflow-y-auto">
+			<CardContent>
+				{showTextArea ? (
+					<Textarea
+						placeholder={t(($) => $.daily_notes.writeHere)}
+						value={noteText}
+						onChange={(e) => setNoteText(e.target.value)}
+					/>
+				) : (
+					<p>{note.note}</p>
+				)}
+			</CardContent>
+			<CardFooter className="justify-end gap-2">
+				<Button variant={"secondary"} onClick={handleEdit}>
+					{t(($) => $.daily_notes.edit)}
+				</Button>
+				<Button disabled={!showTextArea} onClick={handleSubmit}>
+					{t(($) => $.daily_notes.save)}
+				</Button>
+			</CardFooter>
 		</Card>
 	);
 };
