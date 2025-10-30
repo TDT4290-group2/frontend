@@ -15,6 +15,8 @@ type BasePopupProps = {
 	open: boolean;
 	onClose: () => void;
 	relevantDate: Date | null;
+	navOverride?: string;
+	pathname?: string;
 	children: React.ReactNode;
 };
 
@@ -23,6 +25,8 @@ export function BasePopup({
 	open,
 	onClose,
 	relevantDate,
+	navOverride,
+	pathname,
 	children,
 }: BasePopupProps) {
 	return (
@@ -47,7 +51,10 @@ export function BasePopup({
 						>
 							<NavLink
 								to={{
-									search: `?view=Day&date=${relevantDate.toLocaleDateString("en-CA")}`,
+									pathname: pathname ? pathname : "",
+									search: navOverride
+										? navOverride
+										: `?view=Day&date=${relevantDate.toLocaleDateString("en-CA")}`,
 								}}
 								prefetch="intent"
 							>

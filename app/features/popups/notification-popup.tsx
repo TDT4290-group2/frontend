@@ -5,12 +5,14 @@ export function NotificationPopup({
 	relevantDate,
 	open,
 	onClose,
+	pathname,
 	children,
 }: {
 	title: string;
 	relevantDate: Date;
 	open: boolean;
 	onClose: () => void;
+	pathname?: string;
 	children?: React.ReactNode;
 }) {
 	return (
@@ -19,6 +21,7 @@ export function NotificationPopup({
 			open={open}
 			relevantDate={relevantDate}
 			onClose={onClose}
+			pathname={pathname ? pathname : undefined}
 		>
 			{/* Exposure: */}
 			{children}

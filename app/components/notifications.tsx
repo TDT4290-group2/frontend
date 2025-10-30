@@ -139,6 +139,7 @@ export function Notifications() {
 							minute: "2-digit",
 						}),
 					})}
+					pathname={`/${notifData.sensor}`}
 				>
 					<div className="flex justify-start gap-2">
 						<span
