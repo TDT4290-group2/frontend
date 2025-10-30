@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { WeeklyPopup } from "@/components/view-popup";
+import { WeeklyPopup } from "@/features/popups/weekly-popup";
 import { type Day, isSameWeek, type Locale } from "date-fns";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,7 @@ import { WeekGrid } from "./components/week-grid";
 import { WeekHeader } from "./components/week-header";
 import type { Cell, WeekEvent } from "./types";
 import { useWeekView } from "./use-week-view";
+import { usePopup } from "../popups/usePopup";
 
 export function WeekWidget({
 	minuteStep = 30,
@@ -46,30 +47,21 @@ export function WeekWidget({
 	});
 
 	const { t, i18n } = useTranslation();
+	const { visible, closePopup, openPopup } = usePopup();
+	
 	const [popupData, setPopupData] = useState<{
 		event: WeekEvent | null;
-		open: boolean;
-	}>({ event: null, open: false });
-
-	function togglePopup() {
-		setPopupData((p) => ({ ...p, open: !p.open }));
-	}
-
-	function navToDay(day: Date) {
-		// biome-ignore lint/suspicious/noConsole: We are in development duh
-		console.log("Navigating to: ", day?.toLocaleDateString("en-CA"));
-	}
+	}>({ event: null });
 
 	function handleEventClick(event: WeekEvent): void {
-		// biome-ignore lint/suspicious/noConsole: We are in development duh
-		console.log("clicked day: ", event?.startDate?.toLocaleDateString("en-CA"));
-		setPopupData({ event: event, open: true});
+		setPopupData({event: event});
+		openPopup();
 	}
 
 	const eventTitle = (event: WeekEvent) => {
 		const actualDay = event.startDate.toLocaleDateString(i18n.language, {
 			day: "numeric",
-			month: "long"
+			month: "long",
 		});
 		const timeConfig: Intl.DateTimeFormatOptions = {
 			hour: "2-digit",
@@ -128,12 +120,12 @@ export function WeekWidget({
 			</Card>
 
 			{/* interaction popup window */}
-			{popupData.open && popupData.event && (
+			{popupData.event && (
 				<WeeklyPopup
 					title={eventTitle(popupData.event)}
-					togglePopup={togglePopup}
-					handleDayNav={navToDay}
 					event={popupData.event}
+					open={visible}
+					onClose={closePopup}
 				></WeeklyPopup>
 			)}
 		</>

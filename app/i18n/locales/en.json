@@ -5,7 +5,7 @@
     "overview": "Overview"
   },
   "overview" : {
-    "title": "Overview of {{view}}",
+    "title": "Overview of the {{view}}",
     "day": "day",
     "week": "week",
     "month": "month",

@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/correctness/noNestedComponentDefinitions: CustomDay is intentionally defined inside MonthlyView for prop access. */
+/** biome-ignore-all lint/correctness/noNestedComponentDefinitions: CustomDay is intentionally defined inside CalendarView for prop access. */
 import { Calendar } from "@/components/ui/calendar";
 import { Card } from "@/components/ui/card";
 import { languageToLocale } from "@/i18n/locale";
@@ -9,24 +9,28 @@ import { useTranslation } from "react-i18next";
 
 export type MonthData = Record<DangerKey, Partial<Record<Sensor, Array<Date>>>>;
 
-type MonthlyProps = {
+type CalendarProps = {
 	selectedDay: Date;
 	exposureType?: Sensor;
 	data: MonthData;
 };
 
-import { type PopupData, PopupModal } from "@/components/view-popup";
+import {
+	type CalendarPopupData,
+	CalendarPopup,
+} from "@/features/popups/calendar-popup";
 import { useState } from "react";
 import type { Sensor } from "../sensor-picker/sensors";
+import { usePopup } from "../popups/usePopup";
 
-export function CalendarWidget({ selectedDay, data }: MonthlyProps) {
+export function CalendarWidget({ selectedDay, data }: CalendarProps) {
 	const { i18n } = useTranslation();
+	const {visible, openPopup, closePopup} = usePopup();
 
 	const [popupData, setPopupData] = useState<{
 		day: Date | null;
-		open: boolean;
-		exposures: PopupData | null;
-	}>({ day: null, open: false, exposures: null });
+		exposures: CalendarPopupData | null;
+	}>({ day: null, exposures: null });
 
 	const dayKey = (d: Date) => d.toDateString();
 
@@ -62,21 +66,12 @@ export function CalendarWidget({ selectedDay, data }: MonthlyProps) {
 		const type = getDayType(clickedDay);
 		if (type === "none") return;
 		const exposureData = getExposureData(clickedDay);
-		setPopupData({ day: clickedDay, open: true, exposures: exposureData });
-	}
-
-	function togglePopup() {
-		setPopupData((p) => ({ ...p, open: !p.open }));
-	}
-
-	function navToDay(date: Date) {
-		
-		// biome-ignore lint/suspicious/noConsole: We are in development duh
-		console.log("Navigating to day: ", date?.toISOString());
+		setPopupData({ day: clickedDay, exposures: exposureData });
+		openPopup();
 	}
 
 	function getExposureData(clickedDay: Date) {
-		const exposureData: PopupData = {} as PopupData;
+		const exposureData: CalendarPopupData = {} as CalendarPopupData;
 
 		(Object.keys(data) as Array<DangerKey>).forEach((dangerKey) => {
 			Object.entries(data[dangerKey]).forEach(([sensor, dates]) => {
@@ -128,18 +123,18 @@ export function CalendarWidget({ selectedDay, data }: MonthlyProps) {
 			</Card>
 
 			{/* interaction popup window */}
-			{popupData.open && popupData.day && (
-				<PopupModal
+			{popupData.day && (
+				<CalendarPopup
 					title={popupData.day.toLocaleDateString(i18n.language, {
 						day: "numeric",
 						month: "long",
 						year: "numeric",
 					})}
 					selectedDate={popupData.day}
-					togglePopup={togglePopup}
-					handleDayNav={navToDay}
+					open={visible}
+					onClose={closePopup}
 					exposureData={popupData.exposures}
-				></PopupModal>
+				></CalendarPopup>
 			)}
 		</>
 	);
