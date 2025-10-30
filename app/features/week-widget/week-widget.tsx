@@ -45,7 +45,7 @@ export function WeekWidget({
 		disabledWeek,
 	});
 
-	const { i18n } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const [popupData, setPopupData] = useState<{
 		event: WeekEvent | null;
 		open: boolean;
@@ -78,7 +78,12 @@ export function WeekWidget({
 		};
 		const start = event.startDate.toLocaleTimeString(i18n.language, timeConfig);
 		const end = event.endDate.toLocaleTimeString(i18n.language, timeConfig);
-		return `${actualDay}, from ${start} to ${end}`;
+		const translatedTitle = t(($) => $.popup.eventTitle, {
+			day: actualDay,
+			start: start,
+			end: end,
+		});
+		return translatedTitle;
 	};
 
 	return (
@@ -127,7 +132,6 @@ export function WeekWidget({
 			{popupData.open && popupData.event && (
 				<WeeklyPopup
 					title={eventTitle(popupData.event)}
-					event={popupData.event}
 					togglePopup={togglePopup}
 					handleDayNav={navToDay}
 					highestExposure={popupData.event.dangerLevel}

@@ -1,6 +1,4 @@
-/** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 /** biome-ignore-all lint/correctness/noNestedComponentDefinitions: CustomDay is intentionally defined inside MonthlyView for prop access. */
-
 import { Calendar } from "@/components/ui/calendar";
 import { Card } from "@/components/ui/card";
 import { languageToLocale } from "@/i18n/locale";

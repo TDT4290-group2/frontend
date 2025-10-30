@@ -187,7 +187,7 @@ export const PopupNotes = ({ selectedDate }: { selectedDate: Date }) => {
 			<CardContent>
 				{showTextArea ? (
 					<Textarea
-						placeholder={t("daily_notes.writeHere")}
+						placeholder={t(($) => $.daily_notes.writeHere)}
 						value={noteText}
 						onChange={(e) => setNoteText(e.target.value)}
 					/>
@@ -197,10 +197,10 @@ export const PopupNotes = ({ selectedDate }: { selectedDate: Date }) => {
 			</CardContent>
 			<CardFooter className="justify-end gap-2">
 				<Button variant={"secondary"} onClick={handleEdit}>
-					{t("daily_notes.edit")}
+					{t(($) => $.daily_notes.edit)}
 				</Button>
 				<Button disabled={!showTextArea} onClick={handleSubmit}>
-					{t("daily_notes.save")}
+					{t(($) => $.daily_notes.save)}
 				</Button>
 			</CardFooter>
 		</Card>

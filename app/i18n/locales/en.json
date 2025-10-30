@@ -89,7 +89,8 @@
     "safe": "No exposure limit was exceeded",
     "warning": "An exposure limit was almost exceeded",
     "danger": "An exposure limit was exceeded",
-    "openDaily": "See details for information about type of exposure"
+    "openDaily": "See details for information about type of exposure",
+    "eventTitle": "{{day}}, from {{start}} to {{end}}"
   },
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",
