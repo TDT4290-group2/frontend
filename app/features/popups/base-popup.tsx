@@ -41,7 +41,7 @@ export function BasePopup({
 
 				<DialogFooter>
 					{relevantDate && (
-						<Button variant="default" className="cursor-pointer">
+						<Button variant="default" className="cursor-pointer" onClick={onClose}>
 							<NavLink
 								to={{
 									search: `?view=Day&date=${relevantDate.toLocaleDateString("en-CA")}`,
