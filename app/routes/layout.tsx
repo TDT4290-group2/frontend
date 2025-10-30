@@ -11,6 +11,9 @@ import {
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/features/dark-mode/mode-toggle";
 import { useDate } from "@/features/date-picker/use-date";
+import { Icon, type IconVariant } from "@/features/icon";
+import { BellPopup } from "@/features/popups/bell-popup";
+import { usePopup } from "@/features/popups/use-popup";
 import { sensors } from "@/features/sensor-picker/sensors";
 import { useSensor } from "@/features/sensor-picker/use-sensor";
 import { useView } from "@/features/views/use-view";
@@ -55,7 +58,7 @@ function HomeLink() {
 			<div className="text-2xl">
 				<Logo />
 			</div>
-			<span className="text-xl sm:inline-block">{"HealthTech"}</span>
+			<span className="hidden text-xl sm:inline-block">{"HealthTech"}</span>
 		</NavLink>
 	);
 }
@@ -65,6 +68,7 @@ export default function Layout() {
 	const isMobile = useIsMobile();
 
 	const { t, i18n } = useTranslation();
+	const {visible, openPopup, closePopup} = usePopup();
 
 	const links: Array<{ to: To; label: string }> = [
 		{ to: href("/"), label: t(($) => $.layout.overview) },
@@ -101,6 +105,13 @@ export default function Layout() {
 						</>
 					)}
 					<div className="flex flex-row gap-4">
+						<button
+							type="button"
+							className="cursor-pointer rounded-xl px-1 hover:bg-card active:bg-card"
+							onClick={openPopup}
+						>
+							<Icon variant="bell" size="medium" />
+						</button>
 						<Select onValueChange={(value) => i18n.changeLanguage(value)}>
 							<SelectTrigger className="w-32">
 								<SelectValue placeholder="Language" />
@@ -117,6 +128,7 @@ export default function Layout() {
 						<ModeToggle />
 					</div>
 				</header>
+				<BellPopup open={visible} onClose={closePopup} title="Notifications"></BellPopup>
 				<main className="m-2 flex items-center justify-center">
 					<Outlet />
 				</main>

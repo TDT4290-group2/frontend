@@ -1,4 +1,5 @@
 import { useDate } from "@/features/date-picker/use-date";
+import { Icon } from "@/features/icon";
 import type { Sensor } from "@/features/sensor-picker/sensors";
 import { useSensor } from "@/features/sensor-picker/use-sensor";
 import { useView } from "@/features/views/use-view";
@@ -9,7 +10,12 @@ import { t } from "i18next";
 import { Outlet } from "react-router";
 
 function Title({ sensor }: { sensor: Sensor }) {
-	return <h1 className="p-2 text-3xl">{t(($) => $[sensor])}</h1>;
+	return (
+		<>
+			<h1 className="p-2 text-3xl">{t(($) => $[sensor])}</h1>
+			<Icon variant={sensor} size="medium" className="mt-2" />
+		</>
+	);
 }
 
 // biome-ignore lint: page components can be default exports

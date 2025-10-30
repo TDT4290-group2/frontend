@@ -14,9 +14,7 @@ import { cn } from "@/lib/utils";
 import { Card } from "@/ui/card";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import dustIcon from "/icons/dustIcon.png";
-import noiseIcon from "/icons/noiseIcon.png";
-import vibrationIcon from "/icons/vibrationIcon.png";
+import { Icon } from "@/features/icon";
 
 const notifications: Array<{
 	sensor: Sensor;
@@ -85,30 +83,7 @@ export function Notifications() {
 								className="rounded-3xl border-3 border-border bg-background hover:bg-card-highlight"
 							>
 								<ItemMedia variant="image">
-									{sensor === "noise" && (
-										<img
-											src={noiseIcon}
-											alt={"noise symbol"}
-											width={200}
-											height={200}
-										/>
-									)}
-									{sensor === "dust" && (
-										<img
-											src={dustIcon}
-											alt={"dust symbol"}
-											width={512}
-											height={512}
-										/>
-									)}
-									{sensor === "vibration" && (
-										<img
-											src={vibrationIcon}
-											alt={"vibration symbol"}
-											width={512}
-											height={512}
-										/>
-									)}
+									<Icon variant={sensor} size="medium" />
 								</ItemMedia>
 								<ItemContent>
 									<ItemTitle className="line-clamp-1">
