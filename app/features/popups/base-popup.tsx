@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -8,11 +9,10 @@ import {
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { t } from "i18next";
 import { NavLink } from "react-router";
-import { Button } from "@/components/ui/button";
 
 type BasePopupProps = {
 	title: string;
-    open: boolean
+	open: boolean;
 	onClose: () => void;
 	relevantDate: Date | null;
 	children: React.ReactNode;
@@ -20,13 +20,12 @@ type BasePopupProps = {
 
 export function BasePopup({
 	title,
-    open,
+	open,
 	onClose,
 	relevantDate,
 	children,
 }: BasePopupProps) {
-
-    return (
+	return (
 		<Dialog open={open} onOpenChange={onClose}>
 			<DialogContent className="max-w-md">
 				<DialogHeader>
@@ -41,7 +40,11 @@ export function BasePopup({
 
 				<DialogFooter>
 					{relevantDate && (
-						<Button variant="default" className="cursor-pointer" onClick={onClose}>
+						<Button
+							variant="default"
+							className="cursor-pointer"
+							onClick={onClose}
+						>
 							<NavLink
 								to={{
 									search: `?view=Day&date=${relevantDate.toLocaleDateString("en-CA")}`,

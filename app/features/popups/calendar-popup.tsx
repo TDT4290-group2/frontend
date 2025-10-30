@@ -1,10 +1,10 @@
+import { BasePopup } from "@/features/popups/base-popup";
 import type { DangerKey } from "@/lib/danger-levels";
 import type { Sensor } from "@/lib/sensors";
 import { cn } from "@/lib/utils";
 import { t } from "i18next";
 import { PopupNotes } from "../../components/daily-notes";
 import { Card } from "../../components/ui/card";
-import { BasePopup } from "@/features/popups/base-popup";
 
 type CalendarPopupProps = {
 	title: string;
@@ -26,7 +26,12 @@ export function CalendarPopup({
 	children,
 }: CalendarPopupProps) {
 	return (
-		<BasePopup title={title} relevantDate={selectedDate} open={open} onClose={onClose}>
+		<BasePopup
+			title={title}
+			relevantDate={selectedDate}
+			open={open}
+			onClose={onClose}
+		>
 			{exposureData && (
 				<Card className="p-2 md:p-5">
 					{Object.entries(exposureData).map(([sensor, danger]) => (

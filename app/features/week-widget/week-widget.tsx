@@ -3,13 +3,13 @@ import { WeeklyPopup } from "@/features/popups/weekly-popup";
 import { type Day, isSameWeek, type Locale } from "date-fns";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { usePopup } from "../popups/use-popup";
 import { WeekDaysHeader } from "./components/week-days-header";
 import { WeekEventGrid } from "./components/week-event-grid";
 import { WeekGrid } from "./components/week-grid";
 import { WeekHeader } from "./components/week-header";
 import type { Cell, WeekEvent } from "./types";
 import { useWeekView } from "./use-week-view";
-import { usePopup } from "../popups/usePopup";
 
 export function WeekWidget({
 	minuteStep = 30,
@@ -48,13 +48,13 @@ export function WeekWidget({
 
 	const { t, i18n } = useTranslation();
 	const { visible, closePopup, openPopup } = usePopup();
-	
+
 	const [popupData, setPopupData] = useState<{
 		event: WeekEvent | null;
 	}>({ event: null });
 
 	function handleEventClick(event: WeekEvent): void {
-		setPopupData({event: event});
+		setPopupData({ event: event });
 		openPopup();
 	}
 

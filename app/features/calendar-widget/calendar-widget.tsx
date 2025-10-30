@@ -16,16 +16,16 @@ type CalendarProps = {
 };
 
 import {
-	type CalendarPopupData,
 	CalendarPopup,
+	type CalendarPopupData,
 } from "@/features/popups/calendar-popup";
 import { useState } from "react";
+import { usePopup } from "../popups/use-popup";
 import type { Sensor } from "../sensor-picker/sensors";
-import { usePopup } from "../popups/usePopup";
 
 export function CalendarWidget({ selectedDay, data }: CalendarProps) {
 	const { i18n } = useTranslation();
-	const {visible, openPopup, closePopup} = usePopup();
+	const { visible, openPopup, closePopup } = usePopup();
 
 	const [popupData, setPopupData] = useState<{
 		day: Date | null;

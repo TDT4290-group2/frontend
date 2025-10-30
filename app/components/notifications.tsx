@@ -6,18 +6,17 @@ import {
 	ItemMedia,
 	ItemTitle,
 } from "@/components/ui/item";
+import { NotificationPopup } from "@/features/popups/notification-popup";
+import { usePopup } from "@/features/popups/use-popup";
 import type { DangerKey } from "@/lib/danger-levels";
 import type { Sensor } from "@/lib/sensors";
 import { cn } from "@/lib/utils";
 import { Card } from "@/ui/card";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import dustIcon from "/icons/dustIcon.png";
 import noiseIcon from "/icons/noiseIcon.png";
 import vibrationIcon from "/icons/vibrationIcon.png";
-import { Button } from "./ui/button";
-import { usePopup } from "@/features/popups/usePopup";
-import { NotificationPopup } from "@/features/popups/notification-popup";
-import { useState } from "react";
 
 const notifications: Array<{
 	sensor: Sensor;
