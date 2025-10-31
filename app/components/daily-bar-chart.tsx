@@ -126,12 +126,7 @@ export function DailyBarChart({
 									}
 									if (color === `var(--card)`) {
 										// Non-active cell, No data
-										return (
-											<Cell
-												key={`cell-${index}-${key}`}
-												fill={color}
-											/>
-										);
+										return <Cell key={`cell-${index}-${key}`} fill={color} />;
 									}
 									return (
 										// Active cell, has data, interactable
@@ -144,7 +139,9 @@ export function DailyBarChart({
 											}
 											key={`cell-${index}-${key}`}
 											fill={color}
-											className={"cursor-pointer hover:brightness-90 active:brightness-90"}
+											className={
+												"cursor-pointer hover:brightness-90 active:brightness-90"
+											}
 										/>
 									);
 								})}
