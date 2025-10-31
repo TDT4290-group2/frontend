@@ -10,6 +10,7 @@ import { WeekGrid } from "./components/week-grid";
 import { WeekHeader } from "./components/week-header";
 import type { Cell, WeekEvent } from "./types";
 import { useWeekView } from "./use-week-view";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 export function WeekWidget({
 	minuteStep = 30,
@@ -126,7 +127,11 @@ export function WeekWidget({
 					event={popupData.event}
 					open={visible}
 					onClose={closePopup}
-				></WeeklyPopup>
+				>
+					<DialogDescription className="font-medium text-xl">
+						{t(($) => $.popup.exposureTitle)}
+					</DialogDescription>
+				</WeeklyPopup>
 			)}
 		</>
 	);

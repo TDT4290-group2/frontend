@@ -23,7 +23,6 @@ export function NotificationPopup({
 			onClose={onClose}
 			pathname={pathname ? pathname : undefined}
 		>
-			{/* Exposure: */}
 			{children}
 		</BasePopup>
 	);
