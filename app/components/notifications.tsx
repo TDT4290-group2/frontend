@@ -77,7 +77,7 @@ export function Notifications({
 
 	return (
 		<>
-			<Card className="max-h-80 w-full gap-0 overflow-y-auto px-4">
+			<Card className="h-64 w-full gap-0 overflow-y-auto px-4">
 				<ItemGroup className="gap-1" role="list">
 					{notifications.map(({ sensor, date, dangerLevel }) => (
 						<button
