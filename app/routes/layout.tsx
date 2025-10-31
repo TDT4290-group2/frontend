@@ -251,7 +251,7 @@ function MobileMenu({
 											<span className="text-lg text-primary">
 												{t(($) => $.notifications)}
 											</span>
-											<Icon variant="bell" size="small" className="ml-2" />
+											<Icon variant="bell" size="medium" className="ml-2" />
 										</button>
 									</DrawerClose>
 								</li>
