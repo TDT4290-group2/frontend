@@ -5,7 +5,7 @@
     "overview": "Overview"
   },
   "overview" : {
-    "title": "Overview of {{view}}",
+    "title": "Overview of the {{view}}",
     "day": "day",
     "week": "week",
     "month": "month",
@@ -90,7 +90,8 @@
     "warning": "An exposure limit was almost exceeded",
     "danger": "An exposure limit was exceeded",
     "openDaily": "See details for information about type of exposure",
-    "eventTitle": "{{day}}, from {{start}} to {{end}}"
+    "eventTitle": "{{day}}, from {{start}} to {{end}}",
+    "notifTitle": "Notification received {{date}}" 
   },
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",
