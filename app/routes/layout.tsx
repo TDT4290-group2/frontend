@@ -11,7 +11,7 @@ import {
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/features/dark-mode/mode-toggle";
 import { useDate } from "@/features/date-picker/use-date";
-import { Icon, type IconVariant } from "@/features/icon";
+import { Icon } from "@/features/icon";
 import { BellPopup } from "@/features/popups/bell-popup";
 import { usePopup } from "@/features/popups/use-popup";
 import { sensors } from "@/features/sensor-picker/sensors";

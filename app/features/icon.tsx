@@ -9,7 +9,7 @@ type IconSize = "small" | "medium";
 type IconProps = {
 	variant: IconVariant;
 	size: IconSize;
-    className?: string;
+	className?: string;
 };
 
 const srcMap: Record<IconVariant, string> = {
@@ -34,7 +34,7 @@ export function Icon({ variant, size, className }: IconProps) {
 				display: "inline-block",
 				verticalAlign: "middle",
 			}}
-            className={className ? className : ""}
+			className={className ? className : ""}
 		/>
 	);
 }

@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { WeeklyPopup } from "@/features/popups/weekly-popup";
+import { DialogDescription } from "@radix-ui/react-dialog";
 import { type Day, isSameWeek, type Locale } from "date-fns";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,7 +11,6 @@ import { WeekGrid } from "./components/week-grid";
 import { WeekHeader } from "./components/week-header";
 import type { Cell, WeekEvent } from "./types";
 import { useWeekView } from "./use-week-view";
-import { DialogDescription } from "@radix-ui/react-dialog";
 
 export function WeekWidget({
 	minuteStep = 30,
