@@ -68,7 +68,7 @@ export default function Layout() {
 	const isMobile = useIsMobile();
 
 	const { t, i18n } = useTranslation();
-	const {visible, openPopup, closePopup} = usePopup();
+	const { visible, openPopup, closePopup } = usePopup();
 
 	const links: Array<{ to: To; label: string }> = [
 		{ to: href("/"), label: t(($) => $.layout.overview) },
@@ -82,17 +82,14 @@ export default function Layout() {
 			<SidebarInset>
 				<header className="flex items-center justify-between p-2">
 					{isMobile ? (
-						<>
-							<div className="flex items-center gap-6">
-								<MobileMenu routes={links}>
-									<DrawerTrigger>
-										<HamburgerButton />
-									</DrawerTrigger>
-								</MobileMenu>
-							</div>
-
+						<div className="flex items-center gap-4">
+							<MobileMenu routes={links}>
+								<DrawerTrigger>
+									<HamburgerButton />
+								</DrawerTrigger>
+							</MobileMenu>
 							<HomeLink />
-						</>
+						</div>
 					) : (
 						<>
 							<div className="flex items-center gap-6">
@@ -107,7 +104,7 @@ export default function Layout() {
 					<div className="flex flex-row gap-4">
 						<button
 							type="button"
-							className="cursor-pointer rounded-xl px-1 hover:bg-card active:bg-card"
+							className="hidden cursor-pointer rounded-xl px-1 hover:bg-card active:bg-card md:block"
 							onClick={openPopup}
 						>
 							<Icon variant="bell" size="medium" />
@@ -128,7 +125,11 @@ export default function Layout() {
 						<ModeToggle />
 					</div>
 				</header>
-				<BellPopup open={visible} onClose={closePopup} title="Notifications"></BellPopup>
+				<BellPopup
+					open={visible}
+					onClose={closePopup}
+					title={t(($) => $.notifications)}
+				></BellPopup>
 				<main className="m-2 flex items-center justify-center">
 					<Outlet />
 				</main>
@@ -205,6 +206,8 @@ function MobileMenu({
 	const { view } = useView();
 	const { date } = useDate();
 	const { setSensor } = useSensor();
+	const { visible, openPopup, closePopup } = usePopup();
+	const { t } = useTranslation();
 	return (
 		<div className="md:hidden">
 			<Drawer>
@@ -237,6 +240,21 @@ function MobileMenu({
 										</DrawerClose>
 									</li>
 								))}
+								<li className="separator w-full border-t-2 border-t-slate-200 dark:border-t-slate-700"></li>
+								<li>
+									<DrawerClose asChild>
+										<button
+											type="button"
+											className="w-full cursor-pointer rounded-xl px-1 hover:bg-card active:bg-card"
+											onClick={openPopup}
+										>
+											<span className="text-lg text-primary">
+												{t(($) => $.notifications)}
+											</span>
+											<Icon variant="bell" size="small" className="ml-2" />
+										</button>
+									</DrawerClose>
+								</li>
 							</ul>
 						</div>
 					</DrawerDescription>
@@ -247,6 +265,11 @@ function MobileMenu({
 					</DrawerFooter>
 				</DrawerContent>
 			</Drawer>
+			<BellPopup
+				open={visible}
+				onClose={closePopup}
+				title={t(($) => $.notifications)}
+			></BellPopup>
 		</div>
 	);
 }

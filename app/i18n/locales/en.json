@@ -82,6 +82,7 @@
   "day": "Day",
   "week": "Week",
   "month": "Month",
+  "notifications": "Notifications",
   "popup": {
     "toDay": "See details",
     "notesTitle": "Note for this day:",
@@ -91,7 +92,7 @@
     "danger": "An exposure limit was exceeded",
     "openDaily": "See details for information about type of exposure",
     "eventTitle": "{{day}}, from {{start}} to {{end}}",
-    "notifTitle": "Notification received {{date}}" 
+    "notifTitle": "Notification received {{date}}"
   },
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",
