@@ -189,13 +189,13 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 						prefetch="intent"
 					>
 						{route.label}
-						{i > 0 && (
+						{/* {i > 0 && (
 							<Icon
 								className={"ml-1"}
 								variant={route.to.toString().replace("/", "") as IconVariant}
 								size="small"
 							/>
-						)}
+						)} */}
 					</NavLink>
 				);
 			})}

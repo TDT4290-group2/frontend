@@ -85,7 +85,6 @@ export default function Dust() {
 						weekStartsOn={1}
 						minuteStep={60}
 						events={mapWeekDataToEvents(data ?? [], "dust")}
-						onEventClick={(event) => alert(event.dangerLevel)}
 					/>
 				) : !data || data.length === 0 ? (
 					<Card className="flex h-24 w-full items-center">
