@@ -6,27 +6,25 @@ import vibrationIcon from "/icons/vibrationIcon_light.png";
 export type IconVariant = "dust" | "noise" | "vibration" | "bell";
 type IconSize = "small" | "medium";
 
-const srcMapLight: Record<IconVariant, string> = {
-	dust: dustIconLight,
-	noise: noiseIconLight,
-	vibration: vibrationIconLight,
-	bell: bellIconLight,
+type IconProps = {
+	variant: IconVariant;
+	size: IconSize;
+	className?: string;
 };
 
-const srcMapDark: Record<IconVariant, string> = {
-	dust: dustIconDark,
-	noise: noiseIconDark,
-	vibration: vibrationIconDark,
-	bell: bellIconDark,
+const srcMap: Record<IconVariant, string> = {
+	dust: dustIcon,
+	noise: noiseIcon,
+	vibration: vibrationIcon,
+	bell: bellIcon,
 };
 
 export function Icon({ variant, size, className }: IconProps) {
 	const isSmall = size === "small";
-	const { theme } = useTheme();
 
 	return (
 		<img
-			src={theme === "light" ? srcMapLight[variant] : srcMapDark[variant]}
+			src={srcMap[variant]}
 			alt={`${variant} icon`}
 			width={200}
 			height={200}
