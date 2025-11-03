@@ -77,7 +77,7 @@ export default function Home() {
 					</Button>
 				</div>
 			</div>
-			<div className="flex w-full flex-col gap-4 md:flex-row">
+			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
 					<Summary exposureType="all" data={everySensorData ?? []} />
 				</div>
