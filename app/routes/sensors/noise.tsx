@@ -1,7 +1,6 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 
 import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
-import { Notifications } from "@/components/notifications";
 import { Summary } from "@/components/summary";
 import { Card, CardTitle } from "@/components/ui/card";
 import { CalendarWidget } from "@/features/calendar-widget/calendar-widget";

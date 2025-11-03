@@ -1,14 +1,14 @@
-import bellIcon from "/icons/bell_light.png";
-import dustIcon from "/icons/dustIcon_light.png";
-import noiseIcon from "/icons/noiseIcon_light.png";
-import vibrationIcon from "/icons/vibrationIcon_light.png";
-import bellIconDark from "/icons/bell_dark.png";
-import dustIconDark from "/icons/dustIcon_dark.png";
-import noiseIconDark from "/icons/noiseIcon_dark.png";
-import vibrationIconDark from "/icons/vibrationIcon_dark.png";
-import { useTheme } from "./dark-mode/use-theme";
-import type { Theme } from "./dark-mode/theme-provider";
 import { cn } from "@/lib/utils";
+import bellIconDark from "/icons/bell_dark.png";
+import bellIcon from "/icons/bell_light.png";
+import dustIconDark from "/icons/dustIcon_dark.png";
+import dustIcon from "/icons/dustIcon_light.png";
+import noiseIconDark from "/icons/noiseIcon_dark.png";
+import noiseIcon from "/icons/noiseIcon_light.png";
+import vibrationIconDark from "/icons/vibrationIcon_dark.png";
+import vibrationIcon from "/icons/vibrationIcon_light.png";
+import type { Theme } from "./dark-mode/theme-provider";
+import { useTheme } from "./dark-mode/use-theme";
 
 export type IconVariant = "dust" | "noise" | "vibration" | "bell";
 type IconSize = "small" | "medium";

@@ -22,7 +22,7 @@ export function BellPopup({
 			onClose={onClose}
 			pathname={pathname ? pathname : undefined}
 		>
-			<Notifications onParentClose={onClose}/>
+			<Notifications onParentClose={onClose} />
 			{children}
 		</BasePopup>
 	);

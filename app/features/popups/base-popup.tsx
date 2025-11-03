@@ -26,7 +26,7 @@ export function BasePopup({
 	relevantDate,
 	navOverride,
 	pathname,
-	children
+	children,
 }: BasePopupProps) {
 	return (
 		<Dialog open={open} onOpenChange={onClose}>

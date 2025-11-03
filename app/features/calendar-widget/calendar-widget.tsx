@@ -15,6 +15,7 @@ type CalendarProps = {
 	data: MonthData;
 };
 
+import { DialogDescription } from "@/components/ui/dialog";
 import {
 	CalendarPopup,
 	type CalendarPopupData,
@@ -22,7 +23,6 @@ import {
 import { useState } from "react";
 import { usePopup } from "../popups/use-popup";
 import type { Sensor } from "../sensor-picker/sensors";
-import { DialogDescription } from "@/components/ui/dialog";
 
 export function CalendarWidget({ selectedDay, data }: CalendarProps) {
 	const { t, i18n } = useTranslation();

@@ -6,6 +6,7 @@ import {
 	ItemMedia,
 	ItemTitle,
 } from "@/components/ui/item";
+import { Icon } from "@/features/icon";
 import { NotificationPopup } from "@/features/popups/notification-popup";
 import { usePopup } from "@/features/popups/use-popup";
 import type { DangerKey } from "@/lib/danger-levels";
@@ -14,7 +15,6 @@ import { cn } from "@/lib/utils";
 import { Card } from "@/ui/card";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Icon } from "@/features/icon";
 
 const notifications: Array<{
 	sensor: Sensor;
@@ -53,18 +53,22 @@ type NotifData = {
 	dangerLevel: DangerKey;
 };
 
-export function Notifications({ onParentClose }: { onParentClose: () => void }) {
+export function Notifications({
+	onParentClose,
+}: {
+	onParentClose: () => void;
+}) {
 	const { t, i18n } = useTranslation();
 
 	const { visible, openPopup, closePopup } = usePopup();
 
 	const [notifData, setNotifData] = useState<NotifData | null>(null);
 
-	// Since notifications are nested in a parent popup we need to close that popup as well as the popup for a specific notification. 
+	// Since notifications are nested in a parent popup we need to close that popup as well as the popup for a specific notification.
 	const closeAll = () => {
 		closePopup();
 		onParentClose();
-	}
+	};
 
 	function handleNotifClick(clickedNotif: NotifData): void {
 		setNotifData(clickedNotif);
