@@ -62,7 +62,6 @@ export default function Vibration() {
 		<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 			<div className="flex flex-col gap-4">
 				<Summary exposureType={"vibration"} data={makeCumulative(data)} />
-				<Notifications />
 			</div>
 			<div className="flex flex-1 flex-col items-end gap-4">
 				{isLoading ? (

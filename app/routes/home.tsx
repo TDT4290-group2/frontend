@@ -81,7 +81,6 @@ export default function Home() {
 			<div className="flex w-full flex-col gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
 					<Summary exposureType="all" data={everySensorData ?? []} />
-					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">
 					<div className="view-wrapper w-full">
