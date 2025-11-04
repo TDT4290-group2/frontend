@@ -157,7 +157,7 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 				className="absolute top-0 bottom-0 z-10 flex overflow-hidden rounded-full py-1.5 transition-all duration-300"
 				style={{ left: pillLeft, width: pillWidth }}
 			>
-				<span className="h-full w-full rounded-full bg-secondary shadow-sm" />
+				<span className="h-full w-full rounded-full bg-secondary shadow-sm dark:bg-background" />
 			</span>
 			{routes.map((route, i) => {
 				return (
@@ -189,6 +189,13 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 						prefetch="intent"
 					>
 						{route.label}
+						{/* {i > 0 && (
+							<Icon
+								className={"ml-1"}
+								variant={route.to.toString().replace("/", "") as IconVariant}
+								size="small"
+							/>
+						)} */}
 					</NavLink>
 				);
 			})}
@@ -217,7 +224,7 @@ function MobileMenu({
 					<DrawerDescription>
 						<div className="flex items-start justify-between p-6">
 							<ul className="flex w-full flex-col items-start gap-4 text-center">
-								{routes.map((route) => (
+								{routes.map((route, i) => (
 									<li key={route.to.toString()}>
 										<DrawerClose asChild>
 											<NavLink
@@ -236,6 +243,17 @@ function MobileMenu({
 												className="text-lg text-primary"
 											>
 												{route.label}
+												{i > 0 && (
+													<Icon
+														variant={
+															route.to
+																.toString()
+																.replace("/", "") as IconVariant
+														}
+														size="medium"
+														className="ml-2"
+													/>
+												)}
 											</NavLink>
 										</DrawerClose>
 									</li>
