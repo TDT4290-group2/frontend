@@ -23,6 +23,7 @@ export function WeeklyPopup({
 			open={open}
 			onClose={onClose}
 		>
+			{children}
 			<div className="flex flex-col gap-2">
 				{event.dangerLevel && (
 					<Card className="p-2 md:p-5">
@@ -35,7 +36,6 @@ export function WeeklyPopup({
 					</Card>
 				)}
 			</div>
-			{children}
 		</BasePopup>
 	);
 }

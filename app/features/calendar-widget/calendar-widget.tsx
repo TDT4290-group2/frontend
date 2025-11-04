@@ -15,6 +15,7 @@ type CalendarProps = {
 	data: MonthData;
 };
 
+import { DialogDescription } from "@/components/ui/dialog";
 import {
 	CalendarPopup,
 	type CalendarPopupData,
@@ -24,7 +25,7 @@ import { usePopup } from "../popups/use-popup";
 import type { Sensor } from "../sensor-picker/sensors";
 
 export function CalendarWidget({ selectedDay, data }: CalendarProps) {
-	const { i18n } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const { visible, openPopup, closePopup } = usePopup();
 
 	const [popupData, setPopupData] = useState<{
@@ -134,7 +135,11 @@ export function CalendarWidget({ selectedDay, data }: CalendarProps) {
 					open={visible}
 					onClose={closePopup}
 					exposureData={popupData.exposures}
-				></CalendarPopup>
+				>
+					<DialogDescription className="font-medium text-xl">
+						{t(($) => $.popup.exposureTitle)}
+					</DialogDescription>
+				</CalendarPopup>
 			)}
 		</>
 	);

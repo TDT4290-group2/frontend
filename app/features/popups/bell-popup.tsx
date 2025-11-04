@@ -1,15 +1,14 @@
+import { Notifications } from "@/components/notifications";
 import { BasePopup } from "./base-popup";
 
-export function NotificationPopup({
+export function BellPopup({
 	title,
-	relevantDate,
 	open,
 	onClose,
 	pathname,
 	children,
 }: {
 	title: string;
-	relevantDate: Date;
 	open: boolean;
 	onClose: () => void;
 	pathname?: string;
@@ -19,10 +18,11 @@ export function NotificationPopup({
 		<BasePopup
 			title={title}
 			open={open}
-			relevantDate={relevantDate}
+			relevantDate={null}
 			onClose={onClose}
 			pathname={pathname ? pathname : undefined}
 		>
+			<Notifications onParentClose={onClose} />
 			{children}
 		</BasePopup>
 	);

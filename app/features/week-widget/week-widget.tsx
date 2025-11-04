@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { WeeklyPopup } from "@/features/popups/weekly-popup";
+import { DialogDescription } from "@radix-ui/react-dialog";
 import { type Day, isSameWeek, type Locale } from "date-fns";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -126,7 +127,11 @@ export function WeekWidget({
 					event={popupData.event}
 					open={visible}
 					onClose={closePopup}
-				></WeeklyPopup>
+				>
+					<DialogDescription className="font-medium text-xl">
+						{t(($) => $.popup.exposureTitle)}
+					</DialogDescription>
+				</WeeklyPopup>
 			)}
 		</>
 	);

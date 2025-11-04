@@ -11,6 +11,9 @@ import {
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/features/dark-mode/mode-toggle";
 import { useDate } from "@/features/date-picker/use-date";
+import { Icon } from "@/features/icon";
+import { BellPopup } from "@/features/popups/bell-popup";
+import { usePopup } from "@/features/popups/use-popup";
 import { sensors } from "@/features/sensor-picker/sensors";
 import { useSensor } from "@/features/sensor-picker/use-sensor";
 import { useView } from "@/features/views/use-view";
@@ -55,7 +58,7 @@ function HomeLink() {
 			<div className="text-2xl">
 				<Logo />
 			</div>
-			<span className="text-xl sm:inline-block">{"HealthTech"}</span>
+			<span className="hidden text-xl sm:inline-block">{"HealthTech"}</span>
 		</NavLink>
 	);
 }
@@ -65,6 +68,7 @@ export default function Layout() {
 	const isMobile = useIsMobile();
 
 	const { t, i18n } = useTranslation();
+	const { visible, openPopup, closePopup } = usePopup();
 
 	const links: Array<{ to: To; label: string }> = [
 		{ to: href("/"), label: t(($) => $.layout.overview) },
@@ -78,17 +82,14 @@ export default function Layout() {
 			<SidebarInset>
 				<header className="flex items-center justify-between p-2">
 					{isMobile ? (
-						<>
-							<div className="flex items-center gap-6">
-								<MobileMenu routes={links}>
-									<DrawerTrigger>
-										<HamburgerButton />
-									</DrawerTrigger>
-								</MobileMenu>
-							</div>
-
+						<div className="flex items-center gap-4">
+							<MobileMenu routes={links}>
+								<DrawerTrigger>
+									<HamburgerButton />
+								</DrawerTrigger>
+							</MobileMenu>
 							<HomeLink />
-						</>
+						</div>
 					) : (
 						<>
 							<div className="flex items-center gap-6">
@@ -101,6 +102,13 @@ export default function Layout() {
 						</>
 					)}
 					<div className="flex flex-row gap-4">
+						<button
+							type="button"
+							className="hidden cursor-pointer rounded-xl px-1 hover:bg-card active:bg-card md:block"
+							onClick={openPopup}
+						>
+							<Icon variant="bell" size="medium" />
+						</button>
 						<Select onValueChange={(value) => i18n.changeLanguage(value)}>
 							<SelectTrigger className="w-32">
 								<SelectValue placeholder="Language" />
@@ -117,6 +125,11 @@ export default function Layout() {
 						<ModeToggle />
 					</div>
 				</header>
+				<BellPopup
+					open={visible}
+					onClose={closePopup}
+					title={t(($) => $.notifications)}
+				></BellPopup>
 				<main className="m-2 flex items-center justify-center">
 					<Outlet />
 				</main>
@@ -144,7 +157,7 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 				className="absolute top-0 bottom-0 z-10 flex overflow-hidden rounded-full py-1.5 transition-all duration-300"
 				style={{ left: pillLeft, width: pillWidth }}
 			>
-				<span className="h-full w-full rounded-full bg-secondary shadow-sm" />
+				<span className="h-full w-full rounded-full bg-secondary shadow-sm dark:bg-background" />
 			</span>
 			{routes.map((route, i) => {
 				return (
@@ -176,6 +189,13 @@ function NavTabs({ routes }: { routes: Array<{ label: string; to: To }> }) {
 						prefetch="intent"
 					>
 						{route.label}
+						{/* {i > 0 && (
+							<Icon
+								className={"ml-1"}
+								variant={route.to.toString().replace("/", "") as IconVariant}
+								size="small"
+							/>
+						)} */}
 					</NavLink>
 				);
 			})}
@@ -193,6 +213,8 @@ function MobileMenu({
 	const { view } = useView();
 	const { date } = useDate();
 	const { setSensor } = useSensor();
+	const { visible, openPopup, closePopup } = usePopup();
+	const { t } = useTranslation();
 	return (
 		<div className="md:hidden">
 			<Drawer>
@@ -202,7 +224,7 @@ function MobileMenu({
 					<DrawerDescription>
 						<div className="flex items-start justify-between p-6">
 							<ul className="flex w-full flex-col items-start gap-4 text-center">
-								{routes.map((route) => (
+								{routes.map((route, i) => (
 									<li key={route.to.toString()}>
 										<DrawerClose asChild>
 											<NavLink
@@ -221,10 +243,36 @@ function MobileMenu({
 												className="text-lg text-primary"
 											>
 												{route.label}
+												{i > 0 && (
+													<Icon
+														variant={
+															route.to
+																.toString()
+																.replace("/", "") as IconVariant
+														}
+														size="medium"
+														className="ml-2"
+													/>
+												)}
 											</NavLink>
 										</DrawerClose>
 									</li>
 								))}
+								<li className="separator w-full border-t-2 border-t-slate-200 dark:border-t-slate-700"></li>
+								<li>
+									<DrawerClose asChild>
+										<button
+											type="button"
+											className="w-full cursor-pointer rounded-xl px-1 hover:bg-card active:bg-card"
+											onClick={openPopup}
+										>
+											<span className="text-lg text-primary">
+												{t(($) => $.notifications)}
+											</span>
+											<Icon variant="bell" size="medium" className="ml-2" />
+										</button>
+									</DrawerClose>
+								</li>
 							</ul>
 						</div>
 					</DrawerDescription>
@@ -235,6 +283,11 @@ function MobileMenu({
 					</DrawerFooter>
 				</DrawerContent>
 			</Drawer>
+			<BellPopup
+				open={visible}
+				onClose={closePopup}
+				title={t(($) => $.notifications)}
+			></BellPopup>
 		</div>
 	);
 }

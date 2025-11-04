@@ -32,6 +32,7 @@ export function CalendarPopup({
 			open={open}
 			onClose={onClose}
 		>
+			{children}
 			{exposureData && (
 				<Card className="p-2 md:p-5">
 					{Object.entries(exposureData).map(([sensor, danger]) => (
@@ -55,8 +56,6 @@ export function CalendarPopup({
 			)}
 			<h2 className="pt-4 font-bold">{t(($) => $.popup.notesTitle)}</h2>
 			<PopupNotes selectedDate={selectedDate} />
-
-			{children}
 		</BasePopup>
 	);
 }

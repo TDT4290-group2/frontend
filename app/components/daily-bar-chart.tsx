@@ -2,16 +2,18 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { useDate } from "@/features/date-picker/use-date";
 import type { Sensor } from "@/features/sensor-picker/sensors";
 import { sensors } from "@/features/sensor-picker/sensors";
 import type { AllSensors } from "@/lib/dto";
 import { thresholds } from "@/lib/thresholds";
 import { makeCumulative } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import { Bar, BarChart, Cell, XAxis, YAxis } from "recharts";
 
 // the chart data is always the same, we only change the colors based on exposure data
-const generateChartData = () =>
+const generateChartData = (): Array<Record<string, Sensor>> =>
 	sensors.map((sensor) => ({
 		sensor,
 		...Object.fromEntries(
@@ -60,6 +62,8 @@ export function DailyBarChart({
 	endHour?: number;
 }) {
 	const { t } = useTranslation();
+	const { date } = useDate();
+	const navigate = useNavigate();
 	const totalHours = endHour - startHour + 1;
 	const hours = Array.from({ length: totalHours }, (_, i) => startHour + i);
 
@@ -120,7 +124,26 @@ export function DailyBarChart({
 									} else if (hourlyMax[sensor][i] > -1) {
 										color = "var(--safe)";
 									}
-									return <Cell key={`cell-${index}-${key}`} fill={color} />;
+									if (color === `var(--card)`) {
+										// Non-active cell, No data
+										return <Cell key={`cell-${index}-${key}`} fill={color} />;
+									}
+									return (
+										// Active cell, has data, interactable
+										<Cell
+											onClick={() =>
+												navigate({
+													pathname: entry.sensor,
+													search: `?view=Day&date=${date.toLocaleDateString("en-CA")}`,
+												})
+											}
+											key={`cell-${index}-${key}`}
+											fill={color}
+											className={
+												"cursor-pointer hover:brightness-90 active:brightness-90"
+											}
+										/>
+									);
 								})}
 							</Bar>
 						))}

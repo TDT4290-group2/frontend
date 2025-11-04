@@ -1,7 +1,6 @@
 /** biome-ignore-all lint/suspicious/noAlert: We use alert for testing, but will be changed later */
 
 import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
-import { Notifications } from "@/components/notifications";
 import { Summary } from "@/components/summary";
 import { Card, CardTitle } from "@/components/ui/card";
 import { CalendarWidget } from "@/features/calendar-widget/calendar-widget";
@@ -62,7 +61,6 @@ export default function Dust() {
 		<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 			<div className="flex flex-col gap-4">
 				<Summary exposureType={"dust"} data={data} />
-				<Notifications />
 			</div>
 			<div className="flex flex-1 flex-col items-end gap-4">
 				{isLoading ? (
@@ -86,7 +84,6 @@ export default function Dust() {
 						weekStartsOn={1}
 						minuteStep={60}
 						events={mapWeekDataToEvents(data ?? [], "dust")}
-						onEventClick={(event) => alert(event.dangerLevel)}
 					/>
 				) : !data || data.length === 0 ? (
 					<Card className="flex h-24 w-full items-center">

@@ -2,7 +2,6 @@
 
 import { DailyBarChart } from "@/components/daily-bar-chart";
 import { DailyNotes } from "@/components/daily-notes";
-import { Notifications } from "@/components/notifications";
 import { Summary } from "@/components/summary";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
@@ -78,10 +77,9 @@ export default function Home() {
 					</Button>
 				</div>
 			</div>
-			<div className="flex w-full flex-col gap-4 md:flex-row">
+			<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
 				<div className="flex flex-col gap-4">
 					<Summary exposureType="all" data={everySensorData ?? []} />
-					<Notifications />
 				</div>
 				<div className="flex flex-1 flex-col gap-1">
 					<div className="view-wrapper w-full">

@@ -6,9 +6,10 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { t } from "i18next";
 import { NavLink } from "react-router";
+import { sensors } from "../sensor-picker/sensors";
+import { useSensor } from "../sensor-picker/use-sensor";
 
 type BasePopupProps = {
 	title: string;
@@ -29,16 +30,13 @@ export function BasePopup({
 	pathname,
 	children,
 }: BasePopupProps) {
+	const { setSensor } = useSensor();
 	return (
 		<Dialog open={open} onOpenChange={onClose}>
 			<DialogContent className="max-w-md">
 				<DialogHeader>
 					<DialogTitle className="font-bold text-xl">{title}</DialogTitle>
 				</DialogHeader>
-
-				<DialogDescription className="font-medium text-xl">
-					{t(($) => $.popup.exposureTitle)}
-				</DialogDescription>
 
 				{children}
 
@@ -56,6 +54,9 @@ export function BasePopup({
 										? navOverride
 										: `?view=Day&date=${relevantDate.toLocaleDateString("en-CA")}`,
 								}}
+								onClick={() =>
+									sensors.find((s) => pathname?.includes(s) && setSensor(s))
+								}
 								prefetch="intent"
 							>
 								{t(($) => $.popup.toDay)}

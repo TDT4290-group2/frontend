@@ -6,6 +6,7 @@ import {
 	ItemMedia,
 	ItemTitle,
 } from "@/components/ui/item";
+import { Icon } from "@/features/icon";
 import { NotificationPopup } from "@/features/popups/notification-popup";
 import { usePopup } from "@/features/popups/use-popup";
 import type { DangerKey } from "@/lib/danger-levels";
@@ -14,9 +15,6 @@ import { cn } from "@/lib/utils";
 import { Card } from "@/ui/card";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import dustIcon from "/icons/dustIcon.png";
-import noiseIcon from "/icons/noiseIcon.png";
-import vibrationIcon from "/icons/vibrationIcon.png";
 
 const notifications: Array<{
 	sensor: Sensor;
@@ -26,26 +24,26 @@ const notifications: Array<{
 	{
 		sensor: "noise",
 		dangerLevel: "warning",
-		// "01.04 9.41" → 1 April 2025, 09:41
-		date: new Date(2025, 3, 1, 9, 41),
+		// "18.11 9.41" → 18 November 2024, 09:41
+		date: new Date(2024, 10, 18, 9, 41),
 	},
 	{
 		sensor: "vibration",
 		dangerLevel: "danger",
-		// "24.05 14.04" → 24 May 2025, 14:04
-		date: new Date(2025, 4, 24, 14, 4),
+		// "12.05 14.04" → 12 May 2025, 14:04
+		date: new Date(2025, 4, 12, 14, 4),
 	},
 	{
 		sensor: "dust",
 		dangerLevel: "warning",
-		// "04.03 8.53" → 4 March 2025, 08:53
-		date: new Date(2025, 2, 4, 8, 53),
+		// "17.02 8.53" → 17 February 2025, 08:53
+		date: new Date(2025, 1, 17, 8, 53),
 	},
 	{
 		sensor: "dust",
 		dangerLevel: "warning",
-		// "04.03 8.54" → 4 March 2025, 08:54
-		date: new Date(2025, 2, 4, 8, 54),
+		// "20.02 8.54" → 20 February 2025, 08:54
+		date: new Date(2025, 1, 20, 8, 54),
 	},
 ];
 
@@ -55,12 +53,22 @@ type NotifData = {
 	dangerLevel: DangerKey;
 };
 
-export function Notifications() {
+export function Notifications({
+	onParentClose,
+}: {
+	onParentClose: () => void;
+}) {
 	const { t, i18n } = useTranslation();
 
 	const { visible, openPopup, closePopup } = usePopup();
 
 	const [notifData, setNotifData] = useState<NotifData | null>(null);
+
+	// Since notifications are nested in a parent popup we need to close that popup as well as the popup for a specific notification.
+	const closeAll = () => {
+		closePopup();
+		onParentClose();
+	};
 
 	function handleNotifClick(clickedNotif: NotifData): void {
 		setNotifData(clickedNotif);
@@ -84,31 +92,8 @@ export function Notifications() {
 								size="sm"
 								className="rounded-3xl border-3 border-border bg-background hover:bg-card-highlight"
 							>
-								<ItemMedia variant="image">
-									{sensor === "noise" && (
-										<img
-											src={noiseIcon}
-											alt={"noise symbol"}
-											width={200}
-											height={200}
-										/>
-									)}
-									{sensor === "dust" && (
-										<img
-											src={dustIcon}
-											alt={"dust symbol"}
-											width={512}
-											height={512}
-										/>
-									)}
-									{sensor === "vibration" && (
-										<img
-											src={vibrationIcon}
-											alt={"vibration symbol"}
-											width={512}
-											height={512}
-										/>
-									)}
+								<ItemMedia variant="default" className="pt-1">
+									<Icon variant={sensor} size="medium" />
 								</ItemMedia>
 								<ItemContent>
 									<ItemTitle className="line-clamp-1">
@@ -129,7 +114,7 @@ export function Notifications() {
 			{notifData && (
 				<NotificationPopup
 					open={visible}
-					onClose={closePopup}
+					onClose={closeAll}
 					relevantDate={notifData.date}
 					title={t(($) => $.popup.notifTitle, {
 						date: notifData.date.toLocaleDateString(i18n.language, {
