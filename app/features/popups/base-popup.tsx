@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/dialog";
 import { t } from "i18next";
 import { NavLink } from "react-router";
+import { sensors } from "../sensor-picker/sensors";
+import { useSensor } from "../sensor-picker/use-sensor";
 
 type BasePopupProps = {
 	title: string;
@@ -28,6 +30,7 @@ export function BasePopup({
 	pathname,
 	children,
 }: BasePopupProps) {
+	const { setSensor } = useSensor();
 	return (
 		<Dialog open={open} onOpenChange={onClose}>
 			<DialogContent className="max-w-md">
@@ -51,6 +54,9 @@ export function BasePopup({
 										? navOverride
 										: `?view=Day&date=${relevantDate.toLocaleDateString("en-CA")}`,
 								}}
+								onClick={() =>
+									sensors.find((s) => pathname?.includes(s) && setSensor(s))
+								}
 								prefetch="intent"
 							>
 								{t(($) => $.popup.toDay)}
