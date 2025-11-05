@@ -67,7 +67,7 @@ export const DailyNotes = () => {
 
 	if (view === "day") {
 		return (
-			<Card className="max-h-64 w-full overflow-y-auto">
+			<Card className="max-h-96 w-full overflow-y-auto">
 				<CardHeader>
 					<h2 className="text-xl">{t(($) => $.daily_notes.dayTitle)}</h2>
 				</CardHeader>
@@ -96,7 +96,7 @@ export const DailyNotes = () => {
 
 	if (view === "week") {
 		return (
-			<Card className="max-h-64 w-full overflow-y-auto">
+			<Card className="max-h-96 w-full overflow-y-auto">
 				<CardHeader>
 					<h2 className="text-xl">
 						{t(($) => $.daily_notes.notesFromThis)}
@@ -130,7 +130,7 @@ export const DailyNotes = () => {
 
 	//month-view
 	return (
-		<Card className="max-h-64 w-full overflow-y-auto">
+		<Card className="max-h-96 w-full overflow-y-auto">
 			<CardHeader>
 				<h2 className="text-xl">
 					{t(($) => $.daily_notes.notesFromThis)}
