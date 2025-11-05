@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/features/dark-mode/mode-toggle";
+import { useTheme } from "@/features/dark-mode/use-theme";
 import { useDate } from "@/features/date-picker/use-date";
 import { Icon, type IconVariant } from "@/features/icon";
 import { BellPopup } from "@/features/popups/bell-popup";
@@ -128,6 +129,7 @@ export default function Layout() {
 				<main className="m-2 flex items-center justify-center">
 					<Outlet />
 				</main>
+				<Footer />
 			</SidebarInset>
 		</SidebarProvider>
 	);
@@ -327,3 +329,62 @@ const HamburgerIcon = ({
 		/>
 	</svg>
 );
+
+const AkerLogo = () => {
+	const { theme } = useTheme();
+	const isMobile = useIsMobile();
+	const resolvedTheme: "light" | "dark" =
+		theme === "system"
+			? document.documentElement.classList.contains("dark")
+				? "dark"
+				: "light"
+			: theme;
+	const isDark = resolvedTheme === "dark";
+	const size = isMobile ? "small" : "large";
+	return (
+		<img
+			height={300}
+			width={isMobile ? 300 : 1025}
+			alt="Aker Solutions Logo"
+			src={`akerlogo_${size}${isDark ? "_dark" : ""}.png`}
+		/>
+	);
+};
+
+const Footer = () => {
+	const { t, i18n } = useTranslation();
+
+	return (
+		<footer
+			className={cn("w-full border-t bg-background text-foreground", "bg-card")}
+		>
+			<div className={cn("mx-auto px-4 sm:px-6 lg:px-8", "py-6 md:py-8")}>
+				<div className="flex justify-between gap-8 md:items-start">
+					<div className="flex gap-3">
+						<div className="w-16 shrink-0 md:w-50">
+							<AkerLogo />
+						</div>
+					</div>
+					<div className="flex justify-end gap-3">
+						<Select onValueChange={(value) => i18n.changeLanguage(value)}>
+							<SelectTrigger className="w-32 bg-background dark:bg-background">
+								<SelectValue placeholder="Language" />
+							</SelectTrigger>
+							<SelectContent className="w-32">
+								<SelectItem key={"en"} value={"en"}>
+									{t(($) => $.english)}
+								</SelectItem>
+								<SelectItem key={"no"} value={"no"}>
+									{t(($) => $.norwegian)}
+								</SelectItem>
+							</SelectContent>
+						</Select>
+						<ModeToggle />
+					</div>
+				</div>
+			</div>
+		</footer>
+	);
+};
+
+
