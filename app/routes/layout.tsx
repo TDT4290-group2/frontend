@@ -94,7 +94,10 @@ export default function Layout() {
 						</div>
 					) : (
 						<>
-							<div className="flex items-center gap-6">
+							<div className="flex items-center gap-4">
+								<div className="w-36 shrink-0 border-r-2 border-r-muted-foreground pr-4">
+									<AkerLogo />
+								</div>
 								<HomeLink />
 							</div>
 
@@ -111,6 +114,20 @@ export default function Layout() {
 						>
 							<Icon variant="bell" size="medium" />
 						</button>
+						<Select onValueChange={(value) => i18n.changeLanguage(value)}>
+							<SelectTrigger className="w-32 bg-background dark:bg-background">
+								<SelectValue placeholder="Language" />
+							</SelectTrigger>
+							<SelectContent className="w-32">
+								<SelectItem key={"en"} value={"en"}>
+									{t(($) => $.english)}
+								</SelectItem>
+								<SelectItem key={"no"} value={"no"}>
+									{t(($) => $.norwegian)}
+								</SelectItem>
+							</SelectContent>
+						</Select>
+						<ModeToggle />
 						<div className="profile-wrapper">
 							{/* DUMMY PROFILE DISPLAY */}
 							<ProfileBadge
@@ -126,10 +143,16 @@ export default function Layout() {
 					onClose={closePopup}
 					title={t(($) => $.notifications)}
 				></BellPopup>
-				<main className="m-2 flex items-center justify-center">
+				<main className="m-2 flex-col items-center justify-center">
 					<Outlet />
+					{isMobile && (
+						<div className="mt-2 flex w-full justify-center p-4">
+							<div className="w-28 shrink-0 self-center">
+								<AkerLogo />
+							</div>
+						</div>
+					)}
 				</main>
-				<Footer />
 			</SidebarInset>
 		</SidebarProvider>
 	);
@@ -330,7 +353,7 @@ const HamburgerIcon = ({
 	</svg>
 );
 
-const AkerLogo = () => {
+const AkerLogo = ({ sizeOverride }: { sizeOverride?: "small" | "large" }) => {
 	const { theme } = useTheme();
 	const isMobile = useIsMobile();
 	const resolvedTheme: "light" | "dark" =
@@ -340,7 +363,12 @@ const AkerLogo = () => {
 				: "light"
 			: theme;
 	const isDark = resolvedTheme === "dark";
-	const size = isMobile ? "small" : "large";
+	let size: "small" | "large";
+	if (sizeOverride){
+		size = sizeOverride;
+	} else {
+		size = isMobile ? "small" : "large";
+	}
 	return (
 		<img
 			height={300}
@@ -350,41 +378,4 @@ const AkerLogo = () => {
 		/>
 	);
 };
-
-const Footer = () => {
-	const { t, i18n } = useTranslation();
-
-	return (
-		<footer
-			className={cn("w-full border-t bg-background text-foreground", "bg-card")}
-		>
-			<div className={cn("mx-auto px-4 sm:px-6 lg:px-8", "py-6 md:py-8")}>
-				<div className="flex justify-between gap-8 md:items-start">
-					<div className="flex gap-3">
-						<div className="w-16 shrink-0 md:w-50">
-							<AkerLogo />
-						</div>
-					</div>
-					<div className="flex justify-end gap-3">
-						<Select onValueChange={(value) => i18n.changeLanguage(value)}>
-							<SelectTrigger className="w-32 bg-background dark:bg-background">
-								<SelectValue placeholder="Language" />
-							</SelectTrigger>
-							<SelectContent className="w-32">
-								<SelectItem key={"en"} value={"en"}>
-									{t(($) => $.english)}
-								</SelectItem>
-								<SelectItem key={"no"} value={"no"}>
-									{t(($) => $.norwegian)}
-								</SelectItem>
-							</SelectContent>
-						</Select>
-						<ModeToggle />
-					</div>
-				</div>
-			</div>
-		</footer>
-	);
-};
-
 
