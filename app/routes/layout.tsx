@@ -11,9 +11,10 @@ import {
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/features/dark-mode/mode-toggle";
 import { useDate } from "@/features/date-picker/use-date";
-import { Icon } from "@/features/icon";
+import { Icon, type IconVariant } from "@/features/icon";
 import { BellPopup } from "@/features/popups/bell-popup";
 import { usePopup } from "@/features/popups/use-popup";
+import { ProfileBadge } from "@/features/profile/profile-badge";
 import { sensors } from "@/features/sensor-picker/sensors";
 import { useSensor } from "@/features/sensor-picker/use-sensor";
 import { useView } from "@/features/views/use-view";
@@ -109,20 +110,14 @@ export default function Layout() {
 						>
 							<Icon variant="bell" size="medium" />
 						</button>
-						<Select onValueChange={(value) => i18n.changeLanguage(value)}>
-							<SelectTrigger className="w-32">
-								<SelectValue placeholder="Language" />
-							</SelectTrigger>
-							<SelectContent className="w-32">
-								<SelectItem key={"en"} value={"en"}>
-									{t(($) => $.english)}
-								</SelectItem>
-								<SelectItem key={"no"} value={"no"}>
-									{t(($) => $.norwegian)}
-								</SelectItem>
-							</SelectContent>
-						</Select>
-						<ModeToggle />
+						<div className="profile-wrapper">
+							{/* DUMMY PROFILE DISPLAY */}
+							<ProfileBadge
+								name="Olav Perator"
+								location="Egersund"
+								avatarUrl="userimage.png"
+							/>
+						</div>
 					</div>
 				</header>
 				<BellPopup

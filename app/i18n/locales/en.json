@@ -94,6 +94,13 @@
     "eventTitle": "{{day}}, from {{start}} to {{end}}",
     "notifTitle": "Notification received {{date}}"
   },
+  "profile": {
+    "title": "Profile",
+    "location": "Location",
+    "name": "Name",
+    "prefLanguage": "Preferred language",
+    "secReg": "Current security regulations"
+  },
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",
   "noData": "No exposure data found for this day",
