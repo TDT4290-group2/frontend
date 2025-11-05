@@ -1,5 +1,6 @@
 /** biome-ignore-all lint/suspicious/noAlert: we allow alerts for testing */
 
+import { DailyNotes } from "@/components/daily-notes";
 import { ChartLineDefault, ThresholdLine } from "@/components/line-chart";
 import { Summary } from "@/components/summary";
 import { Card, CardTitle } from "@/components/ui/card";
@@ -59,8 +60,9 @@ export default function Vibration() {
 
 	return (
 		<div className="flex w-full flex-col-reverse gap-4 md:flex-row">
-			<div className="flex flex-col gap-4">
+			<div className="flex flex-col gap-4 md:w-1/4">
 				<Summary exposureType={"vibration"} data={makeCumulative(data)} />
+				<DailyNotes />
 			</div>
 			<div className="flex flex-1 flex-col items-end gap-4">
 				{isLoading ? (
