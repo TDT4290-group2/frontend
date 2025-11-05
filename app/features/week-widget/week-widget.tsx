@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { WeeklyPopup } from "@/features/popups/weekly-popup";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { type Day, isSameWeek, type Locale } from "date-fns";
+import type { Day, Locale } from "date-fns";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { usePopup } from "../popups/use-popup";
@@ -87,11 +87,7 @@ export function WeekWidget({
 						onNext={nextWeek}
 						onPrev={previousWeek}
 						onToday={goToToday}
-						showTodayButton={
-							!isSameWeek(days[0].date, new Date(), {
-								weekStartsOn: weekStartsOn,
-							})
-						}
+						showTodayButton={false}
 					/>
 					<div className="flex flex-1 select-none flex-col overflow-hidden">
 						<div className="isolate flex flex-1 flex-col overflow-auto">

@@ -6,6 +6,7 @@ import { useView } from "@/features/views/use-view";
 import { ViewPicker } from "@/features/views/view-picker";
 import { getNextDay, getPrevDay } from "@/lib/utils";
 import { Button } from "@/ui/button";
+import { isSameDay } from "date-fns";
 import { t } from "i18next";
 import { Outlet } from "react-router";
 
@@ -32,6 +33,12 @@ export default function SensorLayout() {
 			<div className="flex flex-row">
 				<Title sensor={sensor} />
 				<div className="ml-auto flex flex-row gap-4">
+					{!isSameDay(new Date(), date) && (
+						<Button variant={"default"} onClick={() => setDate(new Date())}>
+							{t(($) => $.today)}
+						</Button>
+					)}
+
 					<Button onClick={() => setDate(getPrevDay(date, view))} size={"icon"}>
 						{"<"}
 					</Button>
