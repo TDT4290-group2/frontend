@@ -148,7 +148,7 @@ export default function Layout() {
 					{isMobile && (
 						<div className="mt-2 flex w-full justify-center p-4">
 							<div className="w-28 shrink-0 self-center">
-								<AkerLogo />
+								<AkerLogo sizeOverride="large"/>
 							</div>
 						</div>
 					)}
