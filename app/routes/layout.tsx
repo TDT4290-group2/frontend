@@ -148,7 +148,7 @@ export default function Layout() {
 					{isMobile && (
 						<div className="mt-2 flex w-full justify-center p-4">
 							<div className="w-28 shrink-0 self-center">
-								<AkerLogo sizeOverride="large"/>
+								<AkerLogo sizeOverride="large" />
 							</div>
 						</div>
 					)}
@@ -364,7 +364,7 @@ const AkerLogo = ({ sizeOverride }: { sizeOverride?: "small" | "large" }) => {
 			: theme;
 	const isDark = resolvedTheme === "dark";
 	let size: "small" | "large";
-	if (sizeOverride){
+	if (sizeOverride) {
 		size = sizeOverride;
 	} else {
 		size = isMobile ? "small" : "large";
@@ -378,4 +378,3 @@ const AkerLogo = ({ sizeOverride }: { sizeOverride?: "small" | "large" }) => {
 		/>
 	);
 };
-
