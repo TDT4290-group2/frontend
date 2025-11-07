@@ -30,7 +30,7 @@ export const ProfileBadge = ({
 			<button
 				type="button"
 				className={cn(
-					"inline-flex items-center gap-2 rounded-full border bg-background py-1 pr-4 pl-1",
+					"inline-flex items-center gap-2 rounded-full border bg-background p-1 md:pr-4",
 					"text-foreground/90 text-sm shadow-sm",
 					"cursor-pointer hover:bg-card-highlight",
 				)}
@@ -50,7 +50,7 @@ export const ProfileBadge = ({
 					)}
 				</div>
 
-				<div className="leading-tight">
+				<div className="hidden leading-tight md:block">
 					<p className="font-medium">{shorthandName}</p>
 					<p className="flex items-center gap-1 text-foreground/60 text-xs">
 						{location}
