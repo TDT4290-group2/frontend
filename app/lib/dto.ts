@@ -44,3 +44,24 @@ export type AllSensorData = {
 	isLoadingAny: boolean;
 	isErrorAny: boolean;
 };
+
+export type NotificationRequestDto = {
+  DataType: string;
+  ExceedingLevel?: string;
+  Value?: number;
+  HappenedAt: string;
+  IsRead?: boolean;
+  UserMessage?: string;
+};
+
+export type NotificationResponseDto = {
+  id: string;
+  exceedingLevel?: string;
+  dataType?: string;
+  value?: number;
+  happenedAt?: string;
+  isRead?: boolean;
+  userMessage?: string;
+};
+
+
