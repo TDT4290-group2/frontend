@@ -86,11 +86,11 @@ export function Notifications({ onParentClose }: { onParentClose: () => void }) 
 		<>
 			<Card className="h-64 w-full gap-0 overflow-y-auto px-4">
 				<ItemGroup className="gap-1" role="list">
-					{notifications.map(({ sensor, date, dangerLevel }) => (
+					{notifications.map(({ id,sensor, date, dangerLevel }) => (
 						<button
 							type={"button"}
 							key={`${date} ${sensor} ${dangerLevel}`}
-							onClick={() => handleNotifClick({ date, sensor, dangerLevel })}
+							onClick={() => handleNotifClick({ id, date, sensor, dangerLevel })}
 							className="cursor-pointer"
 						>
 							<Item
