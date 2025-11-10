@@ -90,38 +90,44 @@ export function Notifications({
 		<>
 			<Card className="h-64 w-full gap-0 overflow-y-auto px-4">
 				<ItemGroup className="gap-1" role="list">
-					{notifications.map(({ id, sensor, date, dangerLevel }) => (
-						<button
-							type={"button"}
-							key={`${date} ${sensor} ${dangerLevel}`}
-							onClick={() =>
-								handleNotifClick({ id, date, sensor, dangerLevel })
-							}
-							className="cursor-pointer"
-						>
-							<Item
-								variant="outline"
-								role="listitem"
-								size="sm"
-								className="rounded-3xl border-3 border-border bg-background hover:bg-card-highlight"
+					{notifications.length > 0 ? (
+						notifications.map(({ id, sensor, date, dangerLevel }) => (
+							<button
+								type={"button"}
+								key={`${date} ${sensor} ${dangerLevel}`}
+								onClick={() =>
+									handleNotifClick({ id, date, sensor, dangerLevel })
+								}
+								className="cursor-pointer"
 							>
-								<ItemMedia variant="default" className="pt-1">
-									<Icon variant={sensor} size="medium" />
-								</ItemMedia>
-								<ItemContent>
-									<ItemTitle className="line-clamp-1">
-										{t(($) => $[sensor])}
-									</ItemTitle>
-									<ItemDescription className={cn(`text-${dangerLevel}`)}>
-										{t(($) => $[dangerLevel])}
-									</ItemDescription>
-								</ItemContent>
-								<ItemContent>
-									<span>{formatNotificationDate(date)}</span>
-								</ItemContent>
-							</Item>
-						</button>
-					))}
+								<Item
+									variant="outline"
+									role="listitem"
+									size="sm"
+									className="rounded-3xl border-3 border-border bg-background hover:bg-card-highlight"
+								>
+									<ItemMedia variant="default" className="pt-1">
+										<Icon variant={sensor} size="medium" />
+									</ItemMedia>
+									<ItemContent>
+										<ItemTitle className="line-clamp-1">
+											{t(($) => $[sensor])}
+										</ItemTitle>
+										<ItemDescription className={cn(`text-${dangerLevel}`)}>
+											{t(($) => $[dangerLevel])}
+										</ItemDescription>
+									</ItemContent>
+									<ItemContent>
+										<span>{formatNotificationDate(date)}</span>
+									</ItemContent>
+								</Item>
+							</button>
+						))
+					) : (
+						<li className="text-center text-2xl text-muted-foreground">
+							{t(($) => $.popup.noNotifications)}
+						</li>
+					)}
 				</ItemGroup>
 			</Card>
 			{selectedNotification && (
