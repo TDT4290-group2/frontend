@@ -2,7 +2,9 @@ import type { NotificationResponseDto } from "./dto";
 
 const API_BASE_URL = `${import.meta.env.VITE_BASE_URL}notification`;
 
-export async function getNotifications(): Promise<Array<NotificationResponseDto>> {
+export async function getNotifications(): Promise<
+	Array<NotificationResponseDto>
+> {
 	const res = await fetch(API_BASE_URL, {
 		headers: { Accept: "application/json" },
 	});
