@@ -48,6 +48,7 @@
   },
   "daily_notes": {
     "dayTitle": "Dagens notater",
+    "daySubtitle": "Notat for {{day}}:",
     "writeHere": "Skriv her...",
     "edit": "Rediger",
     "save": "Lagre",

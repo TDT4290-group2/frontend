@@ -48,6 +48,7 @@
   },
   "daily_notes": {
     "dayTitle": "Daily Notes",
+    "daySubtitle": "Note for {{day}}:",
     "writeHere": "Write here...",
     "edit": "Edit",
     "save": "Save",

@@ -44,3 +44,13 @@ export type AllSensorData = {
 	isLoadingAny: boolean;
 	isErrorAny: boolean;
 };
+
+export type Note = {
+	note: string;
+	time: Date;
+};
+
+export type NoteDataRequest = {
+	startTime: Date;
+	endTime: Date;
+};
