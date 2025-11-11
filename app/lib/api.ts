@@ -6,8 +6,8 @@ import type {
 	SensorDataRequestDto,
 	SensorDataResponseDto,
 } from "./dto";
-import type { View } from "./views";
 import { getStartEnd } from "./queries";
+import type { View } from "./views";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 

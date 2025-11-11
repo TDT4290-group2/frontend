@@ -1,36 +1,53 @@
+/** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: <I prefer this over sending functions as props> */
+import { useDate } from "@/features/date-picker/use-date";
 import { useView } from "@/features/views/use-view";
-import { isSameMonth, isSameWeek, isToday } from "date-fns";
-import { useState } from "react";
+import { createNote, notesQueryOptions, updateNote } from "@/lib/api";
+import type { Note } from "@/lib/dto";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { isSameDay, isSameMonth, isSameWeek } from "date-fns";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Textarea } from "./ui/textarea";
-import { createNote, fetchNoteData, notesQueryOptions, updateNote } from "@/lib/api";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useDate } from "@/features/date-picker/use-date";
-import type { Note } from "@/lib/dto";
 
-
-export const DailyNotes = () => {
-	//assumes that the notes are sorted with current day first
-
+export const DailyNotes = ({
+	popUpOverride = false,
+}: {
+	popUpOverride?: boolean;
+}) => {
 	const { t, i18n } = useTranslation();
 	const locale = i18n.language;
 	const { view } = useView();
 	const { date } = useDate();
+	const queryClient = useQueryClient();
 
-	const { data, isLoading, isError } = useQuery(notesQueryOptions({ view: view, selectedDay: date }));
-	console.log(data)
+	const { data, isLoading, isError, refetch } = useQuery(
+		notesQueryOptions({ view: view, selectedDay: date }),
+	);
 
-	const { mutate: mutateUpdateNote } = useMutation({ mutationFn: updateNote });
-	const { mutate: mutateCreateNote } = useMutation({ mutationFn: createNote });
+	const { mutate: mutateUpdateNote } = useMutation({
+		mutationFn: updateNote,
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: ["notes"] });
+			refetch();
+		},
+	});
 
-	// const todayNoteExists = 
+	const { mutate: mutateCreateNote } = useMutation({
+		mutationFn: createNote,
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: ["notes"] });
+			refetch();
+		},
+	});
 
-	const [todayNote, setTodayNote] = useState<Note | null>(data ? data.find((note) => isToday(note.time)) ?? null : null);
+	const [todayNote, setTodayNote] = useState<Note | null>(
+		data ? (data.find((note) => isSameDay(note.time, date)) ?? null) : null,
+	);
 
 	const [showTextArea, setShowTextArea] = useState<boolean>(
-		todayNote === null
+		data ? !data.some((note) => isSameDay(note.time, date)) : true,
 	);
 
 	const handleEdit = () => {
@@ -38,43 +55,65 @@ export const DailyNotes = () => {
 	};
 
 	const handleSubmit = () => {
-		if (todayNote !== null) {
-			mutateCreateNote({ note: todayNote })
-
+		if (todayNote !== null && todayNote.note !== "" && data) {
+			if (data.some((note) => isSameDay(note.time, date))) {
+				mutateUpdateNote({ note: todayNote });
+			} else {
+				mutateCreateNote({ note: todayNote });
+			}
 		}
-
-
 		setShowTextArea(false);
 	};
 
+	useEffect(() => {
+		if (data) {
+			const foundNote = data.find((note) => isSameDay(note.time, date)) ?? null;
+			setTodayNote(foundNote);
+			setShowTextArea(!foundNote);
+		}
+	}, [data, date]);
+
 	if (isLoading) {
-		return <Card className="flex h-24 w-full items-center">
-			<p>{t(($) => $.loadingData)}</p>
-		</Card>
+		return (
+			<Card className="flex h-24 w-full items-center">
+				<p>{t(($) => $.loadingData)}</p>
+			</Card>
+		);
 	}
 
 	if (isError) {
-		return <Card className="flex h-24 w-full items-center">
-			<p>{t(($) => $.loadingData)}</p>
-		</Card>
+		return (
+			<Card className="flex h-24 w-full items-center">
+				<p>{t(($) => $.loadingData)}</p>
+			</Card>
+		);
 	}
 
-
-	if (view === "day") {
+	if (view === "day" || popUpOverride) {
 		return (
 			<Card className="max-h-96 w-full overflow-y-auto">
 				<CardHeader>
 					<h2 className="text-xl">{t(($) => $.daily_notes.dayTitle)}</h2>
+					<p>
+						{t(($) => $.daily_notes.daySubtitle, {
+							day: date.toLocaleDateString(locale, {
+								day: "numeric",
+								month: "long",
+							}),
+						})}
+					</p>
 				</CardHeader>
 				<CardContent>
-					{data?.find((note) => isToday(note.time)) ? (
-						<p>{data?.find((note) => isToday(note.time))?.note}</p>
-					) : (
+					{showTextArea ? (
 						<Textarea
 							placeholder={t(($) => $.daily_notes.writeHere)}
 							value={todayNote ? todayNote.note : ""}
-							onChange={(e) => setTodayNote({ time: new Date, note: e.target.value })}
+							onChange={(e) =>
+								setTodayNote({ time: date, note: e.target.value })
+							}
 						/>
+					) : (
+						<p>{data?.find((note) => isSameDay(note.time, date))?.note}</p>
 					)}
 				</CardContent>
 				<CardFooter className="justify-end gap-2">
@@ -101,22 +140,25 @@ export const DailyNotes = () => {
 				</CardHeader>
 				<CardContent>
 					<ul>
-						{data ?
-							data.filter((note) =>
-								isSameWeek(new Date(), note.time, { weekStartsOn: 1 }),
-							)
-								.map((note) => (
-									<li key={note.time.toDateString()}>
-										<strong>
-											{note.time.toLocaleDateString(locale, {
-												day: "numeric",
-												month: "long",
-											})}
-											{": "}
-										</strong>
-										{note.note}
-									</li>
-								)) : null}
+						{data
+							? data
+									.filter((note) =>
+										isSameWeek(date, note.time, { weekStartsOn: 1 }),
+									)
+									.sort((n1, n2) => n1.time.getTime() - n2.time.getTime())
+									.map((note) => (
+										<li key={note.time.toDateString()}>
+											<strong>
+												{note.time.toLocaleDateString(locale, {
+													day: "numeric",
+													month: "long",
+												})}
+												{": "}
+											</strong>
+											{note.note}
+										</li>
+									))
+							: null}
 					</ul>
 				</CardContent>
 			</Card>
@@ -135,69 +177,25 @@ export const DailyNotes = () => {
 			</CardHeader>
 			<CardContent>
 				<ul>
-					{data ?
-						data.filter((note) => isSameMonth(new Date(), note.time))
-							.map((note) => (
-								<li key={note.time.getTime()}>
-									<strong>
-										{note.time.toLocaleDateString(locale, {
-											day: "numeric",
-											month: "long",
-										})}
-										{": "}
-									</strong>
-									{note.note}
-								</li>
-							)) : null}
+					{data
+						? data
+								.filter((note) => isSameMonth(date, note.time))
+								.sort((n1, n2) => n1.time.getTime() - n2.time.getTime())
+								.map((note) => (
+									<li key={note.time.getTime()}>
+										<strong>
+											{note.time.toLocaleDateString(locale, {
+												day: "numeric",
+												month: "long",
+											})}
+											{": "}
+										</strong>
+										{note.note}
+									</li>
+								))
+						: null}
 				</ul>
 			</CardContent>
-		</Card>
-	);
-};
-
-export const PopupNotes = ({ selectedDate }: { selectedDate: Date }) => {
-	const { t } = useTranslation();
-
-	const [note, setNote] = useState<Note>({
-		time: new Date,
-		note: "Popup placeholder notat - må fikse funksjonaliteten her",
-	});
-
-	const [showTextArea, setShowTextArea] = useState<boolean>(
-		!isToday(note.time),
-	);
-	const [noteText, setNoteText] = useState<string>(note.note);
-
-	const handleEdit = () => {
-		setShowTextArea(!showTextArea);
-	};
-
-	const handleSubmit = () => {
-		//this will be replaced by api call
-		setNote({ time: selectedDate, note: noteText });
-		setShowTextArea(false);
-	};
-	return (
-		<Card className="max-h-64 w-full overflow-y-auto">
-			<CardContent>
-				{showTextArea ? (
-					<Textarea
-						placeholder={t(($) => $.daily_notes.writeHere)}
-						value={noteText}
-						onChange={(e) => setNoteText(e.target.value)}
-					/>
-				) : (
-					<p>{note.note}</p>
-				)}
-			</CardContent>
-			<CardFooter className="justify-end gap-2">
-				<Button variant={"secondary"} onClick={handleEdit}>
-					{t(($) => $.daily_notes.edit)}
-				</Button>
-				<Button disabled={!showTextArea} onClick={handleSubmit}>
-					{t(($) => $.daily_notes.save)}
-				</Button>
-			</CardFooter>
 		</Card>
 	);
 };
