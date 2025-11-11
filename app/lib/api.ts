@@ -1,6 +1,13 @@
 import type { Sensor } from "@/features/sensor-picker/sensors";
 import { queryOptions } from "@tanstack/react-query";
-import type { SensorDataRequestDto, SensorDataResponseDto } from "./dto";
+import type {
+	Note,
+	NoteDataRequest,
+	SensorDataRequestDto,
+	SensorDataResponseDto,
+} from "./dto";
+import type { View } from "./views";
+import { getStartEnd } from "./queries";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -38,3 +45,77 @@ export function sensorQueryOptions({
 		staleTime: 10 * 60 * 1000, // 10 min
 	});
 }
+
+export const fetchNoteData = async (
+	noteDataRequest: NoteDataRequest,
+): Promise<Array<Note>> => {
+	const response = await fetch(`${baseURL}notes/${uid}`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(noteDataRequest),
+	});
+
+	if (!response.ok) {
+		throw new Error("Failed to fetch daily notes");
+	}
+
+	const data = await response.json();
+
+	// parse time as Date object
+	return data.map((note: Note) => ({
+		...note,
+		time: new Date(note.time),
+	}));
+};
+
+export function notesQueryOptions({
+	view,
+	selectedDay,
+}: {
+	view: View;
+	selectedDay: Date;
+}) {
+	const query = getStartEnd(view, selectedDay);
+
+	return queryOptions({
+		queryKey: ["notes", query],
+		queryFn: () => fetchNoteData(query),
+		staleTime: 10 * 60 * 1000, // 10 min
+	});
+}
+
+export const updateNote = async ({ note }: { note: Note }) => {
+	const res = await fetch(`${baseURL}notes/${uid}`, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(note),
+	});
+
+	if (!res.ok) {
+		const errorText = await res.text();
+		throw new Error(`Failed to update note: ${errorText}`);
+	}
+
+	return res.json();
+};
+
+export const createNote = async ({ note }: { note: Note }) => {
+	const res = await fetch(`${baseURL}notes/${uid}/create`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(note),
+	});
+
+	if (!res.ok) {
+		const errorText = await res.text();
+		throw new Error(`Failed to create note: ${errorText}`);
+	}
+
+	return res.json();
+};

@@ -5,65 +5,60 @@ import { useTranslation } from "react-i18next";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Textarea } from "./ui/textarea";
+import { createNote, fetchNoteData, notesQueryOptions, updateNote } from "@/lib/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useDate } from "@/features/date-picker/use-date";
+import type { Note } from "@/lib/dto";
 
-type Note = {
-	date: Date;
-	note: string;
-};
-
-const d1 = new Date(2025, 9, 7);
-const d2 = new Date(2025, 9, 6);
-const d3 = new Date(2025, 9, 3);
-const d4 = new Date(2025, 9, 2);
-const d5 = new Date(2025, 9, 1);
-const d6 = new Date(2025, 9, 1);
-const d7 = new Date(2025, 9, 1);
-const d8 = new Date(2025, 9, 1);
-const d9 = new Date(2025, 9, 1);
-const d10 = new Date(2025, 9, 1);
-const today = new Date();
 
 export const DailyNotes = () => {
 	//assumes that the notes are sorted with current day first
 
 	const { t, i18n } = useTranslation();
 	const locale = i18n.language;
-
-	const [notes, setNotes] = useState<Array<Note>>([
-		{
-			date: today,
-			note: "Sandblåsing kl 10. Dette er et langt notat. Et veldig veldig veldig langt notat. Forhåpentligvis gjør det ikke at siden ser dårlig ut eller noe.",
-		},
-		{ date: d1, note: "Sveising kl 11." },
-		{ date: d2, note: "Ingenting å rapportere." },
-		{ date: d3, note: "Slipemaskin kl 12." },
-		{ date: d4, note: "Slipemaskin kl 12." },
-		{ date: d5, note: "Slipemaskin kl 12." },
-		{ date: d6, note: "Slipemaskin kl 12." },
-		{ date: d7, note: "Slipemaskin kl 12." },
-		{ date: d8, note: "Slipemaskin kl 12." },
-		{ date: d9, note: "Slipemaskin kl 12." },
-		{ date: d10, note: "Slipemaskin kl 12." },
-	]);
 	const { view } = useView();
+	const { date } = useDate();
+
+	const { data, isLoading, isError } = useQuery(notesQueryOptions({ view: view, selectedDay: date }));
+	console.log(data)
+
+	const { mutate: mutateUpdateNote } = useMutation({ mutationFn: updateNote });
+	const { mutate: mutateCreateNote } = useMutation({ mutationFn: createNote });
+
+	// const todayNoteExists = 
+
+	const [todayNote, setTodayNote] = useState<Note | null>(data ? data.find((note) => isToday(note.time)) ?? null : null);
+
 	const [showTextArea, setShowTextArea] = useState<boolean>(
-		!notes.some((note) => isToday(note.date)),
+		todayNote === null
 	);
-	const [noteText, setNoteText] = useState<string>(notes[0].note);
 
 	const handleEdit = () => {
 		setShowTextArea(!showTextArea);
 	};
 
 	const handleSubmit = () => {
-		//this will be replaced by api call
-		if (notes.some((note) => isToday(note.date))) {
-			notes[0] = { date: new Date(), note: noteText };
-		} else {
-			setNotes([{ date: new Date(), note: noteText } as Note].concat(notes));
+		if (todayNote !== null) {
+			mutateCreateNote({ note: todayNote })
+
 		}
+
+
 		setShowTextArea(false);
 	};
+
+	if (isLoading) {
+		return <Card className="flex h-24 w-full items-center">
+			<p>{t(($) => $.loadingData)}</p>
+		</Card>
+	}
+
+	if (isError) {
+		return <Card className="flex h-24 w-full items-center">
+			<p>{t(($) => $.loadingData)}</p>
+		</Card>
+	}
+
 
 	if (view === "day") {
 		return (
@@ -72,14 +67,14 @@ export const DailyNotes = () => {
 					<h2 className="text-xl">{t(($) => $.daily_notes.dayTitle)}</h2>
 				</CardHeader>
 				<CardContent>
-					{showTextArea ? (
+					{data?.find((note) => isToday(note.time)) ? (
+						<p>{data?.find((note) => isToday(note.time))?.note}</p>
+					) : (
 						<Textarea
 							placeholder={t(($) => $.daily_notes.writeHere)}
-							value={noteText}
-							onChange={(e) => setNoteText(e.target.value)}
+							value={todayNote ? todayNote.note : ""}
+							onChange={(e) => setTodayNote({ time: new Date, note: e.target.value })}
 						/>
-					) : (
-						<p>{notes[0].note}</p>
 					)}
 				</CardContent>
 				<CardFooter className="justify-end gap-2">
@@ -106,22 +101,22 @@ export const DailyNotes = () => {
 				</CardHeader>
 				<CardContent>
 					<ul>
-						{notes
-							.filter((note) =>
-								isSameWeek(new Date(), note.date, { weekStartsOn: 1 }),
+						{data ?
+							data.filter((note) =>
+								isSameWeek(new Date(), note.time, { weekStartsOn: 1 }),
 							)
-							.map((note) => (
-								<li key={note.date.toDateString()}>
-									<strong>
-										{note.date.toLocaleDateString(locale, {
-											day: "numeric",
-											month: "long",
-										})}
-										{": "}
-									</strong>
-									{note.note}
-								</li>
-							))}
+								.map((note) => (
+									<li key={note.time.toDateString()}>
+										<strong>
+											{note.time.toLocaleDateString(locale, {
+												day: "numeric",
+												month: "long",
+											})}
+											{": "}
+										</strong>
+										{note.note}
+									</li>
+								)) : null}
 					</ul>
 				</CardContent>
 			</Card>
@@ -140,20 +135,20 @@ export const DailyNotes = () => {
 			</CardHeader>
 			<CardContent>
 				<ul>
-					{notes
-						.filter((note) => isSameMonth(new Date(), note.date))
-						.map((note) => (
-							<li key={note.date.getTime()}>
-								<strong>
-									{note.date.toLocaleDateString(locale, {
-										day: "numeric",
-										month: "long",
-									})}
-									{": "}
-								</strong>
-								{note.note}
-							</li>
-						))}
+					{data ?
+						data.filter((note) => isSameMonth(new Date(), note.time))
+							.map((note) => (
+								<li key={note.time.getTime()}>
+									<strong>
+										{note.time.toLocaleDateString(locale, {
+											day: "numeric",
+											month: "long",
+										})}
+										{": "}
+									</strong>
+									{note.note}
+								</li>
+							)) : null}
 				</ul>
 			</CardContent>
 		</Card>
@@ -164,12 +159,12 @@ export const PopupNotes = ({ selectedDate }: { selectedDate: Date }) => {
 	const { t } = useTranslation();
 
 	const [note, setNote] = useState<Note>({
-		date: today,
+		time: new Date,
 		note: "Popup placeholder notat - må fikse funksjonaliteten her",
 	});
 
 	const [showTextArea, setShowTextArea] = useState<boolean>(
-		!isToday(note.date),
+		!isToday(note.time),
 	);
 	const [noteText, setNoteText] = useState<string>(note.note);
 
@@ -179,7 +174,7 @@ export const PopupNotes = ({ selectedDate }: { selectedDate: Date }) => {
 
 	const handleSubmit = () => {
 		//this will be replaced by api call
-		setNote({ date: selectedDate, note: noteText });
+		setNote({ time: selectedDate, note: noteText });
 		setShowTextArea(false);
 	};
 	return (
