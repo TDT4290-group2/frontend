@@ -95,7 +95,13 @@
     "eventTitle": "{{day}}, fra {{start}} til {{end}}",
     "notifTitle": "Notifikasjon mottatt {{date}}" 
   },
-
+    "profile": {
+    "title": "Profil",
+    "location": "Lokasjon",
+    "name": "Navn",
+    "prefLanguage": "Foretrukket språk",
+    "secReg": "Gjeldende sikkerhetsreguleringer"
+  },
   "loadingData": "Laster inn data...",
   "errorLoadingData": "Noe gikk galt under henting av sensordata.",
   "noData": "Ingen eksponeringsdata funnet for denne dagen",
