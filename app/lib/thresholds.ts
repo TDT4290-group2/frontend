@@ -11,8 +11,8 @@ export const thresholds: Record<Sensor, Threshold> = {
 		danger: 100,
 	},
 	noise: {
-		warning: 120,
-		danger: 130,
+		warning: 80,
+		danger: 60,
 	},
 	vibration: {
 		warning: 100,

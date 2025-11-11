@@ -10,10 +10,12 @@ import {
 } from "@/components/ui/drawer";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/features/dark-mode/mode-toggle";
+import { useTheme } from "@/features/dark-mode/use-theme";
 import { useDate } from "@/features/date-picker/use-date";
-import { Icon } from "@/features/icon";
+import { Icon, type IconVariant } from "@/features/icon";
 import { BellPopup } from "@/features/popups/bell-popup";
 import { usePopup } from "@/features/popups/use-popup";
+import { ProfileBadge } from "@/features/profile/profile-badge";
 import { sensors } from "@/features/sensor-picker/sensors";
 import { useSensor } from "@/features/sensor-picker/use-sensor";
 import { useView } from "@/features/views/use-view";
@@ -92,7 +94,10 @@ export default function Layout() {
 						</div>
 					) : (
 						<>
-							<div className="flex items-center gap-6">
+							<div className="flex items-center gap-4">
+								<div className="w-36 shrink-0 border-r-2 border-r-muted-foreground pr-4">
+									<AkerLogo />
+								</div>
 								<HomeLink />
 							</div>
 
@@ -110,7 +115,7 @@ export default function Layout() {
 							<Icon variant="bell" size="medium" />
 						</button>
 						<Select onValueChange={(value) => i18n.changeLanguage(value)}>
-							<SelectTrigger className="w-32">
+							<SelectTrigger className="w-32 bg-background dark:bg-background">
 								<SelectValue placeholder="Language" />
 							</SelectTrigger>
 							<SelectContent className="w-32">
@@ -123,6 +128,14 @@ export default function Layout() {
 							</SelectContent>
 						</Select>
 						<ModeToggle />
+						<div className="profile-wrapper">
+							{/* DUMMY PROFILE DISPLAY */}
+							<ProfileBadge
+								name="Olav Perator"
+								location="Egersund"
+								avatarUrl="userimage.png"
+							/>
+						</div>
 					</div>
 				</header>
 				<BellPopup
@@ -130,8 +143,15 @@ export default function Layout() {
 					onClose={closePopup}
 					title={t(($) => $.notifications)}
 				></BellPopup>
-				<main className="m-2 flex items-center justify-center">
+				<main className="m-2 flex-col items-center justify-center">
 					<Outlet />
+					{isMobile && (
+						<div className="mt-2 flex w-full justify-center p-4">
+							<div className="w-28 shrink-0 self-center">
+								<AkerLogo sizeOverride="large" />
+							</div>
+						</div>
+					)}
 				</main>
 			</SidebarInset>
 		</SidebarProvider>
@@ -332,3 +352,29 @@ const HamburgerIcon = ({
 		/>
 	</svg>
 );
+
+const AkerLogo = ({ sizeOverride }: { sizeOverride?: "small" | "large" }) => {
+	const { theme } = useTheme();
+	const isMobile = useIsMobile();
+	const resolvedTheme: "light" | "dark" =
+		theme === "system"
+			? document.documentElement.classList.contains("dark")
+				? "dark"
+				: "light"
+			: theme;
+	const isDark = resolvedTheme === "dark";
+	let size: "small" | "large";
+	if (sizeOverride) {
+		size = sizeOverride;
+	} else {
+		size = isMobile ? "small" : "large";
+	}
+	return (
+		<img
+			height={300}
+			width={isMobile ? 300 : 1025}
+			alt="Aker Solutions Logo"
+			src={`akerlogo_${size}${isDark ? "_dark" : ""}.png`}
+		/>
+	);
+};
