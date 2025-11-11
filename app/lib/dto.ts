@@ -63,3 +63,13 @@ export type NotificationResponseDto = {
 	isRead?: boolean;
 	userMessage?: string;
 };
+
+export type Note = {
+	note: string;
+	time: Date;
+};
+
+export type NoteDataRequest = {
+	startTime: Date;
+	endTime: Date;
+};

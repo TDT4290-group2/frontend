@@ -48,6 +48,7 @@
   },
   "daily_notes": {
     "dayTitle": "Daily Notes",
+    "daySubtitle": "Note for {{day}}:",
     "writeHere": "Write here...",
     "edit": "Edit",
     "save": "Save",
@@ -94,6 +95,13 @@
     "eventTitle": "{{day}}, from {{start}} to {{end}}",
     "notifTitle": "Notification received {{date}}",
     "noNotifications": "You have no notifications"
+  },
+  "profile": {
+    "title": "Profile",
+    "location": "Location",
+    "name": "Name",
+    "prefLanguage": "Preferred language",
+    "secReg": "Current security regulations"
   },
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",

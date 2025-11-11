@@ -110,7 +110,13 @@ export function DailyBarChart({
 							tickFormatter={(value) => t(($) => $.overview[value as Sensor])}
 						/>
 						{hourKeys.map((key) => (
-							<Bar key={key} dataKey={key} stackId="a">
+							<Bar
+								key={key}
+								dataKey={key}
+								stackId="a"
+								stroke={"var(--muted-foreground)"} // Tailwind + theme aware
+								strokeWidth={1}
+							>
 								{generateChartData().map((entry, index) => {
 									const sensor = entry.sensor;
 									const _threshold = thresholds[entry.sensor];

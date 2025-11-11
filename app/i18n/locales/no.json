@@ -48,6 +48,7 @@
   },
   "daily_notes": {
     "dayTitle": "Dagens notater",
+    "daySubtitle": "Notat for {{day}}:",
     "writeHere": "Skriv her...",
     "edit": "Rediger",
     "save": "Lagre",
@@ -95,7 +96,13 @@
     "notifTitle": "Notifikasjon mottatt {{date}}",
     "noNotifications": "Du har ingen notifikasjoner"
   },
-
+    "profile": {
+    "title": "Profil",
+    "location": "Lokasjon",
+    "name": "Navn",
+    "prefLanguage": "Foretrukket språk",
+    "secReg": "Gjeldende sikkerhetsreguleringer"
+  },
   "loadingData": "Laster inn data...",
   "errorLoadingData": "Noe gikk galt under henting av sensordata.",
   "noData": "Ingen eksponeringsdata funnet for denne dagen",
