@@ -106,10 +106,10 @@ export default function Dust() {
 							month: "long",
 							year: "numeric",
 						})}
-						unit={t(($) => $.points)}
+						unit={t(($) => $.dust_y_axis)}
 						startHour={8}
 						endHour={16}
-						maxY={120}
+						maxY={100}
 						lineType="monotone"
 					>
 						<ThresholdLine y={thresholds.dust.danger} dangerLevel="danger" />

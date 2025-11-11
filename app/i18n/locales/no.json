@@ -105,5 +105,6 @@
   "loadingData": "Laster inn data...",
   "errorLoadingData": "Noe gikk galt under henting av sensordata.",
   "noData": "Ingen eksponeringsdata funnet for denne dagen",
-  "points": "Poeng"
+  "points": "Poeng",
+  "dust_y_axis": "µg/m³"
 }
