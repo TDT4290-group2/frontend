@@ -67,6 +67,9 @@ Install the required external dependencies:
 pnpm install
 ```
 
+### Set the Base URL for the backend
+The simplest way is to make a copy of the [.env.example](./.env.example) file and rename the new file to *.env*. Then change the `VITE_BASE_URL` if needed. The default value works with the default value set in the backend repository. 
+
 ### Run Locally
 
 Run the dev server:
@@ -113,32 +116,12 @@ Now you'll need to pick a host to deploy it to.
 
 ## Deployment
 
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
 ### Example Deployment of Whole Application Stack
 An example deployment configuration is available in [an example file](docker-compose-deployment-example.yml). 
 This configuration uses traefik as a reverse proxy, with letsencrypt as a certificate resolver. 
 
 #### Important Notes About Docker Images for Deployment
-The frontend needs to be rebuilt for the correct API URL. Also note that both frontend and backend dockerfiles support multi-architecture builds, such as `linux/arm64`, but are not built with this support for the GitHub container registry. Both images need to be rebuilt if this is needed.
+The frontend needs to be rebuilt for the correct API URL. This value is taken from the `VITE_BASE_URL` variable in the `.env` file. Also note that both frontend and backend dockerfiles support multi-architecture builds, such as `linux/arm64`, but are not built with this support for the GitHub container registry. Both images need to be rebuilt if this is needed.
 
 ### DIY Deployment
 
