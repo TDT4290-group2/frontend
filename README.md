@@ -146,7 +146,7 @@ As this is a single page application (no server-side rendering), we only create 
 		- `ui`: Primitive UI components acting as building blocks for larger components, such as header, buttons, and input fields. Most of these originates from shadcn/ui, with some tweaks.
 	- `hooks/`: Common React hooks reused in multiple pages
   - `features/`: Subfolders of components grouped by larger feature scopes, such as date-picker and popups.
-	- `lib/`: Common variables, functions and types reused in multiple components
+	- `lib/`: Common variables, functions and types reused in multiple components. [This](./app/lib/thresholds.ts) is also where the exposure thresholds are defined.
   - `i18n/`: Contains language files, states and logic for enabling multi-language support. 
 	- `routes/`: The main pages that render as the user navigates the application.
 - `public/`: Assets requiring no processing, clients download these files as is.
