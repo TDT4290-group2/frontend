@@ -37,7 +37,7 @@ const sensorToField: Record<Sensor, string | undefined> = {
 	vibration: undefined,
 };
 
-function getStartEnd(
+export function getStartEnd(
 	view: View,
 	selectedDay: Date,
 ): {

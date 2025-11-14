@@ -21,12 +21,14 @@ import {
 	type CalendarPopupData,
 } from "@/features/popups/calendar-popup";
 import { useState } from "react";
+import { useDate } from "../date-picker/use-date";
 import { usePopup } from "../popups/use-popup";
 import type { Sensor } from "../sensor-picker/sensors";
 
 export function CalendarWidget({ selectedDay, data }: CalendarProps) {
 	const { t, i18n } = useTranslation();
 	const { visible, openPopup, closePopup } = usePopup();
+	const { setDate } = useDate();
 
 	const [popupData, setPopupData] = useState<{
 		day: Date | null;
@@ -64,6 +66,14 @@ export function CalendarWidget({ selectedDay, data }: CalendarProps) {
 	}
 
 	function handleDayClick(clickedDay: Date) {
+		const utcDate = new Date(
+			Date.UTC(
+				clickedDay.getFullYear(),
+				clickedDay.getMonth(),
+				clickedDay.getDate(),
+			),
+		);
+		setDate(utcDate);
 		const type = getDayType(clickedDay);
 		if (type === "none") return;
 		const exposureData = getExposureData(clickedDay);

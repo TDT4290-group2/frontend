@@ -3,7 +3,7 @@ import type { DangerKey } from "@/lib/danger-levels";
 import type { Sensor } from "@/lib/sensors";
 import { cn } from "@/lib/utils";
 import { t } from "i18next";
-import { PopupNotes } from "../../components/daily-notes";
+import { DailyNotes } from "../../components/daily-notes";
 import { Card } from "../../components/ui/card";
 
 type CalendarPopupProps = {
@@ -55,7 +55,7 @@ export function CalendarPopup({
 				</Card>
 			)}
 			<h2 className="pt-4 font-bold">{t(($) => $.popup.notesTitle)}</h2>
-			<PopupNotes selectedDate={selectedDate} />
+			<DailyNotes popUpOverride={true} />
 		</BasePopup>
 	);
 }

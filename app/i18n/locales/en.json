@@ -48,6 +48,7 @@
   },
   "daily_notes": {
     "dayTitle": "Daily Notes",
+    "daySubtitle": "Note for {{day}}:",
     "writeHere": "Write here...",
     "edit": "Edit",
     "save": "Save",
@@ -104,5 +105,6 @@
   "loadingData": "Loading data...",
   "errorLoadingData": "Something went wrong while fetching sensor data.",
   "noData": "No exposure data found for this day",
-  "points": "Points"
+  "points": "Points",
+  "dust_y_axis": "µg/m³"
 }
