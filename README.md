@@ -46,10 +46,11 @@ After the data is placed, run
 ```sh
 docker exec -it timescaledb psql -U postgres -d mydb -f /seed/seed.sql
 ```
+*Please note that seeding the database with the provided files may take a few minutes.*
 
-Note that you need to change the postgres user from *postgres* and database from *mydb* if you changed the default values from `.env.example`
+Also note that you need to change the postgres user from *postgres* and database from *mydb* if you changed the default values from `.env.example`
 
-Now our application is ready! You can open it at http://localhost:8080
+Now your application is ready! You can open it at http://localhost:8080
 
 
 ## Local Development
