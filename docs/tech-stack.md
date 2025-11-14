@@ -12,7 +12,6 @@
 | Linter, Formatter: | [Biome](https://biomejs.dev/) | [eliminates bugs pre-emptively and keeps code consistent](#biome-eliminates-bugs-preemptively-and-keeps-code-consistent) |
 | Component collection: | [Shadcn/ui](https://ui.shadcn.com/) | [starts us off on the right foot](#shadcnui-starts-us-off-on-the-right-foot) |
 | Headless components: | [Radix UI](https://www.radix-ui.com/) | [provides functional and accessible primitives](#radix-primitives-provides-functional-and-accessible-primitives) |
-| e2e test runner | [Playwright](https://playwright.dev/) | [makes sure everything works as intended](#playwright-makes-sure-everything-works-as-intended) |
 | Package manager: | [pnpm](https://pnpm.io/) | [reduces the black hole that is node_modules](#pnpm-reduces-the-black-hole-that-is-node_modules) |
 
 ## Reasoning
@@ -69,12 +68,6 @@ Radix Primitives adhere to the
 [WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/) accessibility practices.\
 Radix Primitives is used in the component collection shadcn/ui provides.\
 In house UI components should use Radix Primitives when possible.
-
-### Playwright makes sure everything works as intended
-
-Playwright does e2e testing by running all tests in the different major browsers.
-This is our most important way of testing as functionality is tested in the
-same environment users interact with the application in.
 
 ### pnpm reduces the black hole that is node_modules
 

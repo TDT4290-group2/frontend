@@ -2,25 +2,56 @@
 
 - [HealthTech Operator Dashboard](#healthtech-operator-dashboard)
   - [Other documents](#other-documents)
+  - [Quick start](#quick-start)
   - [Local Development](#local-development)
     - [Programs needed to run project](#programs-needed-to-run-project)
     - [Installation](#installation)
     - [Run locally](#run-locally)
     - [Linting and formatting](#linting-and-formatting)
-    - [Testing](#testing)
     - [Build for Production](#build-for-production)
   - [Deployment](#deployment)
     - [Docker Deployment](#docker-deployment)
+    - [Example Deployment of Whole Application Stack](#example-deployment-of-whole-application-stack)
+      - [Important Notes About Docker Images for Deployment](#important-notes-about-docker-images-for-deployment)
     - [DIY Deployment](#diy-deployment)
   - [File structure](#file-structure)
 
 ## Other documents
 
 - [Onboarding: READ IF ITS YOUR FIRST TIME OPENING THIS REPO](./docs/onboarding.md)
-- [Tips for developing with VSCode (please read)](./docs/vscode-tips.md)
 - [Tech Stack](./docs/tech-stack.md)
-- [React Router README](./docs/react-router_README.md)
-- [Learn React](./docs/learn-react.md)
+
+## Quick start
+
+### Running full HealthTech application stack locally with Docker
+The easiest way to run the full HealthTech application stack is with Docker compose
+**Note: Requires Docker installed locally**
+
+#### Set up environment variables
+Make a copy of the [.env.example](./.env.example) file and rename the new file to *.env*. Remember to change the default password.
+
+#### Run the compose stack
+To run the full HealthTech application stack, run
+```
+docker compose up --build -d
+```
+**Your application is not ready yet!** You need to seed the database with some data to display.
+
+### Seeding the Database with sample data
+First, place your sample data in the *seed* directory as csv-files: *NoiseData.csv*, *DustData.csv*, *VibrationData.csv*
+Sample data for the different exposure types can be found [here](https://drive.proton.me/urls/FYRKP45DT8#CyS2vd2gzQHH).
+
+After the data is placed, run 
+
+```sh
+docker exec -it timescaledb psql -U postgres -d mydb -f /seed/seed.sql
+```
+*Please note that seeding the database with the provided files may take a few minutes.*
+
+Also note that you need to change the postgres user from *postgres* and database from *mydb* if you changed the default values from `.env.example`
+
+Now your application is ready! You can open it at http://localhost:8080
+
 
 ## Local Development
 
@@ -37,7 +68,10 @@ Install the required external dependencies:
 pnpm install
 ```
 
-### Run locally
+### Set the Base URL for the backend
+The simplest way is to make a copy of the [.env.example](./.env.example) file and rename the new file to *.env*. Then change the `VITE_BASE_URL` if needed. The default value works with the default value set in the backend repository. 
+
+### Run Locally
 
 Run the dev server:
 
@@ -45,7 +79,7 @@ Run the dev server:
 pnpm dev
 ```
 
-### Linting and formatting
+### Linting and Formatting
 
 Check for linting errors and apply safe fixes:
 
@@ -65,40 +99,6 @@ Do both in one check:
 pnpm check
 ```
 
-### Testing
-
-Install required browsers for running e2e tests:
-
-```sh
-pnpm e2e:install
-```
-
-Run all tests:
-
-```sh
-pnpm e2e:test
-```
-
-Use the `ui` flag to watch the tests:
-
-```sh
-pnpm exec playwright test --ui
-```
-
-Run tests for individual browsers:
-
-| Google Chrome | Firefox | Safari |
-| --- | --- | --- |
-|`pnpm e2e:test:chromium`|`pnpm e2e:test:firefox`|`pnpm e2e:test:webkit`|
-
-Generate tests interactively:
-
-```sh
-pnpm e2e:test:generate
-```
-
-Read more in the [docs](https://playwright.dev/docs/codegen).
-
 ### Build for Production
 
 First, build your app for production:
@@ -117,55 +117,37 @@ Now you'll need to pick a host to deploy it to.
 
 ## Deployment
 
-### Docker Deployment
+### Example Deployment of Whole Application Stack
+An example deployment configuration is available in [an example file](docker-compose-deployment-example.yml). 
+This configuration uses traefik as a reverse proxy, with letsencrypt as a certificate resolver. 
 
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+#### Important Notes About Docker Images for Deployment
+The frontend needs to be rebuilt for the correct API URL. This value is taken from the `VITE_BASE_URL` variable in the `.env` file. Also note that both frontend and backend dockerfiles support multi-architecture builds, such as `linux/arm64`, but are not built with this support for the GitHub container registry. Both images need to be rebuilt if this is needed.
 
 ### DIY Deployment
 
 If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
 Make sure to deploy the output of `pnpm run build`
+As this is a single page application (no server-side rendering), we only create a client-side bundle under `build/client/`
 
 ```
 ├── package.json
 ├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
 ├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+│   └── client/    # Client-side code
 ```
 
-## File structure
+## Folder Structure
 
-- `dashboard/`: root folder with configuration files and subfolders
-  - `.github/`: GitHub config like CI/CD workflows and PR templates
-  - `.react-router/`: autogenerated types from React Router
-  - `.vscode/`: Local per user workspace settings for those using VSCode
-  - `app/`: All source code for the web app
-    - `__tests__/`: End-to-end tests for full pages or user stories
-    - `components/`: Common components used in multiple pages. Encapsulates features into singular units.
-      - `ui`: Primitives acting as the foundational building blocks for composing larger features or sections, for example common layout components like headers, footers and sidebars, or features like a login modal. Most primitives originates from shadcn/ui and might be manually tweaked to our preferences.
-    - `hooks/`: Common React hooks reused in multiple pages
-    - `lib/`: Common code reused in multiple pages
-    - `routes/`: Page components rendered by our router. This includes common layouts and should try to reflect either the routing or grouping of responsibilities as close as possible. If the component uses router apis, then it should most likely lie here.
-    - `app.css`: Style variables accessable throughout the whole app. Mainly configuration of Tailwind and CSS variables.
-    - `root.tsx`: Root HTML rendered for ALL pages. Contains global metadata, styles and providers.
-    - `routes.ts`: Routing declared through the React Router routes API. Check out the [docs](https://reactrouter.com/start/framework/routing) for an in-depth explanation of the API.
-  - `build/`: Build artifacts for deploying the app to servers
-  - `public/`: Assets requiring no processing, clients download these files as is.
+- `.github/`: GitHub configurations, particularly CI/CD workflows
+- `.vscode/`: Local per user workspace settings for those using VSCode
+- `app/`: All source code for Healthtech frontend 
+	- `components/`: Common components used in multiple pages. 
+		- `ui`: Primitive UI components acting as building blocks for larger components, such as header, buttons, and input fields. Most of these originates from shadcn/ui, with some tweaks.
+	- `hooks/`: Common React hooks reused in multiple pages
+  - `features/`: Subfolders of components grouped by larger feature scopes, such as date-picker and popups.
+	- `lib/`: Common variables, functions and types reused in multiple components. [This](./app/lib/thresholds.ts) is also where the exposure thresholds are defined.
+  - `i18n/`: Contains language files, states and logic for enabling multi-language support. 
+	- `routes/`: The main pages that render as the user navigates the application.
+- `public/`: Assets requiring no processing, clients download these files as is.
+- `seed/`: Seeding script and location to place seeding data. Only relevant if running database with docker compose. 
